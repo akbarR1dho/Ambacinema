@@ -22,7 +22,7 @@
     ],
     "env": {
         "APP_ENV": "production",
-        "APP_DEBUG": "true",
+        "APP_DEBUG": "false",
         "CACHE_STORE": "database",
         "SESSION_DRIVER": "database",
         "QUEUE_CONNECTION": "database"
