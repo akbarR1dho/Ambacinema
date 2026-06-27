@@ -16,7 +16,7 @@
                     <th class="py-3 px-4">No</th>
                     <th class="py-3 px-4">Name</th>
                     <th class="py-3 px-4">Type</th>
-                    <th class="py-3 px-4">Price</th>
+                    <th class="py-3 px-4 min-tablet">Price</th>
                     <th class="py-3 px-4">Total Seats</th>
                     <th class="py-3 px-4 w-32">Action</th>
                 </tr>

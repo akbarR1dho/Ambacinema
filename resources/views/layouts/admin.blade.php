@@ -180,7 +180,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans antialiased overflow-hidden flex h-screen">
+<body class="bg-slate-50 text-slate-900 font-sans antialiased overflow-hidden flex h-[100dvh]">
     
     <!-- Mobile Sidebar Overlay -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden"></div>
@@ -264,8 +264,7 @@
             </div>
         </header>
 
-        <!-- Page Content -->
-        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-50 p-6">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-50 p-4 sm:p-6 pb-20 sm:pb-10">
             @if(session('success'))
                 <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-6" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>

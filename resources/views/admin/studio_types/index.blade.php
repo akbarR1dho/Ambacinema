@@ -14,9 +14,9 @@
             <tr>
                 <th>No</th>
                 <th>Name</th>
-                <th>Price Range</th>
-                <th>Description</th>
-                <th>Actions</th>
+                <th class="min-tablet">Price Range</th>
+                <th class="min-desktop">Description</th>
+                <th class="min-tablet">Action</th>
             </tr>
         </thead>
         <tbody>

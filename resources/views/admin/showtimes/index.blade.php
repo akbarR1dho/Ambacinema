@@ -16,8 +16,8 @@
                     <th class="py-3 px-4">No</th>
                     <th class="py-3 px-4">Movie</th>
                     <th class="py-3 px-4">Studio</th>
-                    <th class="py-3 px-4">Start Time</th>
-                    <th class="py-3 px-4">End Time</th>
+                    <th class="py-3 px-4 min-tablet">Start Time</th>
+                    <th class="py-3 px-4 min-tablet">End Time</th>
                     <th class="py-3 px-4 w-32">Action</th>
                 </tr>
             </thead>
