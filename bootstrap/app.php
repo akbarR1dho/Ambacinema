@@ -17,10 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->report(function (\Throwable $e) {
-            echo "<h1>ORIGINAL ERROR:</h1><pre>" . (string) $e . "</pre>";
-            die();
-        });
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
