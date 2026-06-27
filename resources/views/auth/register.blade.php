@@ -8,7 +8,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex items-center justify-center py-12">
     <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-xl border border-slate-200">
-        <h2 class="text-3xl font-extrabold text-slate-900 mb-6 text-center tracking-tight">Join <span class="text-blue-600 italic tracking-tighter">Amba</span>cinema</h2>
+        <h2 class="text-3xl font-extrabold text-blue-600 mb-6 text-center tracking-tighter uppercase italic">Join Amba<span class="text-slate-900">cinema</span></h2>
         <form method="POST" action="{{ route('register') }}">
             @csrf
             

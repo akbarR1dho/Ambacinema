@@ -23,10 +23,10 @@
                     <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center">
                         <span class="text-3xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></span>
                     </a>
-                    <div class="hidden md:ml-10 md:flex md:space-x-8">
+                    <!-- <div class="hidden md:ml-10 md:flex md:space-x-8">
                         <a href="{{ route('home') }}" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors uppercase tracking-wider">Now Playing</a>
                         <a href="#" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors uppercase tracking-wider">Theaters</a>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="flex items-center">
                     @auth
@@ -82,7 +82,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center flex-col md:flex-row">
                 <div class="mb-4 md:mb-0">
-                    <span class="text-2xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></span>
+                    <span class="text-3xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></span>
                     <p class="text-slate-500 text-sm mt-1">© {{ date('Y') }} Ambacinema. All rights reserved.</p>
                 </div>
                 <div class="flex space-x-6">

@@ -189,7 +189,7 @@
     <aside id="admin-sidebar" class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col fixed inset-y-0 left-0 z-50 transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out shadow-xl">
         <div class="h-16 flex items-center justify-center border-b border-slate-800">
             <a href="{{ route('admin.dashboard') }}" class="flex-shrink-0 flex items-center">
-                <span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-slate-100">cinema</span></span>
+                <span class="text-2xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>
                 <span class="ml-2 px-1.5 py-0.5 bg-blue-900/40 text-blue-400 text-[10px] font-bold uppercase rounded border border-blue-800/50">Admin</span>
             </a>
         </div>

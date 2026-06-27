@@ -8,7 +8,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans antialiased h-screen flex items-center justify-center">
     <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-xl border border-slate-200">
-        <h2 class="text-3xl font-extrabold text-blue-600 mb-6 text-center italic tracking-tighter">Amba<span class="text-slate-900">cinema</span></h2>
+        <h2 class="text-3xl font-extrabold text-blue-600 mb-6 text-center tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></h2>
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <div class="mb-4">

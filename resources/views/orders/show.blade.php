@@ -23,7 +23,7 @@
                     <span class="inline-block mt-2 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full border border-blue-200 uppercase">Confirmed</span>
                 </div>
                 <div class="text-right">
-                    <span class="text-2xl font-bold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></span>
+                    <span class="text-3xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></span>
                 </div>
             </div>
 
