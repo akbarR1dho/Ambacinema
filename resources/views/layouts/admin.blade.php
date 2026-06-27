@@ -252,6 +252,8 @@
                     <!-- Admin Profile Dropdown -->
                     <div class="absolute right-0 mt-3 w-48 hidden z-50" id="profile-dropdown-menu">
                         <div class="bg-white rounded-md shadow-lg py-1 ring-1 ring-slate-900 ring-opacity-5 border border-slate-200">
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors font-medium">My Profile</a>
+                            <div class="border-t border-slate-100 my-1"></div>
                             <a href="{{ route('home') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Go to User Site</a>
                             <div class="border-t border-slate-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" id="logout-form">

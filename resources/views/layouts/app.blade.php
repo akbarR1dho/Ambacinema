@@ -40,6 +40,7 @@
                                     @if(Auth::user()->role === 'admin')
                                         <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Admin Panel</a>
                                     @endif
+                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors font-medium">My Profile</a>
                                     <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">My Tickets</a>
                                     <div class="border-t border-slate-100 my-1"></div>
                                     <form method="POST" action="{{ route('logout') }}" id="logout-form">
