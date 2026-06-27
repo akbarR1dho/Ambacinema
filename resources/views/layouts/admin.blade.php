@@ -254,9 +254,9 @@
                         <div class="bg-white rounded-md shadow-lg py-1 ring-1 ring-slate-900 ring-opacity-5 border border-slate-200">
                             <a href="{{ route('home') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Go to User Site</a>
                             <div class="border-t border-slate-100 my-1"></div>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" id="logout-form">
                                 @csrf
-                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors">Sign out</button>
+                                <button type="button" onclick="confirmLogout(event)" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors">Sign out</button>
                             </form>
                         </div>
                     </div>
@@ -311,6 +311,57 @@
             toggleBtn.on('click', toggleSidebar);
             overlay.on('click', toggleSidebar);
         });
+    </script>
+    <!-- SweetAlert2 for Logout -->
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: '<span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>',
+                html: '<p class="text-slate-400 mt-2">Are you sure you want to log out of the Admin Panel?</p>',
+                icon: 'question',
+                iconColor: '#3b82f6',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Log Out',
+                cancelButtonText: 'Cancel',
+                background: '#0f172a',
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'border border-slate-800 rounded-2xl shadow-2xl',
+                    confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto',
+                    cancelButton: 'bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto mt-3 sm:mt-0 sm:ml-3',
+                    actions: 'w-full flex flex-col sm:flex-row justify-center mt-6'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.target.closest('form').submit();
+                }
+            });
+        }
+        function confirmDelete(event, message = 'Are you sure you want to delete this item?') {
+            event.preventDefault();
+            Swal.fire({
+                title: '<span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>',
+                html: `<p class="text-slate-400 mt-2">${message}<br><span class="text-red-400 text-xs mt-1 block">This action cannot be undone.</span></p>`,
+                icon: 'warning',
+                iconColor: '#ef4444',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
+                background: '#0f172a',
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'border border-slate-800 rounded-2xl shadow-2xl',
+                    confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto',
+                    cancelButton: 'bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto mt-3 sm:mt-0 sm:ml-3',
+                    actions: 'w-full flex flex-col sm:flex-row justify-center mt-6'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.target.closest('form').submit();
+                }
+            });
+        }
     </script>
     @stack('scripts')
 </body>

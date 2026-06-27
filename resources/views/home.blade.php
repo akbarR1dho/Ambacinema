@@ -1,11 +1,18 @@
 @extends('layouts.app')
 
 @push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
     .swiper-button-next, .swiper-button-prev { color: #2563eb; }
-    .swiper-pagination-bullet-active { background: #2563eb; }
-    .swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction { bottom: 0px; }
+    @media (max-width: 767px) {
+        .swiper-button-next, .swiper-button-prev { display: none !important; }
+    }
+    .swiper-button-prev { left: -24px !important; }
+    .swiper-button-next { right: -24px !important; }
+    @media (min-width: 1024px) {
+        .swiper-button-prev { left: -56px !important; }
+        .swiper-button-next { right: -56px !important; }
+    }
     .movie-swiper { padding-bottom: 40px; }
 </style>
 @endpush
@@ -24,79 +31,49 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" id="now-playing">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 group/carousel" id="now-playing">
     <div class="flex items-center justify-between mb-8 border-b border-slate-200 pb-4">
         <h2 class="text-2xl font-bold text-slate-900 uppercase tracking-wider border-l-4 border-blue-600 pl-3">Now Playing</h2>
     </div>
 
-    @if($movies->count() > 4)
-        <!-- Swiper Carousel Layout -->
-        <div class="swiper movie-swiper">
-            <div class="swiper-wrapper">
-                @foreach($movies as $movie)
-                    <div class="swiper-slide">
-                        <div class="group relative rounded-xl overflow-hidden bg-white border border-slate-200 hover:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-blue-900/10">
-                            <div class="aspect-[2/3] w-full overflow-hidden bg-slate-100 relative">
-                                @if($movie->poster)
-                                    <img src="{{ Storage::url($movie->poster) }}" alt="{{ $movie->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center text-slate-400 bg-slate-100">
-                                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+    @if($movies->count() > 0)
+        <!-- Dynamic Swiper Carousel Layout -->
+        <div class="relative">
+            <div class="swiper movie-swiper">
+                <div class="swiper-wrapper">
+                    @foreach($movies as $movie)
+                        <div class="swiper-slide">
+                            <div class="group relative rounded-xl overflow-hidden bg-white border border-slate-200 hover:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-blue-900/10">
+                                <a href="{{ route('movie.show', $movie->id) }}" class="block aspect-[2/3] w-full overflow-hidden bg-slate-100 relative">
+                                    @if($movie->poster)
+                                        <img src="{{ Storage::url($movie->poster) }}" alt="{{ $movie->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center text-slate-400 bg-slate-100">
+                                            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        </div>
+                                    @endif
+                                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-90"></div>
+                                    <div class="absolute bottom-0 left-0 p-4 w-full">
+                                        <h3 class="text-lg font-bold text-white truncate drop-shadow-md">{{ $movie->title }}</h3>
+                                        <p class="text-sm text-slate-200 mt-1 flex items-center">
+                                            <svg class="w-4 h-4 mr-1 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            {{ $movie->duration }} mins
+                                        </p>
                                     </div>
-                                @endif
-                                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-90"></div>
-                                <div class="absolute bottom-0 left-0 p-4 w-full">
-                                    <h3 class="text-lg font-bold text-white truncate drop-shadow-md">{{ $movie->title }}</h3>
-                                    <p class="text-sm text-slate-200 mt-1 flex items-center">
-                                        <svg class="w-4 h-4 mr-1 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        {{ $movie->duration }} mins
-                                    </p>
-                                </div>
-                                
-                                <!-- Hover Overlay -->
-                                <div class="absolute inset-0 bg-slate-900/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                    <a href="{{ route('movie.show', $movie->id) }}" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-full transform -translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg shadow-blue-900/50 uppercase text-sm tracking-wider">Buy Ticket</a>
-                                </div>
+                                    
+                                    <!-- Hover Overlay -->
+                                    <div class="absolute inset-0 bg-slate-900/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
+                                        <span class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-full transform -translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg shadow-blue-900/50 uppercase text-sm tracking-wider">Buy Ticket</span>
+                                    </div>
+                                </a>
                             </div>
                         </div>
-                    </div>
-                @endforeach
-            </div>
-            <!-- Add Pagination -->
-            <div class="swiper-pagination"></div>
-            <!-- Add Navigation -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-        </div>
-    @elseif($movies->count() > 0)
-        <!-- Grid Layout -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            @foreach($movies as $movie)
-                <div class="group relative rounded-xl overflow-hidden bg-white border border-slate-200 hover:border-blue-500 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-blue-900/10">
-                    <div class="aspect-[2/3] w-full overflow-hidden bg-slate-100 relative">
-                        @if($movie->poster)
-                            <img src="{{ Storage::url($movie->poster) }}" alt="{{ $movie->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        @else
-                            <div class="w-full h-full flex items-center justify-center text-slate-400 bg-slate-100">
-                                <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            </div>
-                        @endif
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-90"></div>
-                        <div class="absolute bottom-0 left-0 p-4 w-full">
-                            <h3 class="text-lg font-bold text-white truncate drop-shadow-md">{{ $movie->title }}</h3>
-                            <p class="text-sm text-slate-200 mt-1 flex items-center">
-                                <svg class="w-4 h-4 mr-1 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                {{ $movie->duration }} mins
-                            </p>
-                        </div>
-                        
-                        <!-- Hover Overlay -->
-                        <div class="absolute inset-0 bg-slate-900/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                            <a href="{{ route('movie.show', $movie->id) }}" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-full transform -translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg shadow-blue-900/50 uppercase text-sm tracking-wider">Buy Ticket</a>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
-            @endforeach
+            </div>
+            <!-- Add Navigation Outside -->
+            <div class="swiper-button-prev -translate-y-5 opacity-0 pointer-events-none group-hover/carousel:opacity-100 group-hover/carousel:pointer-events-auto transition-all duration-300 bg-white !w-12 !h-12 rounded-full shadow-lg border border-slate-200 hover:scale-110 hover:border-blue-400" style="--swiper-navigation-size: 20px;"></div>
+            <div class="swiper-button-next -translate-y-5 opacity-0 pointer-events-none group-hover/carousel:opacity-100 group-hover/carousel:pointer-events-auto transition-all duration-300 bg-white !w-12 !h-12 rounded-full shadow-lg border border-slate-200 hover:scale-110 hover:border-blue-400" style="--swiper-navigation-size: 20px;"></div>
         </div>
     @else
         <div class="text-center py-20 bg-white rounded-xl border border-slate-200">
@@ -109,26 +86,59 @@
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        if (document.querySelector('.movie-swiper')) {
-            new Swiper('.movie-swiper', {
-                slidesPerView: 2,
-                spaceBetween: 24,
-                loop: false,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-                breakpoints: {
-                    640: { slidesPerView: 3, spaceBetween: 24 },
-                    1024: { slidesPerView: 4, spaceBetween: 24 },
-                    1280: { slidesPerView: 5, spaceBetween: 24 },
+        const container = document.querySelector('.movie-swiper');
+        if (container) {
+            const slideCount = container.querySelectorAll('.swiper-slide').length;
+            let swiperInstance = null;
+
+            function initSwiper() {
+                const width = window.innerWidth;
+                let slidesPerView = 2; // mobile default
+                if (width >= 1280) slidesPerView = 5;
+                else if (width >= 1024) slidesPerView = 4;
+                else if (width >= 640) slidesPerView = 3;
+
+                // Only enable loop if we have strictly more slides than can fit on screen
+                const shouldLoop = slideCount > slidesPerView;
+
+                return new Swiper('.movie-swiper', {
+                    slidesPerView: 2,
+                    spaceBetween: 24,
+                    loop: shouldLoop,
+                    watchOverflow: true,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 3, spaceBetween: 24 },
+                        1024: { slidesPerView: 4, spaceBetween: 24 },
+                        1280: { slidesPerView: 5, spaceBetween: 24 },
+                    }
+                });
+            }
+
+            swiperInstance = initSwiper();
+
+            // Re-evaluate on screen resize to prevent loop bugs
+            window.addEventListener('resize', () => {
+                if (!swiperInstance) return;
+                
+                const width = window.innerWidth;
+                let slidesPerView = 2;
+                if (width >= 1280) slidesPerView = 5;
+                else if (width >= 1024) slidesPerView = 4;
+                else if (width >= 640) slidesPerView = 3;
+
+                const shouldLoop = slideCount > slidesPerView;
+                
+                // If the required loop state changes based on screen width, rebuild Swiper
+                if (swiperInstance.params && swiperInstance.params.loop !== shouldLoop) {
+                    swiperInstance.destroy(true, true);
+                    swiperInstance = initSwiper();
                 }
             });
         }

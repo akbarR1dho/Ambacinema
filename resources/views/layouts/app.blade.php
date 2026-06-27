@@ -21,7 +21,7 @@
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
                     <a href="{{ route('home') }}" class="flex-shrink-0 flex items-center">
-                        <span class="text-3xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></span>
+                        <span class="text-2xl sm:text-3xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></span>
                     </a>
                     <!-- <div class="hidden md:ml-10 md:flex md:space-x-8">
                         <a href="{{ route('home') }}" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors uppercase tracking-wider">Now Playing</a>
@@ -30,28 +30,28 @@
                 </div>
                 <div class="flex items-center">
                     @auth
-                        <div class="relative ml-3 group">
-                            <button class="flex items-center text-sm font-medium text-slate-700 hover:text-blue-600 focus:outline-none">
+                        <div class="relative ml-3">
+                            <button id="user-menu-btn" class="flex items-center text-sm font-medium text-slate-700 hover:text-blue-600 focus:outline-none">
                                 <span>{{ Auth::user()->name }}</span>
                                 <svg class="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                             </button>
-                            <div class="absolute right-0 pt-2 w-48 hidden group-hover:block z-50">
+                            <div id="user-menu" class="absolute right-0 mt-2 w-48 hidden z-50">
                                 <div class="bg-white rounded-md shadow-lg py-1 ring-1 ring-slate-900 ring-opacity-5 border border-slate-200">
                                     @if(Auth::user()->role === 'admin')
                                         <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Admin Panel</a>
                                     @endif
                                     <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">My Tickets</a>
                                     <div class="border-t border-slate-100 my-1"></div>
-                                    <form method="POST" action="{{ route('logout') }}">
+                                    <form method="POST" action="{{ route('logout') }}" id="logout-form">
                                         @csrf
-                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium">Sign out</button>
+                                        <button type="button" onclick="confirmLogout(event)" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium">Sign out</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" class="text-slate-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">Log in</a>
-                        <a href="{{ route('register') }}" class="ml-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Sign up</a>
+                        <a href="{{ route('login') }}" class="text-slate-600 hover:text-blue-600 px-2 sm:px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap">Log in</a>
+                        <a href="{{ route('register') }}" class="ml-2 sm:ml-4 bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap">Sign up</a>
                     @endauth
                 </div>
             </div>
@@ -119,6 +119,48 @@
             </div>
         </div>
     </footer>
+    <!-- Dropdown Script -->
+    <script>
+        document.addEventListener('click', function(event) {
+            const dropdownBtn = document.getElementById('user-menu-btn');
+            const dropdownMenu = document.getElementById('user-menu');
+            if (dropdownBtn && dropdownMenu) {
+                const isClickInside = dropdownBtn.contains(event.target) || dropdownMenu.contains(event.target);
+                if (!isClickInside) {
+                    dropdownMenu.classList.add('hidden');
+                } else if (dropdownBtn.contains(event.target)) {
+                    dropdownMenu.classList.toggle('hidden');
+                }
+            }
+        });
+    </script>
+    <!-- SweetAlert2 for Logout -->
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: '<span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>',
+                html: '<p class="text-slate-400 mt-2">Are you sure you want to log out?</p>',
+                icon: 'question',
+                iconColor: '#3b82f6',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Log Out',
+                cancelButtonText: 'Cancel',
+                background: '#0f172a',
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'border border-slate-800 rounded-2xl shadow-2xl',
+                    confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto',
+                    cancelButton: 'bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto mt-3 sm:mt-0 sm:ml-3',
+                    actions: 'w-full flex flex-col sm:flex-row justify-center mt-6'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    event.target.closest('form').submit();
+                }
+            });
+        }
+    </script>
     @stack('scripts')
 </body>
 </html>

@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="mb-6 flex justify-between items-center">
+<div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
     <h2 class="text-2xl font-bold text-slate-900">Showtimes</h2>
-    <a href="{{ route('admin.showtimes.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+    <a href="{{ route('admin.showtimes.create') }}" class="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
         + Add New Showtime
     </a>
 </div>

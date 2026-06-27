@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
+<div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
     <h2 class="text-2xl font-bold text-slate-900">Studio Types</h2>
-    <a href="{{ route('admin.studio-types.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors shadow-lg">
+    <a href="{{ route('admin.studio-types.create') }}" class="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors shadow-lg">
         + Add Studio Type
     </a>
 </div>
