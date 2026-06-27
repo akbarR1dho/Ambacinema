@@ -17,48 +17,50 @@
                 <p class="text-slate-500">{{ $showtime->studio->name }}</p>
             </div>
 
-            <!-- Screen Screen -->
-            <div class="w-3/4 mx-auto mb-16 relative">
-                <div class="h-2 w-full bg-gradient-to-r from-blue-900 via-blue-500 to-blue-900 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.5)]"></div>
-                <div class="w-full h-12 bg-gradient-to-b from-blue-500/20 to-transparent transform perspective-1000 rotateX-45 blur-sm mt-2"></div>
-                <p class="text-center text-slate-400 text-xs font-semibold tracking-[0.3em] mt-4 uppercase">Cinema Screen</p>
-            </div>
-
             <form action="{{ route('checkout.process') }}" method="POST" id="bookingForm">
                 @csrf
                 <input type="hidden" name="showtime_id" value="{{ $showtime->id }}">
                 
-                <div class="flex flex-col items-center overflow-x-auto pb-4">
-                    @php
-                        $groupedSeats = $allSeats->groupBy(function($seat) {
-                            return substr($seat->seat_number, 0, 1);
-                        });
-                    @endphp
-                    
-                    @foreach($groupedSeats as $rowLetter => $seatsInRow)
-                        <div class="flex justify-center gap-2 mb-4 w-max">
-                            @foreach($seatsInRow as $seat)
-                                @php
-                                    $isBooked = in_array($seat->id, $bookedSeatIds);
-                                    $seatNum = (int) substr($seat->seat_number, 1);
-                                    // 3 separators for a 10-seat row: after 2, 5, and 8
-                                    $hasAisle = (in_array($seatNum, [2, 5, 8]) && count($seatsInRow) > 5);
-                                @endphp
-                                <div class="relative group {{ $hasAisle ? 'mr-6 md:mr-10' : '' }}">
-                                    <input type="checkbox" name="seats[]" value="{{ $seat->id }}" id="seat-{{ $seat->id }}" class="peer hidden" {{ $isBooked ? 'disabled' : '' }}>
-                                    <label for="seat-{{ $seat->id }}" class="
-                                        flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-t-lg border-b-4 text-xs font-bold transition-all duration-200 cursor-pointer
-                                        {{ $isBooked 
-                                            ? 'bg-slate-200 border-slate-300 text-slate-400 cursor-not-allowed' 
-                                            : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 peer-checked:bg-blue-600 peer-checked:border-blue-800 peer-checked:text-white peer-checked:shadow-[0_0_15px_rgba(37,99,235,0.5)]' 
-                                        }}
-                                    ">
-                                        {{ $seat->seat_number }}
-                                    </label>
-                                </div>
-                            @endforeach
+                <div class="w-full overflow-x-auto pb-8">
+                    <div class="flex flex-col min-w-max px-4 md:px-8">
+                        <!-- Cinema Screen -->
+                        <div class="w-4/5 md:w-3/4 mx-auto mb-16 relative">
+                            <div class="h-2 w-full bg-gradient-to-r from-blue-900 via-blue-500 to-blue-900 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.5)]"></div>
+                            <div class="w-full h-12 bg-gradient-to-b from-blue-500/20 to-transparent transform perspective-1000 rotateX-45 blur-sm mt-2"></div>
+                            <p class="text-center text-slate-400 text-xs font-semibold tracking-[0.3em] mt-4 uppercase">Cinema Screen</p>
                         </div>
-                    @endforeach
+
+                        @php
+                            $groupedSeats = $allSeats->groupBy(function($seat) {
+                                return substr($seat->seat_number, 0, 1);
+                            });
+                        @endphp
+                        
+                        @foreach($groupedSeats as $rowLetter => $seatsInRow)
+                            <div class="flex justify-center gap-2 mb-4">
+                                @foreach($seatsInRow as $seat)
+                                    @php
+                                        $isBooked = in_array($seat->id, $bookedSeatIds);
+                                        $seatNum = (int) substr($seat->seat_number, 1);
+                                        // 3 separators for a 10-seat row: after 2, 5, and 8
+                                        $hasAisle = (in_array($seatNum, [2, 5, 8]) && count($seatsInRow) > 5);
+                                    @endphp
+                                    <div class="relative group {{ $hasAisle ? 'mr-6 md:mr-10' : '' }}">
+                                        <input type="checkbox" name="seats[]" value="{{ $seat->id }}" id="seat-{{ $seat->id }}" class="peer hidden" {{ $isBooked ? 'disabled' : '' }}>
+                                        <label for="seat-{{ $seat->id }}" class="
+                                            flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-t-lg border-b-4 text-xs font-bold transition-all duration-200 cursor-pointer
+                                            {{ $isBooked 
+                                                ? 'bg-slate-200 border-slate-300 text-slate-400 cursor-not-allowed' 
+                                                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 peer-checked:bg-blue-600 peer-checked:border-blue-800 peer-checked:text-white peer-checked:shadow-[0_0_15px_rgba(37,99,235,0.5)]' 
+                                            }}
+                                        ">
+                                            {{ $seat->seat_number }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
 
                 <!-- Legend -->
