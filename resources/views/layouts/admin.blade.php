@@ -237,20 +237,20 @@
                 </button>
             </div>
             <div class="flex-1 flex justify-end">
-                <div class="relative group cursor-pointer">
-                    <div class="flex items-center space-x-3">
+                <div class="relative cursor-pointer" id="profile-dropdown-wrapper">
+                    <div class="flex items-center space-x-3" id="profile-dropdown-btn">
                         <div class="text-right hidden sm:block">
                             <span class="block text-sm font-medium text-slate-700">Welcome, {{ Auth::user()->name }}</span>
                             <span class="block text-xs text-slate-500 capitalize">{{ Auth::user()->role }}</span>
                         </div>
-                        <div class="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold ring-2 ring-white shadow-sm">
+                        <div class="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold ring-2 ring-white shadow-sm hover:ring-blue-300 transition-all">
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
-                        <svg class="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <svg class="w-4 h-4 text-slate-400 hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     
                     <!-- Admin Profile Dropdown -->
-                    <div class="absolute right-0 pt-3 w-48 hidden group-hover:block z-50">
+                    <div class="absolute right-0 mt-3 w-48 hidden z-50" id="profile-dropdown-menu">
                         <div class="bg-white rounded-md shadow-lg py-1 ring-1 ring-slate-900 ring-opacity-5 border border-slate-200">
                             <a href="{{ route('home') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Go to User Site</a>
                             <div class="border-t border-slate-100 my-1"></div>
@@ -309,6 +309,22 @@
 
             toggleBtn.on('click', toggleSidebar);
             overlay.on('click', toggleSidebar);
+
+            // Profile Dropdown Logic (Mobile Friendly)
+            const profileBtn = $('#profile-dropdown-btn');
+            const profileMenu = $('#profile-dropdown-menu');
+
+            profileBtn.on('click', function(e) {
+                e.stopPropagation();
+                profileMenu.toggleClass('hidden');
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#profile-dropdown-wrapper').length) {
+                    profileMenu.addClass('hidden');
+                }
+            });
         });
     </script>
     <!-- SweetAlert2 for Logout -->
