@@ -22,8 +22,8 @@
     ],
     "env": {
         "APP_ENV": "production",
-        "APP_DEBUG": "false",
-        "CACHE_DRIVER": "database",
+        "APP_DEBUG": "true",
+        "CACHE_STORE": "database",
         "SESSION_DRIVER": "database",
         "QUEUE_CONNECTION": "database"
     }
