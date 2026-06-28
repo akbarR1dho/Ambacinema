@@ -4,15 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Order;
+use App\Repositories\Interfaces\OrderRepositoryInterface;
 use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
 {
+    protected $orderRepo;
+
+    public function __construct(OrderRepositoryInterface $orderRepo)
+    {
+        $this->orderRepo = $orderRepo;
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Order::with(['user', 'showtime.movie'])->select('orders.*');
+            $data = $this->orderRepo->getOrdersDatatable();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('user_name', function($row){
@@ -43,7 +50,7 @@ class OrderController extends Controller
 
     public function show(string $id)
     {
-        $order = Order::with(['user', 'showtime.movie', 'showtime.studio', 'seats'])->findOrFail($id);
+        $order = $this->orderRepo->findAdminOrderWithRelations($id);
         return view('admin.orders.show', compact('order'));
     }
 }

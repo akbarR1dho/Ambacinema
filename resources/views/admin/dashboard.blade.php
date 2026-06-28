@@ -62,4 +62,184 @@
     </div>
 </div>
 
+<div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-8">
+    <div class="mb-4 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+        <h3 class="text-lg font-bold text-slate-900">Revenue Chart</h3>
+        <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-start sm:items-end w-full lg:w-auto">
+            <div class="w-full sm:w-auto">
+                <label for="filter-date" class="block text-xs font-medium text-slate-500 mb-1">Time Range</label>
+                <select id="filter-date" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:min-w-[150px]">
+                    <option value="">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="weekly">This Week</option>
+                    <option value="monthly">This Month</option>
+                    <option value="annual">This Year</option>
+                </select>
+            </div>
+            
+            <div class="w-full sm:w-auto flex-1">
+                <label for="filter-studio" class="block text-xs font-medium text-slate-500 mb-1">Studio</label>
+                <select id="filter-studio" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:min-w-[150px]">
+                    <option value="">All Studios</option>
+                    @foreach($studios as $studio)
+                        <option value="{{ $studio->id }}">{{ $studio->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="w-full sm:w-auto flex-1">
+                <label for="filter-movie" class="block text-xs font-medium text-slate-500 mb-1">Movie</label>
+                <select id="filter-movie" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:min-w-[150px]">
+                    <option value="">All Movies</option>
+                    @foreach($movies as $movie)
+                        <option value="{{ $movie->id }}">{{ $movie->title }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                <button id="btn-reset-filters" class="w-full sm:w-auto px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium rounded-lg transition-colors shadow-sm">Reset</button>
+            </div>
+        </div>
+    </div>
+    <div class="relative h-64 sm:h-80 lg:h-[400px] w-full">
+        <canvas id="revenueChart"></canvas>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        let chartInstance = null;
+
+        // Create Gradient for chart
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(37, 99, 235, 0.8)'); // blue-600
+        gradient.addColorStop(1, 'rgba(37, 99, 235, 0.1)'); // transparent blue
+
+        function loadChartData() {
+            const dateFilter = document.getElementById('filter-date').value;
+            const studioId = document.getElementById('filter-studio').value;
+            const movieId = document.getElementById('filter-movie').value;
+            
+            let url = new URL("{{ route('admin.dashboard.chartData') }}");
+            if (dateFilter) url.searchParams.append('date_filter', dateFilter);
+            if (studioId) url.searchParams.append('studio_id', studioId);
+            if (movieId) url.searchParams.append('movie_id', movieId);
+
+            fetch(url, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                chartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Income',
+                            data: data.data,
+                            backgroundColor: gradient,
+                            borderColor: 'rgb(37, 99, 235)', // blue-600
+                            borderWidth: 2,
+                            borderRadius: 6,
+                            borderSkipped: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    color: '#64748b',
+                                    font: { family: "'Inter', sans-serif" }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                border: { dash: [4, 4], display: false },
+                                grid: {
+                                    color: '#e2e8f0',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    color: '#64748b',
+                                    font: { family: "'Inter', sans-serif" },
+                                    callback: function(value, index, values) {
+                                        return 'Rp ' + (value / 1000) + 'k';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                padding: 12,
+                                cornerRadius: 8,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching chart data:', error));
+        }
+
+        // Initial load
+        loadChartData();
+
+        const filterIds = ['filter-date', 'filter-studio', 'filter-movie'];
+
+        // Auto-update helper
+        function onFilterChange(e) {
+            loadChartData();
+        }
+
+        filterIds.forEach(id => {
+            document.getElementById(id).addEventListener('change', onFilterChange);
+        });
+
+        // Reset button
+        document.getElementById('btn-reset-filters').addEventListener('click', function() {
+            filterIds.forEach(id => document.getElementById(id).value = '');
+            loadChartData();
+        });
+    });
+</script>
+@endpush

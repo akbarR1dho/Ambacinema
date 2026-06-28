@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('showtime_id')->constrained()->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('showtime_id')->constrained()->cascadeOnDelete();
             $table->integer('total_price');
             $table->enum('status', ['pending', 'confirmed'])->default('pending');
             $table->text('qr_code')->nullable();

@@ -3,17 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreMovieRequest;
+use App\Http\Requests\Admin\UpdateMovieRequest;
 use Illuminate\Http\Request;
-use App\Models\Movie;
+use App\Repositories\Interfaces\MovieRepositoryInterface;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
+    protected $movieRepo;
+
+    public function __construct(MovieRepositoryInterface $movieRepo)
+    {
+        $this->movieRepo = $movieRepo;
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Movie::query();
+            $data = $this->movieRepo->getMoviesDatatable();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->editColumn('poster', function($row){
@@ -46,48 +55,34 @@ class MovieController extends Controller
         return view('admin.movies.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreMovieRequest $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255|unique:movies,title',
-            'description' => 'required|string',
-            'duration' => 'required|integer|min:1',
-            'poster' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
-
         $data = $request->except('poster');
         
         if ($request->hasFile('poster')) {
             $data['poster'] = $request->file('poster')->store('posters');
         }
 
-        Movie::create($data);
+        $this->movieRepo->create($data);
 
         return redirect()->route('admin.movies.index')->with('success', 'Movie created successfully.');
     }
 
     public function show(string $id)
     {
-        $movie = Movie::findOrFail($id);
+        $movie = $this->movieRepo->find($id);
         return view('admin.movies.show', compact('movie'));
     }
 
     public function edit(string $id)
     {
-        $movie = Movie::findOrFail($id);
+        $movie = $this->movieRepo->find($id);
         return view('admin.movies.edit', compact('movie'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateMovieRequest $request, string $id)
     {
-        $movie = Movie::findOrFail($id);
-
-        $request->validate([
-            'title' => 'required|string|max:255|unique:movies,title,' . $id,
-            'description' => 'required|string',
-            'duration' => 'required|integer|min:1',
-            'poster' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-        ]);
+        $movie = $this->movieRepo->find($id);
 
         $data = $request->only('title', 'description', 'duration');
 
@@ -101,18 +96,18 @@ class MovieController extends Controller
             $data['poster'] = $path;
         }
 
-        $movie->update($data);
+        $this->movieRepo->update($id, $data);
 
         return redirect()->route('admin.movies.index')->with('success', 'Movie updated successfully.');
     }
 
     public function destroy(string $id)
     {
-        $movie = Movie::findOrFail($id);
+        $movie = $this->movieRepo->find($id);
         if ($movie->poster && Storage::exists($movie->poster)) {
             Storage::delete($movie->poster);
         }
-        $movie->delete();
+        $this->movieRepo->delete($id);
 
         return redirect()->route('admin.movies.index')->with('success', 'Movie deleted successfully.');
     }

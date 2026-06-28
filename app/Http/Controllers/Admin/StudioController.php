@@ -3,19 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreStudioRequest;
+use App\Http\Requests\Admin\UpdateStudioRequest;
 use Illuminate\Http\Request;
-use App\Models\Studio;
-use App\Models\StudioType;
-use App\Models\Seat;
+use App\Repositories\Interfaces\StudioRepositoryInterface;
+use App\Repositories\Interfaces\StudioTypeRepositoryInterface;
+use App\Repositories\Interfaces\SeatRepositoryInterface;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 
 class StudioController extends Controller
 {
+    protected $studioRepo;
+    protected $studioTypeRepo;
+    protected $seatRepo;
+
+    public function __construct(
+        StudioRepositoryInterface $studioRepo,
+        StudioTypeRepositoryInterface $studioTypeRepo,
+        SeatRepositoryInterface $seatRepo
+    ) {
+        $this->studioRepo = $studioRepo;
+        $this->studioTypeRepo = $studioTypeRepo;
+        $this->seatRepo = $seatRepo;
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Studio::with('studioType')->select('studios.*');
+            $data = $this->studioRepo->getStudiosDatatable();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('type', function($row){
@@ -58,20 +74,14 @@ class StudioController extends Controller
 
     public function create()
     {
-        $studioTypes = StudioType::all();
+        $studioTypes = $this->studioTypeRepo->all();
         return view('admin.studios.create', compact('studioTypes'));
     }
 
-    public function store(Request $request)
+    public function store(StoreStudioRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:studios,name',
-            'total_seats' => 'required|integer|min:1',
-            'studio_type_id' => 'required|exists:studio_types,id',
-        ]);
-
         DB::transaction(function () use ($request) {
-            $studio = Studio::create($request->only('name', 'total_seats', 'studio_type_id'));
+            $studio = $this->studioRepo->create($request->only('name', 'total_seats', 'studio_type_id'));
             
             // Auto generate seats
             $seats = [];
@@ -80,13 +90,14 @@ class StudioController extends Controller
                 $row = chr(65 + floor(($i - 1) / 10)); // A, B, C...
                 $col = (($i - 1) % 10) + 1;
                 $seats[] = [
+                    'id' => (string) \Symfony\Component\Uid\Uuid::v7(),
                     'studio_id' => $studio->id,
                     'seat_number' => $row . str_pad($col, 2, '0', STR_PAD_LEFT),
                     'created_at' => now(),
                     'updated_at' => now()
                 ];
             }
-            Seat::insert($seats);
+            $this->seatRepo->insertSeats($seats);
         });
 
         return redirect()->route('admin.studios.index')->with('success', 'Studio created successfully.');
@@ -94,34 +105,27 @@ class StudioController extends Controller
 
     public function show(string $id)
     {
-        $studio = Studio::findOrFail($id);
+        $studio = $this->studioRepo->find($id);
         return view('admin.studios.show', compact('studio'));
     }
 
     public function edit(string $id)
     {
-        $studio = Studio::findOrFail($id);
-        $studioTypes = StudioType::all();
+        $studio = $this->studioRepo->find($id);
+        $studioTypes = $this->studioTypeRepo->all();
         return view('admin.studios.edit', compact('studio', 'studioTypes'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateStudioRequest $request, string $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:studios,name,' . $id,
-            'studio_type_id' => 'required|exists:studio_types,id',
-        ]);
-
-        $studio = Studio::findOrFail($id);
-        $studio->update($request->only('name', 'studio_type_id'));
+        $this->studioRepo->update($id, $request->only('name', 'studio_type_id'));
 
         return redirect()->route('admin.studios.index')->with('success', 'Studio updated successfully. Note: Seat count cannot be modified.');
     }
 
     public function destroy(string $id)
     {
-        $studio = Studio::findOrFail($id);
-        $studio->delete();
+        $this->studioRepo->delete($id);
 
         return redirect()->route('admin.studios.index')->with('success', 'Studio deleted successfully.');
     }
@@ -137,6 +141,7 @@ class StudioController extends Controller
             for ($num = 1; $num <= 10; $num++) {
                 if ($seatCount >= $total) break 2;
                 $seatsToInsert[] = [
+                    'id' => (string) \Symfony\Component\Uid\Uuid::v7(),
                     'studio_id' => $studio->id,
                     'seat_number' => $row . $num,
                     'created_at' => now(),
@@ -146,6 +151,6 @@ class StudioController extends Controller
             }
         }
         
-        Seat::insert($seatsToInsert);
+        $this->seatRepo->insertSeats($seatsToInsert);
     }
 }

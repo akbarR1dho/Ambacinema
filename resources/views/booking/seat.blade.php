@@ -98,9 +98,9 @@
                 </div>
 
                 <div class="border-t border-slate-200 pt-4 mb-6">
-                    <div class="flex justify-between text-sm mb-2">
-                        <span class="text-slate-500">Selected Seats (<span id="seatCount">0</span>)</span>
-                        <span class="text-slate-900 font-medium" id="selectedSeatsList">-</span>
+                    <div class="flex justify-between items-start gap-4 text-sm mb-2">
+                        <span class="text-slate-500 shrink-0">Selected Seats (<span id="seatCount">0</span>)</span>
+                        <span class="text-slate-900 font-medium text-right leading-relaxed" id="selectedSeatsList">-</span>
                     </div>
                     <div class="flex justify-between text-sm mb-4">
                         <span class="text-slate-500">Price per Seat</span>

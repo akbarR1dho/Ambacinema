@@ -20,7 +20,7 @@
             <div class="absolute -top-4 -right-4 w-8 h-8 bg-slate-50 rounded-full hidden md:block shadow-inner border border-slate-300"></div>
             <div class="absolute -bottom-4 -right-4 w-8 h-8 bg-slate-50 rounded-full hidden md:block shadow-inner border border-slate-300"></div>
             
-            <div class="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
+            <div class="flex flex-col-reverse sm:flex-row justify-between items-start mb-6 gap-4">
                 <div>
                     <h1 class="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tight leading-tight">{{ $order->showtime->movie->title }}</h1>
                     <span class="inline-block mt-2 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full border border-blue-200 uppercase">Confirmed</span>

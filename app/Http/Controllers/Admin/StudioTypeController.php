@@ -3,16 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreStudioTypeRequest;
+use App\Http\Requests\Admin\UpdateStudioTypeRequest;
 use Illuminate\Http\Request;
-use App\Models\StudioType;
+use App\Repositories\Interfaces\StudioTypeRepositoryInterface;
 use Yajra\DataTables\Facades\DataTables;
 
 class StudioTypeController extends Controller
 {
+    protected $studioTypeRepo;
+
+    public function __construct(StudioTypeRepositoryInterface $studioTypeRepo)
+    {
+        $this->studioTypeRepo = $studioTypeRepo;
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = StudioType::select('*');
+            $data = $this->studioTypeRepo->getStudioTypesDatatable();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('price', function($row){
@@ -57,39 +66,22 @@ class StudioTypeController extends Controller
         return view('admin.studio_types.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreStudioTypeRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:studio_types,name',
-            'price_weekday' => 'required|integer|min:0',
-            'price_friday' => 'required|integer|min:0',
-            'price_weekend' => 'required|integer|min:0',
-            'description' => 'nullable|string',
-        ]);
-
-        StudioType::create($request->all());
+        $this->studioTypeRepo->create($request->all());
 
         return redirect()->route('admin.studio-types.index')->with('success', 'Studio Type created successfully.');
     }
 
     public function edit(string $id)
     {
-        $studioType = StudioType::findOrFail($id);
+        $studioType = $this->studioTypeRepo->find($id);
         return view('admin.studio_types.edit', compact('studioType'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateStudioTypeRequest $request, string $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:studio_types,name,' . $id,
-            'price_weekday' => 'required|integer|min:0',
-            'price_friday' => 'required|integer|min:0',
-            'price_weekend' => 'required|integer|min:0',
-            'description' => 'nullable|string',
-        ]);
-
-        $studioType = StudioType::findOrFail($id);
-        $studioType->update($request->all());
+        $this->studioTypeRepo->update($id, $request->all());
 
         return redirect()->route('admin.studio-types.index')->with('success', 'Studio Type updated successfully.');
     }
@@ -100,14 +92,14 @@ class StudioTypeController extends Controller
             return redirect()->route('admin.studio-types.index')->with('error', 'Cannot delete the default Regular studio type.');
         }
         
-        $studioType = StudioType::findOrFail($id);
+        $studioType = $this->studioTypeRepo->find($id);
         
         // Re-assign existing studios to Regular (ID 1)
         foreach ($studioType->studios as $studio) {
             $studio->update(['studio_type_id' => 1]);
         }
         
-        $studioType->delete();
+        $this->studioTypeRepo->delete($id);
 
         return redirect()->route('admin.studio-types.index')->with('success', 'Studio Type deleted successfully.');
     }

@@ -3,19 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreShowtimeRequest;
+use App\Http\Requests\Admin\UpdateShowtimeRequest;
 use Illuminate\Http\Request;
-use App\Models\Showtime;
-use App\Models\Movie;
-use App\Models\Studio;
+use App\Repositories\Interfaces\ShowtimeRepositoryInterface;
+use App\Repositories\Interfaces\MovieRepositoryInterface;
+use App\Repositories\Interfaces\StudioRepositoryInterface;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 
 class ShowtimeController extends Controller
 {
+    protected $showtimeRepo;
+    protected $movieRepo;
+    protected $studioRepo;
+
+    public function __construct(
+        ShowtimeRepositoryInterface $showtimeRepo,
+        MovieRepositoryInterface $movieRepo,
+        StudioRepositoryInterface $studioRepo
+    ) {
+        $this->showtimeRepo = $showtimeRepo;
+        $this->movieRepo = $movieRepo;
+        $this->studioRepo = $studioRepo;
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Showtime::with(['movie', 'studio'])->select('showtimes.*');
+            $data = $this->showtimeRepo->getShowtimesDatatable();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('movie_title', function($row){
@@ -51,19 +67,13 @@ class ShowtimeController extends Controller
 
     public function create()
     {
-        $movies = Movie::all();
-        $studios = Studio::all();
+        $movies = $this->movieRepo->all();
+        $studios = $this->studioRepo->all();
         return view('admin.showtimes.create', compact('movies', 'studios'));
     }
 
-    public function store(Request $request)
+    public function store(StoreShowtimeRequest $request)
     {
-        $request->validate([
-            'movie_id' => 'required|exists:movies,id',
-            'studio_id' => 'required|exists:studios,id',
-            'start_time' => 'required|date_format:Y-m-d\TH:i',
-        ]);
-
         $startTime = Carbon::parse($request->start_time);
         
         // Validation: must be at least the start of the next hour
@@ -72,25 +82,17 @@ class ShowtimeController extends Controller
             return back()->withErrors(['start_time' => 'Showtime must be scheduled for ' . $minTime->format('d M Y, H:i') . ' onwards.'])->withInput();
         }
 
-        $movie = Movie::findOrFail($request->movie_id);
+        $movie = $this->movieRepo->find($request->movie_id);
         $endTime = $startTime->copy()->addMinutes($movie->duration);
 
         // Validation: check for overlap in the same studio
-        $overlap = Showtime::where('studio_id', $request->studio_id)
-            ->where(function ($query) use ($startTime, $endTime) {
-                $query->whereBetween('start_time', [$startTime, $endTime])
-                      ->orWhereBetween('end_time', [$startTime, $endTime])
-                      ->orWhere(function ($q) use ($startTime, $endTime) {
-                          $q->where('start_time', '<=', $startTime)
-                            ->where('end_time', '>=', $endTime);
-                      });
-            })->exists();
+        $overlap = $this->showtimeRepo->checkOverlap($request->studio_id, $startTime, $endTime);
 
         if ($overlap) {
             return back()->withErrors(['start_time' => 'The selected studio is already booked for this time period.'])->withInput();
         }
 
-        Showtime::create([
+        $this->showtimeRepo->create([
             'movie_id' => $request->movie_id,
             'studio_id' => $request->studio_id,
             'start_time' => $startTime,
@@ -102,27 +104,21 @@ class ShowtimeController extends Controller
 
     public function show(string $id)
     {
-        $showtime = Showtime::with(['movie', 'studio'])->findOrFail($id);
+        $showtime = $this->showtimeRepo->findWithRelations($id);
         return view('admin.showtimes.show', compact('showtime'));
     }
 
     public function edit(string $id)
     {
-        $showtime = Showtime::findOrFail($id);
-        $movies = Movie::all();
-        $studios = Studio::all();
+        $showtime = $this->showtimeRepo->find($id);
+        $movies = $this->movieRepo->all();
+        $studios = $this->studioRepo->all();
         return view('admin.showtimes.edit', compact('showtime', 'movies', 'studios'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateShowtimeRequest $request, string $id)
     {
-        $showtime = Showtime::findOrFail($id);
-
-        $request->validate([
-            'movie_id' => 'required|exists:movies,id',
-            'studio_id' => 'required|exists:studios,id',
-            'start_time' => 'required|date_format:Y-m-d\TH:i',
-        ]);
+        $showtime = $this->showtimeRepo->find($id);
 
         $startTime = Carbon::parse($request->start_time);
         
@@ -134,26 +130,17 @@ class ShowtimeController extends Controller
             }
         }
 
-        $movie = Movie::findOrFail($request->movie_id);
+        $movie = $this->movieRepo->find($request->movie_id);
         $endTime = $startTime->copy()->addMinutes($movie->duration);
 
         // Validation: check for overlap in the same studio, excluding this specific showtime
-        $overlap = Showtime::where('studio_id', $request->studio_id)
-            ->where('id', '!=', $id)
-            ->where(function ($query) use ($startTime, $endTime) {
-                $query->whereBetween('start_time', [$startTime, $endTime])
-                      ->orWhereBetween('end_time', [$startTime, $endTime])
-                      ->orWhere(function ($q) use ($startTime, $endTime) {
-                          $q->where('start_time', '<=', $startTime)
-                            ->where('end_time', '>=', $endTime);
-                      });
-            })->exists();
+        $overlap = $this->showtimeRepo->checkOverlap($request->studio_id, $startTime, $endTime, $id);
 
         if ($overlap) {
             return back()->withErrors(['start_time' => 'The selected studio is already booked for this time period.'])->withInput();
         }
 
-        $showtime->update([
+        $this->showtimeRepo->update($id, [
             'movie_id' => $request->movie_id,
             'studio_id' => $request->studio_id,
             'start_time' => $startTime,
@@ -165,7 +152,7 @@ class ShowtimeController extends Controller
 
     public function destroy(string $id)
     {
-        Showtime::findOrFail($id)->delete();
+        $this->showtimeRepo->delete($id);
         return redirect()->route('admin.showtimes.index')->with('success', 'Showtime deleted successfully.');
     }
 }

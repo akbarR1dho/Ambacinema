@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('studio_types', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->integer('price')->default(50000);
             $table->text('description')->nullable();

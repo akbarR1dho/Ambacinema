@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\Showtime;
-use App\Models\Seat;
+use App\Http\Requests\Booking\CheckoutRequest;
+use App\Repositories\Interfaces\OrderRepositoryInterface;
+use App\Repositories\Interfaces\ShowtimeRepositoryInterface;
+use App\Repositories\Interfaces\SeatRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
@@ -13,22 +14,28 @@ use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
-    public function process(Request $request)
-    {
-        $request->validate([
-            'showtime_id' => 'required|exists:showtimes,id',
-            'seats' => 'required|array|min:1',
-            'seats.*' => 'exists:seats,id'
-        ]);
+    protected $orderRepo;
+    protected $showtimeRepo;
+    protected $seatRepo;
 
-        $showtime = Showtime::with(['movie', 'studio'])->findOrFail($request->showtime_id);
+    public function __construct(
+        OrderRepositoryInterface $orderRepo,
+        ShowtimeRepositoryInterface $showtimeRepo,
+        SeatRepositoryInterface $seatRepo
+    ) {
+        $this->orderRepo = $orderRepo;
+        $this->showtimeRepo = $showtimeRepo;
+        $this->seatRepo = $seatRepo;
+    }
+
+    public function process(CheckoutRequest $request)
+    {
+        $validated = $request->validated();
+
+        $showtime = $this->showtimeRepo->findWithRelations($request->showtime_id);
         
         // Double check if seats are already booked
-        $bookedSeats = \DB::table('order_seat')
-            ->join('orders', 'order_seat.order_id', '=', 'orders.id')
-            ->where('orders.showtime_id', $showtime->id)
-            ->whereIn('order_seat.seat_id', $request->seats)
-            ->exists();
+        $bookedSeats = $this->orderRepo->checkSeatsAvailability($showtime->id, $request->seats);
 
         if ($bookedSeats) {
             return back()->withErrors(['seats' => 'One or more selected seats have already been booked. Please try again.']);
@@ -38,18 +45,22 @@ class CheckoutController extends Controller
         $totalPrice = count($request->seats) * $pricePerSeat;
 
         // Create Order
-        $order = Order::create([
+        $order = $this->orderRepo->create([
             'user_id' => Auth::id(),
             'showtime_id' => $showtime->id,
             'total_price' => $totalPrice,
             'status' => 'confirmed', // Assuming auto confirm for simplicity
         ]);
 
-        // Attach seats
-        $order->seats()->attach($request->seats);
+        // Attach seats with UUIDs
+        $pivotData = [];
+        foreach ($request->seats as $seatId) {
+            $pivotData[$seatId] = ['id' => (string) \Symfony\Component\Uid\Uuid::v7()];
+        }
+        $this->orderRepo->attachSeats($order, $pivotData);
 
         // Fetch seat names for QR Code
-        $seatNames = Seat::whereIn('id', $request->seats)->pluck('seat_number')->implode(', ');
+        $seatNames = $this->seatRepo->getSeatNamesByIds($request->seats);
 
         // Generate QR Code data
         $qrData = json_encode([
@@ -72,7 +83,7 @@ class CheckoutController extends Controller
         $qrImage = QrCode::format('svg')->size(300)->errorCorrection('H')->generate($qrData);
         Storage::put($fileName, $qrImage);
 
-        $order->update(['qr_code' => $fileName]);
+        $this->orderRepo->update($order->id, ['qr_code' => $fileName]);
 
         return redirect()->route('orders.show', $order->id)->with('success', 'Ticket booked successfully!');
     }

@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\MovieController;
 use App\Http\Controllers\Admin\ShowtimeController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\StudioTypeController;
+use App\Http\Controllers\Admin\DashboardController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,9 +37,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/chart-data', [DashboardController::class, 'chartData'])->name('dashboard.chartData');
 
     Route::resource('studio-types', StudioTypeController::class)->except(['show']);
     Route::resource('studios', StudioController::class);

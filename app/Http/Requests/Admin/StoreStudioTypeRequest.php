@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreStudioTypeRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255', 'unique:studio_types,name'],
+            'price_weekday' => ['required', 'integer', 'min:0'],
+            'price_friday' => ['required', 'integer', 'min:0'],
+            'price_weekend' => ['required', 'integer', 'min:0'],
+            'description' => ['nullable', 'string'],
+        ];
+    }
+}
