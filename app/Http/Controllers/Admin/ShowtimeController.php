@@ -83,7 +83,8 @@ class ShowtimeController extends Controller
         }
 
         $movie = $this->movieRepo->find($request->movie_id);
-        $endTime = $startTime->copy()->addMinutes($movie->duration);
+        // Add 10 minutes overhead for ads
+        $endTime = $startTime->copy()->addMinutes($movie->duration)->addMinutes(10);
 
         // Validation: check for overlap in the same studio
         $overlap = $this->showtimeRepo->checkOverlap($request->studio_id, $startTime, $endTime);
@@ -131,7 +132,8 @@ class ShowtimeController extends Controller
         }
 
         $movie = $this->movieRepo->find($request->movie_id);
-        $endTime = $startTime->copy()->addMinutes($movie->duration);
+        // Add 10 minutes overhead for ads
+        $endTime = $startTime->copy()->addMinutes($movie->duration)->addMinutes(10);
 
         // Validation: check for overlap in the same studio, excluding this specific showtime
         $overlap = $this->showtimeRepo->checkOverlap($request->studio_id, $startTime, $endTime, $id);

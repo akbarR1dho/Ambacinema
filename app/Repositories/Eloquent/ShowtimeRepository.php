@@ -81,20 +81,35 @@ class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInt
     
     public function checkOverlap($studioId, $startTime, $endTime, $excludeId = null)
     {
+        // Define a loose time window (e.g., +/- 12 hours) to fetch relevant showtimes
+        $startWindow = (clone $startTime)->subHours(12);
+        $endWindow = (clone $endTime)->addHours(12);
+
         $query = $this->model->where('studio_id', $studioId)
-            ->where(function ($q) use ($startTime, $endTime) {
-                $q->whereBetween('start_time', [$startTime, $endTime])
-                  ->orWhereBetween('end_time', [$startTime, $endTime])
-                  ->orWhere(function ($q2) use ($startTime, $endTime) {
-                      $q2->where('start_time', '<=', $startTime)
-                        ->where('end_time', '>=', $endTime);
-                  });
-            });
+            ->where('start_time', '>=', $startWindow)
+            ->where('start_time', '<=', $endWindow);
             
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
         
-        return $query->exists();
+        $existingShowtimes = $query->get();
+        
+        // Add 10 minutes overhead to the new showtime's end time (cleaning/exiting)
+        $newStart = clone $startTime;
+        $newEnd = (clone $endTime)->addMinutes(10);
+
+        foreach ($existingShowtimes as $showtime) {
+            $existStart = Carbon::parse($showtime->start_time);
+            // Add 10 minutes overhead to the existing showtime's end time (cleaning/exiting)
+            $existEnd = Carbon::parse($showtime->end_time)->addMinutes(20);
+            
+            // Check for overlap
+            if ($newStart < $existEnd && $newEnd > $existStart) {
+                return true; // Overlap detected
+            }
+        }
+        
+        return false;
     }
 }
