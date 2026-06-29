@@ -31,7 +31,11 @@ class ShowtimeController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->showtimeRepo->getShowtimesDatatable();
+            $filters = [
+                'movie_id' => $request->get('movie_id'),
+                'studio_id' => $request->get('studio_id'),
+            ];
+            $data = $this->showtimeRepo->getShowtimesDatatable($filters);
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('movie_title', function($row){
@@ -62,7 +66,10 @@ class ShowtimeController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('admin.showtimes.index');
+        
+        $movies = $this->movieRepo->all();
+        $studios = $this->studioRepo->all();
+        return view('admin.showtimes.index', compact('movies', 'studios'));
     }
 
     public function create()

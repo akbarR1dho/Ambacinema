@@ -70,9 +70,19 @@ class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInt
         return $this->model->with(['movie', 'studio'])->findOrFail($id);
     }
     
-    public function getShowtimesDatatable()
+    public function getShowtimesDatatable($filters = [])
     {
-        return $this->model->with(['movie', 'studio'])->select('showtimes.*');
+        $query = $this->model->with(['movie', 'studio'])->select('showtimes.*');
+        
+        if (!empty($filters['movie_id'])) {
+            $query->where('movie_id', $filters['movie_id']);
+        }
+        
+        if (!empty($filters['studio_id'])) {
+            $query->where('studio_id', $filters['studio_id']);
+        }
+        
+        return $query;
     }
     
     public function checkOverlap($studioId, $startTime, $endTime, $excludeId = null)
