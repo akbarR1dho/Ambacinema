@@ -23,8 +23,8 @@
     <div class="absolute inset-0 bg-gradient-to-r from-blue-950 via-blue-900/80 to-transparent z-10"></div>
     <div class="h-[400px] w-full object-cover opacity-40 bg-[url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center"></div>
     <div class="absolute inset-0 z-20 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight">EXPERIENCE <br><span class="text-blue-400">CINEMA</span> LIKE NEVER BEFORE</h1>
-        <p class="text-blue-100 text-lg md:text-xl max-w-2xl mb-8">Book your tickets now for the latest blockbuster movies playing in Ambacinema theaters.</p>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight">{{ __('EXPERIENCE') }} <br><span class="text-blue-400">{{ __('CINEMA') }}</span> {{ __('LIKE NEVER BEFORE') }}</h1>
+        <p class="text-blue-100 text-lg md:text-xl max-w-2xl mb-8">{{ __('Book your tickets now for the latest blockbuster movies playing in Ambacinema theaters.') }}</p>
         <!-- <div>
             <a href="#now-playing" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-colors inline-block uppercase tracking-wider text-sm shadow-lg shadow-blue-900/30">Now Playing</a>
         </div> -->
@@ -33,7 +33,7 @@
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 group/carousel" id="now-playing">
     <div class="flex items-center justify-between mb-8 border-b border-slate-200 pb-4">
-        <h2 class="text-2xl font-bold text-slate-900 uppercase tracking-wider border-l-4 border-blue-600 pl-3">Now Playing</h2>
+        <h2 class="text-2xl font-bold text-slate-900 uppercase tracking-wider border-l-4 border-blue-600 pl-3">{{ __('Now Playing') }}</h2>
     </div>
 
     @if($movies->count() > 0)
@@ -57,13 +57,13 @@
                                         <h3 class="text-lg font-bold text-white truncate drop-shadow-md">{{ $movie->title }}</h3>
                                         <p class="text-sm text-slate-200 mt-1 flex items-center">
                                             <svg class="w-4 h-4 mr-1 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                            {{ $movie->duration }} mins
+                                            {{ $movie->duration }} {{ __('mins') }}
                                         </p>
                                     </div>
                                     
                                     <!-- Hover Overlay -->
                                     <div class="absolute inset-0 bg-slate-900/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                        <span class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-full transform -translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg shadow-blue-900/50 uppercase text-sm tracking-wider">Buy Ticket</span>
+                                        <span class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-full transform -translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg shadow-blue-900/50 uppercase text-sm tracking-wider">{{ __('Buy Ticket') }}</span>
                                     </div>
                                 </a>
                             </div>
@@ -78,8 +78,8 @@
     @else
         <div class="text-center py-20 bg-white rounded-xl border border-slate-200">
             <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg>
-            <h3 class="text-xl font-medium text-slate-600">No movies playing right now</h3>
-            <p class="text-slate-500 mt-2">Check back later for exciting new releases!</p>
+            <h3 class="text-xl font-medium text-slate-600">{{ __('No movies playing right now') }}</h3>
+            <p class="text-slate-500 mt-2">{{ __('Check back later for exciting new releases!') }}</p>
         </div>
     @endif
 </div>

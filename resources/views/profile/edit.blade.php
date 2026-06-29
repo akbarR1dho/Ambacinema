@@ -1,17 +1,21 @@
 @extends(Auth::user()->role === 'admin' ? 'layouts.admin' : 'layouts.app')
 
+@section('title', 'Edit Profile - Ambacinema')
+@section('meta_description', 'Update your Ambacinema profile information, email address, and account password.')
+@section('meta_keywords', 'profile settings, account, edit profile, update password, ambacinema user')
+
 @section('content')
 <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
     <div class="mb-8">
-        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">My Profile</h2>
-        <p class="mt-2 text-sm text-slate-500">Update your account's profile information and password.</p>
+        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ __('My Profile') }}</h2>
+        <p class="mt-2 text-sm text-slate-500">{{ __("Update your account's profile information and password.") }}</p>
     </div>
 
     <!-- Update Profile Information -->
     <div class="bg-white shadow-sm border border-slate-200 rounded-2xl overflow-hidden mb-8">
         <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/50">
-            <h3 class="text-lg font-bold text-slate-800">Profile Information</h3>
-            <p class="text-sm text-slate-500 mt-1">Update your account's profile name and email address.</p>
+            <h3 class="text-lg font-bold text-slate-800">{{ __('Profile Information') }}</h3>
+            <p class="text-sm text-slate-500 mt-1">{{ __("Update your account's profile name and email address.") }}</p>
         </div>
         
         <form method="POST" action="{{ route('profile.update') }}" class="p-6">
@@ -21,7 +25,7 @@
             <div class="grid grid-cols-1 gap-y-6">
                 <!-- Name -->
                 <div>
-                    <label for="name" class="block text-sm font-medium text-slate-700">Name</label>
+                    <label for="name" class="block text-sm font-medium text-slate-700">{{ __('Name') }}</label>
                     <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required class="mt-2 block w-full md:w-2/3 rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm transition-colors py-2 px-3 border">
                     @error('name')
                         <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
@@ -30,7 +34,7 @@
 
                 <!-- Email -->
                 <div>
-                    <label for="email" class="block text-sm font-medium text-slate-700">Email Address</label>
+                    <label for="email" class="block text-sm font-medium text-slate-700">{{ __('Email Address') }}</label>
                     <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required class="mt-2 block w-full md:w-2/3 rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm transition-colors py-2 px-3 border">
                     @error('email')
                         <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
@@ -39,7 +43,7 @@
                 
                 <div class="pt-4 flex items-center gap-4">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-lg transition-colors shadow-sm shadow-blue-600/30">
-                        Save Changes
+                        {{ __('Save Changes') }}
                     </button>
                 </div>
             </div>
@@ -49,8 +53,8 @@
     <!-- Update Password -->
     <div class="bg-white shadow-sm border border-slate-200 rounded-2xl overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100 bg-slate-50/50">
-            <h3 class="text-lg font-bold text-slate-800">Update Password</h3>
-            <p class="text-sm text-slate-500 mt-1">Ensure your account is using a long, random password to stay secure.</p>
+            <h3 class="text-lg font-bold text-slate-800">{{ __('Update Password') }}</h3>
+            <p class="text-sm text-slate-500 mt-1">{{ __('Ensure your account is using a long, random password to stay secure.') }}</p>
         </div>
         
         <form method="POST" action="{{ route('profile.password.update') }}" class="p-6">
@@ -60,7 +64,7 @@
             <div class="grid grid-cols-1 gap-y-6">
                 <!-- Current Password -->
                 <div>
-                    <label for="current_password" class="block text-sm font-medium text-slate-700">Current Password</label>
+                    <label for="current_password" class="block text-sm font-medium text-slate-700">{{ __('Current Password') }}</label>
                     <div class="relative mt-2 w-full md:w-2/3">
                         <input type="password" name="current_password" id="current_password" required class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm transition-colors py-2 px-3 pr-10 border" autocomplete="current-password">
                         <button type="button" onclick="togglePassword('current_password', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-blue-600 focus:outline-none">
@@ -77,7 +81,7 @@
 
                 <!-- New Password -->
                 <div>
-                    <label for="password" class="block text-sm font-medium text-slate-700">New Password</label>
+                    <label for="password" class="block text-sm font-medium text-slate-700">{{ __('New Password') }}</label>
                     <div class="relative mt-2 w-full md:w-2/3">
                         <input type="password" name="password" id="password" required class="block w-full rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm transition-colors py-2 px-3 pr-10 border" autocomplete="new-password">
                         <button type="button" onclick="togglePassword('password', this)" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-blue-600 focus:outline-none">
@@ -94,13 +98,13 @@
 
                 <!-- Confirm Password -->
                 <div>
-                    <label for="password_confirmation" class="block text-sm font-medium text-slate-700">Confirm Password</label>
+                    <label for="password_confirmation" class="block text-sm font-medium text-slate-700">{{ __('Confirm Password') }}</label>
                     <input type="password" name="password_confirmation" id="password_confirmation" required class="mt-2 block w-full md:w-2/3 rounded-lg border-slate-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm transition-colors py-2 px-3 border" autocomplete="new-password">
                 </div>
                 
                 <div class="pt-4 flex items-center gap-4">
                     <button type="submit" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-6 rounded-lg transition-colors shadow-sm">
-                        Update Password
+                        {{ __('Update Password') }}
                     </button>
                 </div>
             </div>

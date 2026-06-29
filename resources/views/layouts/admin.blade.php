@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Ambacinema</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- DataTables CSS via CDN -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -187,41 +188,42 @@
 
     <!-- Sidebar -->
     <aside id="admin-sidebar" class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col fixed inset-y-0 left-0 z-50 transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 ease-in-out shadow-xl">
-        <div class="h-16 flex items-center justify-center border-b border-slate-800">
+        <div class="h-16 flex items-center justify-start px-6 border-b border-slate-800">
             <a href="{{ route('admin.dashboard') }}" class="flex-shrink-0 flex items-center">
-                <span class="text-2xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>
-                <span class="ml-2 px-1.5 py-0.5 bg-blue-900/40 text-blue-400 text-[10px] font-bold uppercase rounded border border-blue-800/50">Admin</span>
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-6 mr-2">
+                <span class="text-base font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>
+                <span class="ml-1.5 px-1.5 py-0.5 bg-blue-900/40 text-blue-400 text-[9px] font-bold uppercase rounded border border-blue-800/50">Admin</span>
             </a>
         </div>
         <nav class="flex-1 overflow-y-auto py-4 space-y-1">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-3 text-sm font-medium transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600/10 text-blue-400 border-r-4 border-blue-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white border-r-4 border-transparent' }}">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                Dashboard
+                {{ __('Dashboard') }}
             </a>
             
             <a href="{{ route('admin.studios.index') }}" class="flex items-center px-6 py-3 text-sm font-medium transition-colors {{ request()->routeIs('admin.studios.*') ? 'bg-blue-600/10 text-blue-400 border-r-4 border-blue-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white border-r-4 border-transparent' }}">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                Studios
+                {{ __('Studios') }}
             </a>
             
             <a href="{{ route('admin.studio-types.index') }}" class="flex items-center px-6 py-3 text-sm font-medium transition-colors {{ request()->routeIs('admin.studio-types.*') ? 'bg-blue-600/10 text-blue-400 border-r-4 border-blue-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white border-r-4 border-transparent' }}">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
-                Studio Types
+                {{ __('Studio Types') }}
             </a>
             
             <a href="{{ route('admin.movies.index') }}" class="flex items-center px-6 py-3 text-sm font-medium transition-colors {{ request()->routeIs('admin.movies.*') ? 'bg-blue-600/10 text-blue-400 border-r-4 border-blue-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white border-r-4 border-transparent' }}">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg>
-                Movies
+                {{ __('Movies') }}
             </a>
             
             <a href="{{ route('admin.showtimes.index') }}" class="flex items-center px-6 py-3 text-sm font-medium transition-colors {{ request()->routeIs('admin.showtimes.*') ? 'bg-blue-600/10 text-blue-400 border-r-4 border-blue-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white border-r-4 border-transparent' }}">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                Showtimes
+                {{ __('Showtimes') }}
             </a>
             
             <a href="{{ route('admin.orders.index') }}" class="flex items-center px-6 py-3 text-sm font-medium transition-colors {{ request()->routeIs('admin.orders.*') ? 'bg-blue-600/10 text-blue-400 border-r-4 border-blue-500' : 'text-slate-400 hover:bg-slate-800 hover:text-white border-r-4 border-transparent' }}">
                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                Orders
+                {{ __('Orders') }}
             </a>
         </nav>
     </aside>
@@ -237,28 +239,51 @@
                 </button>
             </div>
             <div class="flex-1 flex justify-end">
-                <div class="relative cursor-pointer" id="profile-dropdown-wrapper">
-                    <div class="flex items-center space-x-3" id="profile-dropdown-btn">
-                        <div class="text-right hidden sm:block">
-                            <span class="block text-sm font-medium text-slate-700">Welcome, {{ Auth::user()->name }}</span>
-                            <span class="block text-xs text-slate-500 capitalize">{{ Auth::user()->role }}</span>
+                <!-- Language Switcher Admin -->
+                <div class="relative mr-4 self-center" id="lang-dropdown-wrapper">
+                     <button id="lang-menu-btn" class="flex items-center text-sm font-medium text-slate-700 hover:text-blue-600 focus:outline-none bg-slate-100 px-2 py-1 rounded-md border border-slate-200">
+                        @if(App::getLocale() === 'id')
+                            <svg class="w-4 h-4 mr-1.5 rounded-sm object-cover border border-slate-200" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg"><path fill="#e00000" d="M0 0h640v240H0z"/><path fill="#fff" d="M0 240h640v240H0z"/></svg>
+                        @else
+                            <svg class="w-4 h-4 mr-1.5 rounded-sm object-cover border border-slate-200" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg"><path fill="#012169" d="M0 0h640v480H0z"/><path fill="#FFF" d="m75 0 244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0z"/><path fill="#C8102E" d="m424 281 216 159v40L369 281zm-184 20 6 35L22 480H0zM640 0v3L391 191l2-44L590 0zM0 0l239 176h-60L0 42z"/><path fill="#FFF" d="M241 0v480h160V0zM0 160v160h640V160z"/><path fill="#C8102E" d="M0 193v96h640v-96zM273 0v480h96V0z"/></svg>
+                        @endif
+                        <span class="uppercase font-bold">{{ App::getLocale() }}</span>
+                        <svg class="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </button>
+                   <div id="lang-menu" class="absolute right-0 mt-2 w-28 hidden z-50">
+                        <div class="bg-white rounded-md shadow-lg py-1 ring-1 ring-slate-900 ring-opacity-5 border border-slate-200">
+                            <a href="{{ route('lang.switch', 'id') }}" class="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors {{ App::getLocale() === 'id' ? 'font-bold text-blue-600' : '' }}">
+                                <svg class="w-4 h-4 mr-2 rounded-sm object-cover border border-slate-200" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg"><path fill="#e00000" d="M0 0h640v240H0z"/><path fill="#fff" d="M0 240h640v240H0z"/></svg> ID
+                            </a>
+                            <a href="{{ route('lang.switch', 'en') }}" class="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors {{ App::getLocale() === 'en' ? 'font-bold text-blue-600' : '' }}">
+                                <svg class="w-4 h-4 mr-2 rounded-sm object-cover border border-slate-200" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg"><path fill="#012169" d="M0 0h640v480H0z"/><path fill="#FFF" d="m75 0 244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-178L0 64V0z"/><path fill="#C8102E" d="m424 281 216 159v40L369 281zm-184 20 6 35L22 480H0zM640 0v3L391 191l2-44L590 0zM0 0l239 176h-60L0 42z"/><path fill="#FFF" d="M241 0v480h160V0zM0 160v160h640V160z"/><path fill="#C8102E" d="M0 193v96h640v-96zM273 0v480h96V0z"/></svg> EN
+                            </a>
                         </div>
+                    </div>
+                </div>
+
+                <div class="relative cursor-pointer self-center" id="profile-dropdown-wrapper">
+                    <div class="flex items-center space-x-3" id="profile-dropdown-btn">
+                        <!-- <div class="text-right hidden sm:block">
+                            <span class="block text-sm font-medium text-slate-700">{{ __('Welcome') }}, {{ Auth::user()->name }}</span>
+                            <span class="block text-xs text-slate-500 capitalize">{{ Auth::user()->role }}</span>
+                        </div> -->
                         <div class="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold ring-2 ring-white shadow-sm hover:ring-blue-300 transition-all">
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
-                        <svg class="w-4 h-4 text-slate-400 hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        <!-- <svg class="w-4 h-4 text-slate-400 hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg> -->
                     </div>
                     
                     <!-- Admin Profile Dropdown -->
                     <div class="absolute right-0 mt-3 w-48 hidden z-50" id="profile-dropdown-menu">
                         <div class="bg-white rounded-md shadow-lg py-1 ring-1 ring-slate-900 ring-opacity-5 border border-slate-200">
-                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors font-medium">My Profile</a>
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors font-medium">{{ __('My Profile') }}</a>
                             <div class="border-t border-slate-100 my-1"></div>
-                            <a href="{{ route('home') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Go to User Site</a>
+                            <a href="{{ route('home') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">{{ __('Go to User Site') }}</a>
                             <div class="border-t border-slate-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" id="logout-form">
                                 @csrf
-                                <button type="button" onclick="confirmLogout(event)" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors">Sign out</button>
+                                <button type="button" onclick="confirmLogout(event)" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors">{{ __('Sign out') }}</button>
                             </form>
                         </div>
                     </div>
@@ -326,6 +351,15 @@
                 if (!$(e.target).closest('#profile-dropdown-wrapper').length) {
                     profileMenu.addClass('hidden');
                 }
+                if (!$(e.target).closest('#lang-dropdown-wrapper').length) {
+                    $('#lang-menu').addClass('hidden');
+                }
+            });
+
+            // Lang menu toggle
+            $('#lang-menu-btn').on('click', function(e) {
+                e.stopPropagation();
+                $('#lang-menu').toggleClass('hidden');
             });
         });
     </script>
@@ -334,13 +368,13 @@
         function confirmLogout(event) {
             event.preventDefault();
             Swal.fire({
-                title: '<span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>',
-                html: '<p class="text-slate-400 mt-2">Are you sure you want to log out of the Admin Panel?</p>',
+                title: '<div class="flex items-center justify-center"><img src="{{ asset("images/logo.png") }}" alt="Logo" class="h-10 mr-4"><span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span></div>',
+                html: '<p class="text-slate-400 mt-2">{{ __("Are you sure you want to log out of the Admin Panel?") }}</p>',
                 icon: 'question',
                 iconColor: '#3b82f6',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, Log Out',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: '{{ __("Yes, Log Out") }}',
+                cancelButtonText: '{{ __("Cancel") }}',
                 background: '#0f172a',
                 buttonsStyling: false,
                 customClass: {
@@ -355,16 +389,16 @@
                 }
             });
         }
-        function confirmDelete(event, message = 'Are you sure you want to delete this item?') {
+        function confirmDelete(event, message = '{{ __("Are you sure you want to delete this item?") }}') {
             event.preventDefault();
             Swal.fire({
-                title: '<span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>',
-                html: `<p class="text-slate-400 mt-2">${message}<br><span class="text-red-400 text-xs mt-1 block">This action cannot be undone.</span></p>`,
+                title: '<div class="flex items-center justify-center"><img src="{{ asset("images/logo.png") }}" alt="Logo" class="h-10 mr-4"><span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span></div>',
+                html: `<p class="text-slate-400 mt-2">${message}<br><span class="text-red-400 text-xs mt-1 block">{{ __("This action cannot be undone.") }}</span></p>`,
                 icon: 'warning',
                 iconColor: '#ef4444',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, Delete',
-                cancelButtonText: 'Cancel',
+                confirmButtonText: '{{ __("Yes, Delete") }}',
+                cancelButtonText: '{{ __("Cancel") }}',
                 background: '#0f172a',
                 buttonsStyling: false,
                 customClass: {

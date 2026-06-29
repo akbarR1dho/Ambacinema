@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
-    <h2 class="text-2xl font-bold text-slate-900">Studio Types</h2>
-    <a href="{{ route('admin.studio-types.create') }}" class="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors shadow-lg">
-        + Add Studio Type
+    <h2 class="text-2xl font-bold text-slate-900">{{ __('Studio Types') }}</h2>
+    <a href="{{ route('admin.studio-types.create') }}" class="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+        + {{ __('Add Studio Type') }}
     </a>
 </div>
 
@@ -12,11 +12,11 @@
     <table class="data-table w-full">
         <thead>
             <tr>
-                <th>No</th>
-                <th>Name</th>
-                <th class="min-tablet">Price Range</th>
-                <th class="min-desktop">Description</th>
-                <th class="min-tablet">Action</th>
+                <th>{{ __('No') }}</th>
+                <th>{{ __('Name') }}</th>
+                <th class="min-tablet">{{ __('Price Range') }}</th>
+                <th class="min-desktop">{{ __('Description') }}</th>
+                <th class="min-tablet">{{ __('Action') }}</th>
             </tr>
         </thead>
         <tbody>

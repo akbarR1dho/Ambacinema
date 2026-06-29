@@ -20,6 +20,23 @@ class OrderController extends Controller
     {
         if ($request->ajax()) {
             $data = $this->orderRepo->getOrdersDatatable();
+            
+            if ($request->filled('studio_id')) {
+                $data->whereHas('showtime', function($q) use ($request) {
+                    $q->where('studio_id', $request->studio_id);
+                });
+            }
+
+            if ($request->filled('movie_id')) {
+                $data->whereHas('showtime', function($q) use ($request) {
+                    $q->where('movie_id', $request->movie_id);
+                });
+            }
+
+            if ($request->filled('status')) {
+                $data->where('status', $request->status);
+            }
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('user_name', function($row){
@@ -27,6 +44,9 @@ class OrderController extends Controller
                 })
                 ->addColumn('movie_title', function($row){
                     return $row->showtime->movie->title;
+                })
+                ->addColumn('studio_name', function($row){
+                    return $row->showtime->studio->name;
                 })
                 ->editColumn('total_price', function($row){
                     return 'Rp ' . number_format($row->total_price, 0, ',', '.');

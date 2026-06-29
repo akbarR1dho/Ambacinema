@@ -13,7 +13,7 @@ class Movie extends Model
     {
         return (string) \Symfony\Component\Uid\Uuid::v7();
     }
-    protected $fillable = ['title', 'description', 'poster', 'duration'];
+    protected $fillable = ['title', 'description', 'poster', 'duration', 'age_rating'];
 
     public function showtimes()
     {

@@ -3,8 +3,8 @@
 @section('content')
 <div class="mb-6 flex justify-between items-center">
     <div>
-        <h2 class="text-2xl font-bold text-slate-900">Dashboard Overview</h2>
-        <p class="text-sm text-slate-500">Welcome to the Ambacinema administration panel.</p>
+        <h2 class="text-2xl font-bold text-slate-900">{{ __('Dashboard Overview') }}</h2>
+        <p class="text-sm text-slate-500">{{ __('Welcome to the Ambacinema administration panel.') }}</p>
     </div>
 </div>
 
@@ -13,7 +13,7 @@
     <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-slate-500">Total Studios</p>
+                <p class="text-sm font-medium text-slate-500">{{ __('Total Studios') }}</p>
                 <p class="text-3xl font-bold text-slate-900 mt-1">{{ \App\Models\Studio::count() }}</p>
             </div>
             <div class="p-3 bg-blue-100 rounded-lg text-blue-600">
@@ -26,7 +26,7 @@
     <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-slate-500">Total Movies</p>
+                <p class="text-sm font-medium text-slate-500">{{ __('Total Movies') }}</p>
                 <p class="text-3xl font-bold text-slate-900 mt-1">{{ \App\Models\Movie::count() }}</p>
             </div>
             <div class="p-3 bg-blue-100 rounded-lg text-blue-600">
@@ -39,7 +39,7 @@
     <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-slate-500">Total Showtimes</p>
+                <p class="text-sm font-medium text-slate-500">{{ __('Total Showtimes') }}</p>
                 <p class="text-3xl font-bold text-slate-900 mt-1">{{ \App\Models\Showtime::count() }}</p>
             </div>
             <div class="p-3 bg-blue-100 rounded-lg text-blue-600">
@@ -52,7 +52,7 @@
     <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-slate-500">Total Orders</p>
+                <p class="text-sm font-medium text-slate-500">{{ __('Total Orders') }}</p>
                 <p class="text-3xl font-bold text-slate-900 mt-1">{{ \App\Models\Order::count() }}</p>
             </div>
             <div class="p-3 bg-blue-100 rounded-lg text-blue-600">
@@ -64,41 +64,41 @@
 
 <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-8">
     <div class="mb-4 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <h3 class="text-lg font-bold text-slate-900">Revenue Chart</h3>
+        <h3 class="text-lg font-bold text-slate-900">{{ __('Revenue Chart') }}</h3>
         <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-start sm:items-end w-full lg:w-auto">
             <div class="w-full sm:w-auto">
-                <label for="filter-date" class="block text-xs font-medium text-slate-500 mb-1">Time Range</label>
+                <label for="filter-date" class="block text-xs font-medium text-slate-500 mb-1">{{ __('Time Range') }}</label>
                 <select id="filter-date" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:min-w-[150px]">
-                    <option value="">All Time</option>
-                    <option value="today">Today</option>
-                    <option value="weekly">This Week</option>
-                    <option value="monthly">This Month</option>
-                    <option value="annual">This Year</option>
+                    <option value="">{{ __('All Time') }}</option>
+                    <option value="today">{{ __('Today') }}</option>
+                    <option value="weekly">{{ __('This Week') }}</option>
+                    <option value="monthly">{{ __('This Month') }}</option>
+                    <option value="annual">{{ __('This Year') }}</option>
                 </select>
             </div>
             
             <div class="w-full sm:w-auto flex-1">
-                <label for="filter-studio" class="block text-xs font-medium text-slate-500 mb-1">Studio</label>
-                <select id="filter-studio" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:min-w-[150px]">
-                    <option value="">All Studios</option>
-                    @foreach($studios as $studio)
-                        <option value="{{ $studio->id }}">{{ $studio->name }}</option>
-                    @endforeach
-                </select>
+                <label for="filter-studio" class="block text-xs font-medium text-slate-500 mb-1">{{ __('Studio') }}</label>
+                <x-infinite-select 
+                    id="filter-studio" 
+                    api-url="{{ route('admin.api.studios') }}" 
+                    default-label="{{ __('All Studios') }}" 
+                    placeholder="{{ __('Search studio...') }}"
+                />
             </div>
 
             <div class="w-full sm:w-auto flex-1">
-                <label for="filter-movie" class="block text-xs font-medium text-slate-500 mb-1">Movie</label>
-                <select id="filter-movie" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:min-w-[150px]">
-                    <option value="">All Movies</option>
-                    @foreach($movies as $movie)
-                        <option value="{{ $movie->id }}">{{ $movie->title }}</option>
-                    @endforeach
-                </select>
+                <label for="filter-movie" class="block text-xs font-medium text-slate-500 mb-1">{{ __('Movie') }}</label>
+                <x-infinite-select 
+                    id="filter-movie" 
+                    api-url="{{ route('admin.api.movies') }}" 
+                    default-label="{{ __('All Movies') }}" 
+                    placeholder="{{ __('Search movie...') }}"
+                />
             </div>
 
             <div class="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0">
-                <button id="btn-reset-filters" class="w-full sm:w-auto px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium rounded-lg transition-colors shadow-sm">Reset</button>
+                <button id="btn-reset-filters" class="w-full sm:w-auto px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium rounded-lg transition-colors shadow-sm">{{ __('Reset') }}</button>
             </div>
         </div>
     </div>
@@ -237,7 +237,19 @@
 
         // Reset button
         document.getElementById('btn-reset-filters').addEventListener('click', function() {
-            filterIds.forEach(id => document.getElementById(id).value = '');
+            filterIds.forEach(id => {
+                const el = document.getElementById(id);
+                el.value = '';
+                
+                if (el.classList.contains('infinite-select-input')) {
+                    const container = el.closest('.infinite-select-container');
+                    const label = container.querySelector('.infinite-select-label');
+                    const defaultItem = container.querySelector('[data-value=""]');
+                    if (defaultItem) {
+                        label.textContent = defaultItem.dataset.name;
+                    }
+                }
+            });
             loadChartData();
         });
     });

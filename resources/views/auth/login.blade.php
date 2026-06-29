@@ -4,13 +4,16 @@
 <div class="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
     <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
         <div class="text-center mb-8">
-            <h2 class="text-3xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></h2>
-            <p class="mt-2 text-sm text-slate-500">Sign in to your account</p>
+            <div class="flex items-center justify-center">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 sm:h-12 mr-4 sm:mr-5">
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></h2>
+            </div>
+            <p class="mt-2 text-sm text-slate-500">{{ __('Sign in to your account') }}</p>
         </div>
         <form method="POST" action="{{ route('login') }}" class="space-y-6">
             @csrf
             <div>
-                <label for="email" class="block text-sm font-medium text-slate-700">Email Address</label>
+                <label for="email" class="block text-sm font-medium text-slate-700">{{ __('Email Address') }}</label>
                 <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus class="mt-1 block w-full bg-slate-50 border border-slate-300 rounded-xl shadow-sm py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 transition-colors">
                 @error('email')
                     <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
@@ -18,7 +21,7 @@
             </div>
 
             <div>
-                <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+                <label for="password" class="block text-sm font-medium text-slate-700">{{ __('Password') }}</label>
                 <div class="relative mt-1">
                     <input id="password" type="password" name="password" required class="block w-full bg-slate-50 border border-slate-300 rounded-xl shadow-sm py-3 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 transition-colors">
                     <button type="button" onclick="const p = document.getElementById('password'); const open = document.getElementById('eye-open-login'); const closed = document.getElementById('eye-closed-login'); if(p.type==='password'){p.type='text';open.classList.add('hidden');closed.classList.remove('hidden');}else{p.type='password';open.classList.remove('hidden');closed.classList.add('hidden');}" class="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 hover:text-blue-600 focus:outline-none transition-colors">
@@ -40,14 +43,14 @@
 
             <div class="flex items-center justify-between">
                 <div class="text-sm">
-                    <span class="text-slate-500">Don't have an account?</span>
-                    <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-700 font-bold ml-1 transition-colors">Sign up</a>
+                    <span class="text-slate-500">{{ __("Don't have an account?") }}</span>
+                    <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-700 font-bold ml-1 transition-colors">{{ __('Sign up') }}</a>
                 </div>
             </div>
 
             <div>
                 <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white transition-all transform hover:-translate-y-0.5">
-                    Sign in
+                    {{ __('Sign in') }}
                 </button>
             </div>
         </form>

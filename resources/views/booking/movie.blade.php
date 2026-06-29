@@ -11,7 +11,7 @@
                     <img src="{{ Storage::url($movie->poster) }}" alt="{{ $movie->title }}" class="w-full h-auto object-cover">
                 @else
                     <div class="w-full h-96 flex items-center justify-center text-slate-400 bg-slate-100">
-                        <span class="text-xl">No Image</span>
+                        <span class="text-xl">{{ __('No Image') }}</span>
                     </div>
                 @endif
                 <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm cursor-pointer">
@@ -22,9 +22,18 @@
             <h1 class="text-3xl font-extrabold text-slate-900 mb-2 uppercase tracking-tight text-center lg:text-left leading-tight">{{ $movie->title }}</h1>
             
             <div class="flex items-center text-sm text-slate-600 mb-6 space-x-3 justify-center lg:justify-start w-full bg-white p-3 rounded-xl border border-slate-200">
-                <span class="flex items-center"><svg class="w-4 h-4 mr-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> {{ $movie->duration }} mnt</span>
-                <span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-xs font-bold border border-yellow-200">SU</span>
-                <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs border border-blue-200 font-bold">2D</span>
+                <span class="flex items-center"><svg class="w-4 h-4 mr-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> {{ $movie->duration }} {{ __('mins') }}</span>
+                @php
+                    $ageRatingColor = match($movie->age_rating) {
+                        'SU' => 'bg-green-100 text-green-700 border-green-200',
+                        '13+' => 'bg-yellow-100 text-yellow-700 border-yellow-200',
+                        '17+' => 'bg-red-100 text-red-700 border-red-200',
+                        '21+' => 'bg-slate-100 text-slate-700 border-slate-200',
+                        default => 'bg-green-100 text-green-700 border-green-200',
+                    };
+                @endphp
+                <span class="{{ $ageRatingColor }} px-2 py-0.5 rounded text-xs font-bold border">{{ $movie->age_rating ?? 'SU' }}</span>
+                <!-- <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs border border-blue-200 font-bold">2D</span> -->
             </div>
         </div>
 
@@ -33,13 +42,13 @@
             
             <!-- Tabs -->
             <div class="flex border-b border-slate-200 mb-8">
-                <button id="tab-jadwal" class="px-6 py-3 text-lg font-bold text-blue-600 border-b-2 border-blue-600 transition-colors focus:outline-none">Jadwal</button>
-                <button id="tab-detail" class="px-6 py-3 text-lg font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 transition-colors focus:outline-none">Detail</button>
+                <button id="tab-jadwal" class="px-6 py-3 text-lg font-bold text-blue-600 border-b-2 border-blue-600 transition-colors focus:outline-none">{{ __('Schedule') }}</button>
+                <button id="tab-detail" class="px-6 py-3 text-lg font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 transition-colors focus:outline-none">{{ __('Detail') }}</button>
             </div>
 
             <!-- Detail Content -->
             <div id="content-detail" class="hidden prose prose-slate max-w-none bg-white p-6 rounded-2xl border border-slate-200">
-                <h3 class="text-xl font-bold text-slate-900 mb-3">Sinopsis</h3>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">{{ __('Synopsis') }}</h3>
                 <p class="text-slate-700 leading-relaxed text-justify">{{ $movie->description }}</p>
             </div>
 
@@ -89,9 +98,15 @@
                                                     <div class="accordion-content px-6 pb-6 pt-2 border-t border-slate-200 bg-slate-50/50">
                                                         <div class="flex flex-wrap gap-4 mt-3">
                                                             @foreach($studioShowtimes as $st)
-                                                                <a href="{{ route('booking.seat', $st->id) }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-bold rounded-xl transition-all duration-200 shadow-sm text-lg">
-                                                                    {{ \Carbon\Carbon::parse($st->start_time)->format('H:i') }}
-                                                                </a>
+                                                                @auth
+                                                                    <a href="{{ route('booking.seat', $st->id) }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-bold rounded-xl transition-all duration-200 shadow-sm text-lg">
+                                                                        {{ \Carbon\Carbon::parse($st->start_time)->format('H:i') }}
+                                                                    </a>
+                                                                @else
+                                                                    <button type="button" onclick="promptLogin(event)" class="inline-flex items-center justify-center px-6 py-2.5 bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-bold rounded-xl transition-all duration-200 shadow-sm text-lg focus:outline-none">
+                                                                        {{ \Carbon\Carbon::parse($st->start_time)->format('H:i') }}
+                                                                    </button>
+                                                                @endauth
                                                             @endforeach
                                                         </div>
                                                     </div>
@@ -103,7 +118,7 @@
                             @else
                                 <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center mt-4">
                                     <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    <p class="text-slate-500 text-lg">Tidak ada jadwal tayang untuk tanggal ini.</p>
+                                    <p class="text-slate-500 text-lg">{{ __('No showtimes available for this date.') }}</p>
                                 </div>
                             @endif
                         </div>
@@ -248,5 +263,30 @@
             });
         });
     });
+
+    function promptLogin(event) {
+        event.preventDefault();
+        Swal.fire({
+            title: '<span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>',
+            html: '<p class="text-slate-600 mt-2">{{ __("You must log in first to select a seat.") }}</p>',
+            icon: 'warning',
+            iconColor: '#3b82f6',
+            showCancelButton: true,
+            confirmButtonText: '{{ __("Login Now") }}',
+            cancelButtonText: '{{ __("Cancel") }}',
+            background: '#0f172a',
+            buttonsStyling: false,
+            customClass: {
+                popup: 'border border-slate-200 rounded-2xl shadow-2xl',
+                confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto',
+                cancelButton: 'bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto mt-3 sm:mt-0 sm:ml-3 border border-slate-300',
+                actions: 'w-full flex flex-col sm:flex-row justify-center mt-6'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('login') }}";
+            }
+        });
+    }
 </script>
 @endpush

@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
-    <h2 class="text-2xl font-bold text-slate-900">Showtimes</h2>
+    <h2 class="text-2xl font-bold text-slate-900">{{ __('Showtimes') }}</h2>
     <a href="{{ route('admin.showtimes.create') }}" class="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-        + Add New Showtime
+        + {{ __('Add New Showtime') }}
     </a>
 </div>
 
@@ -13,12 +13,12 @@
         <table class="w-full text-left border-collapse" id="showtimes-table">
             <thead>
                 <tr class="text-slate-500 text-sm uppercase border-b border-slate-200">
-                    <th class="py-3 px-4">No</th>
-                    <th class="py-3 px-4">Movie</th>
-                    <th class="py-3 px-4">Studio</th>
-                    <th class="py-3 px-4 min-tablet">Start Time</th>
-                    <th class="py-3 px-4 min-tablet">End Time</th>
-                    <th class="py-3 px-4 w-32">Action</th>
+                    <th class="py-3 px-4">{{ __('No') }}</th>
+                    <th class="py-3 px-4">{{ __('Movie') }}</th>
+                    <th class="py-3 px-4">{{ __('Studio') }}</th>
+                    <th class="py-3 px-4 min-tablet">{{ __('Start Time') }}</th>
+                    <th class="py-3 px-4 min-tablet">{{ __('End Time') }}</th>
+                    <th class="py-3 px-4 w-32">{{ __('Action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,7 +46,7 @@
             ],
             language: {
                 search: "",
-                searchPlaceholder: "Search showtimes..."
+                searchPlaceholder: "{{ __('Search showtimes...') }}"
             }
         });
     });

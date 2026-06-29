@@ -50,12 +50,8 @@ class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInt
 
             $showtimesByDate[$dateString] = collect($groupedByTypeAndStudio);
             
-            $englishDay = $date->format('l');
-            $indoDays = [
-                'Sunday' => 'Min', 'Monday' => 'Sen', 'Tuesday' => 'Sel',
-                'Wednesday' => 'Rab', 'Thursday' => 'Kam', 'Friday' => 'Jum', 'Saturday' => 'Sab'
-            ];
-            $dayName = $i == 0 ? 'Hari ini' : $indoDays[$englishDay];
+            $dayShort = $date->format('D');
+            $dayName = $i == 0 ? __('Today') : __($dayShort);
 
             $dates->push((object)[
                 'date' => $dateString,

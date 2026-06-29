@@ -5,7 +5,8 @@
     <div class="mb-6">
         <a href="{{ route('movie.show', $showtime->movie_id) }}" class="text-blue-600 hover:text-blue-500 text-sm font-medium flex items-center">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Back to Showtimes
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            {{ __('Back to Showtimes') }}
         </a>
     </div>
 
@@ -13,7 +14,7 @@
         <!-- Seat Map -->
         <div class="w-full lg:w-2/3 bg-white border border-slate-200 rounded-2xl p-8 shadow-2xl">
             <div class="text-center mb-10">
-                <h2 class="text-2xl font-bold text-slate-900 uppercase tracking-wider mb-2">Select Your Seats</h2>
+                <h2 class="text-2xl font-bold text-slate-900 uppercase tracking-wider mb-2">{{ __('Select Your Seats') }}</h2>
                 <p class="text-slate-500">{{ $showtime->studio->name }}</p>
             </div>
 
@@ -27,7 +28,7 @@
                         <div class="w-4/5 md:w-3/4 mx-auto mb-16 relative">
                             <div class="h-2 w-full bg-gradient-to-r from-blue-900 via-blue-500 to-blue-900 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.5)]"></div>
                             <div class="w-full h-12 bg-gradient-to-b from-blue-500/20 to-transparent transform perspective-1000 rotateX-45 blur-sm mt-2"></div>
-                            <p class="text-center text-slate-400 text-xs font-semibold tracking-[0.3em] mt-4 uppercase">Cinema Screen</p>
+                            <p class="text-center text-slate-400 text-xs font-semibold tracking-[0.3em] mt-4 uppercase">{{ __('Cinema Screen') }}</p>
                         </div>
 
                         @php
@@ -67,15 +68,15 @@
                 <div class="flex items-center justify-center space-x-8 mt-12 pt-6 border-t border-slate-200">
                     <div class="flex items-center">
                         <div class="w-6 h-6 rounded-t bg-white border-b-2 border-slate-300 mr-2 shadow-sm"></div>
-                        <span class="text-sm text-slate-500">Available</span>
+                        <span class="text-sm text-slate-500">{{ __('Available') }}</span>
                     </div>
                     <div class="flex items-center">
                         <div class="w-6 h-6 rounded-t bg-blue-600 border-b-2 border-blue-800 mr-2 shadow-[0_0_10px_rgba(37,99,235,0.3)]"></div>
-                        <span class="text-sm text-slate-500">Selected</span>
+                        <span class="text-sm text-slate-500">{{ __('Selected') }}</span>
                     </div>
                     <div class="flex items-center">
                         <div class="w-6 h-6 rounded-t bg-slate-200 border-b-2 border-slate-300 mr-2"></div>
-                        <span class="text-sm text-slate-500">Booked</span>
+                        <span class="text-sm text-slate-500">{{ __('Booked') }}</span>
                     </div>
                 </div>
             </form>
@@ -84,7 +85,7 @@
         <!-- Booking Summary Sidebar -->
         <div class="w-full lg:w-1/3">
             <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-2xl sticky top-24">
-                <h3 class="text-xl font-bold text-slate-900 mb-6 uppercase tracking-wider border-b border-slate-200 pb-4">Booking Summary</h3>
+                <h3 class="text-xl font-bold text-slate-900 mb-6 uppercase tracking-wider border-b border-slate-200 pb-4">{{ __('Booking Summary') }}</h3>
                 
                 <div class="mb-6 flex gap-4">
                     @if($showtime->movie->poster)
@@ -99,21 +100,21 @@
 
                 <div class="border-t border-slate-200 pt-4 mb-6">
                     <div class="flex justify-between items-start gap-4 text-sm mb-2">
-                        <span class="text-slate-500 shrink-0">Selected Seats (<span id="seatCount">0</span>)</span>
+                        <span class="text-slate-500 shrink-0">{{ __('Selected Seats') }} (<span id="seatCount">0</span>)</span>
                         <span class="text-slate-900 font-medium text-right leading-relaxed" id="selectedSeatsList">-</span>
                     </div>
                     <div class="flex justify-between text-sm mb-4">
-                        <span class="text-slate-500">Price per Seat</span>
+                        <span class="text-slate-500">{{ __('Price per Seat') }}</span>
                         <span class="text-slate-900 font-medium">Rp {{ number_format($price, 0, ',', '.') }}</span>
                     </div>
                     <div class="flex justify-between text-lg font-bold border-t border-slate-200 pt-4">
-                        <span class="text-slate-900">Total Payment</span>
+                        <span class="text-slate-900">{{ __('Total Payment') }}</span>
                         <span class="text-blue-600">Rp <span id="totalPrice">0</span></span>
                     </div>
                 </div>
 
                 <button type="button" onclick="document.getElementById('bookingForm').submit()" id="checkoutBtn" disabled class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold py-4 px-4 rounded-xl transition-colors uppercase tracking-wider shadow-lg">
-                    Confirm & Pay
+                    {{ __('Confirm & Pay') }}
                 </button>
                 @error('seats') <p class="text-red-500 text-xs mt-2 text-center">{{ $message }}</p> @enderror
             </div>
