@@ -85,7 +85,7 @@
                                     @if(Auth::user()->role === 'admin')
                                         <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">{{ __('Admin Panel') }}</a>
                                     @endif
-                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors font-medium">{{ __('My Profile') }}</a>
+                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">{{ __('My Profile') }}</a>
                                     <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">{{ __('My Tickets') }}</a>
                                     <div class="border-t border-slate-100 my-1"></div>
                                     <form method="POST" action="{{ route('logout') }}" id="logout-form">
@@ -128,10 +128,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-10 md:mb-12">
                 <div class="md:col-span-2 text-center md:text-left flex flex-col items-center md:items-start">
-                    <div class="flex items-center mb-4">
+                    <a href="{{ route('home') }}" class="flex items-center mb-4">
                         <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 sm:h-12 mr-4 sm:mr-5">
                         <span class="text-2xl sm:text-3xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>
-                    </div>
+                    </a>
                     <p class="text-slate-400 text-sm leading-relaxed max-w-sm mt-2">
                         {{ __('Experience the magic of cinema with cutting-edge technology and premium comfort. Book your tickets easily and enjoy the show!') }}
                     </p>

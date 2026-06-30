@@ -262,8 +262,8 @@
                     </div>
                 </div>
 
-                <div class="relative cursor-pointer self-center" id="profile-dropdown-wrapper">
-                    <div class="flex items-center space-x-3" id="profile-dropdown-btn">
+                <div class="relative self-center" id="profile-dropdown-wrapper">
+                    <button class="flex items-center space-x-3" id="profile-dropdown-btn">
                         <!-- <div class="text-right hidden sm:block">
                             <span class="block text-sm font-medium text-slate-700">{{ __('Welcome') }}, {{ Auth::user()->name }}</span>
                             <span class="block text-xs text-slate-500 capitalize">{{ Auth::user()->role }}</span>
@@ -272,14 +272,13 @@
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
                         <!-- <svg class="w-4 h-4 text-slate-400 hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg> -->
-                    </div>
+                    </button>
                     
                     <!-- Admin Profile Dropdown -->
                     <div class="absolute right-0 mt-3 w-48 hidden z-50" id="profile-dropdown-menu">
                         <div class="bg-white rounded-md shadow-lg py-1 ring-1 ring-slate-900 ring-opacity-5 border border-slate-200">
-                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors font-medium">{{ __('My Profile') }}</a>
-                            <div class="border-t border-slate-100 my-1"></div>
                             <a href="{{ route('home') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">{{ __('Go to User Site') }}</a>
+                            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">{{ __('My Profile') }}</a>
                             <div class="border-t border-slate-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" id="logout-form">
                                 @csrf

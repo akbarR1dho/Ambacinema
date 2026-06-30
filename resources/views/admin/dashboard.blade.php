@@ -105,6 +105,12 @@
     <div class="relative h-64 sm:h-80 lg:h-[400px] w-full">
         <canvas id="revenueChart"></canvas>
     </div>
+    <div class="mt-6 pt-4 border-t border-slate-100 flex justify-end">
+        <div class="text-right">
+            <p class="text-sm font-medium text-slate-500">{{ __('Total Period Revenue') }}</p>
+            <p id="chart-total-revenue" class="text-3xl font-bold text-blue-600 mt-1">Rp 0</p>
+        </div>
+    </div>
 </div>
 
 @endsection
@@ -138,12 +144,33 @@
             })
             .then(response => response.json())
             .then(data => {
+                // // --- SIMULASI 30 HARI ---
+                // data.labels = [];
+                // data.data = [];
+                // for(let i=1; i<=30; i++) {
+                //     data.labels.push('2026-06-' + String(i).padStart(2, '0'));
+                //     data.data.push(Math.floor(Math.random() * 1500000) + 100000);
+                // }
+                // // ------------------------
+                let totalRevenue = 0;
+                if (data.data && Array.isArray(data.data)) {
+                    totalRevenue = data.data.reduce((sum, current) => sum + Number(current), 0);
+                }
+                const formattedTotal = new Intl.NumberFormat('id-ID', { 
+                    style: 'currency', 
+                    currency: 'IDR', 
+                    minimumFractionDigits: 0 
+                }).format(totalRevenue);
+                document.getElementById('chart-total-revenue').innerText = formattedTotal;
+
                 if (chartInstance) {
                     chartInstance.destroy();
                 }
 
+                let chartType = dateFilter === 'today' ? 'bar' : 'line';
+
                 chartInstance = new Chart(ctx, {
-                    type: 'bar',
+                    type: chartType,
                     data: {
                         labels: data.labels,
                         datasets: [{
@@ -152,11 +179,21 @@
                             backgroundColor: gradient,
                             borderColor: 'rgb(37, 99, 235)', // blue-600
                             borderWidth: 2,
-                            borderRadius: 6,
-                            borderSkipped: false
+                            fill: true,
+                            tension: 0.05,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            pointHoverBackgroundColor: 'rgb(37, 99, 235)',
+                            clip: false
                         }]
                     },
                     options: {
+                        layout: {
+                            padding: {
+                                left: 0,
+                                right: 8
+                            }
+                        },
                         responsive: true,
                         maintainAspectRatio: false,
                         interaction: {
@@ -170,8 +207,7 @@
                                     drawBorder: false
                                 },
                                 ticks: {
-                                    color: '#64748b',
-                                    font: { family: "'Inter', sans-serif" }
+                                    display: false
                                 }
                             },
                             y: {
@@ -215,7 +251,29 @@
                                 }
                             }
                         }
-                    }
+                    },
+                    plugins: [{
+                        id: 'crosshairLine',
+                        afterDraw: chart => {
+                            if (chart.tooltip?._active?.length) {
+                                let activePoint = chart.tooltip._active[0];
+                                let ctx = chart.ctx;
+                                let x = activePoint.element.x;
+                                let topY = chart.scales.y.top;
+                                let bottomY = chart.scales.y.bottom;
+                                
+                                ctx.save();
+                                ctx.beginPath();
+                                ctx.moveTo(x, topY);
+                                ctx.lineTo(x, bottomY);
+                                ctx.lineWidth = 1;
+                                ctx.strokeStyle = '#94a3b8'; // slate-400
+                                ctx.setLineDash([4, 4]);
+                                ctx.stroke();
+                                ctx.restore();
+                            }
+                        }
+                    }]
                 });
             })
             .catch(error => console.error('Error fetching chart data:', error));
