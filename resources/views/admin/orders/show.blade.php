@@ -23,10 +23,17 @@
         <p class="text-slate-600 mb-2"><span class="font-medium text-slate-800">{{ __('Status:') }}</span> 
             @if($order->status == 'confirmed')
                 <span class="text-green-600 font-semibold uppercase">{{ __('Confirmed') }}</span>
+            @elseif($order->status == 'pending')
+                <span class="text-yellow-600 font-semibold uppercase">{{ __('Pending') }}</span>
             @else
-                <span class="text-yellow-600 font-semibold uppercase">{{ $order->status }}</span>
+                <span class="text-red-600 font-semibold uppercase">{{ __('Failed') }}</span>
             @endif
         </p>
+        <p class="text-slate-600 mb-2"><span class="font-medium text-slate-800">{{ __('Booking Time:') }}</span> {{ $order->pending_at ? $order->pending_at->format('d M Y, H:i') : '-' }}</p>
+        <p class="text-slate-600 mb-2"><span class="font-medium text-slate-800">{{ __('Confirmation Time:') }}</span> {{ $order->confirmed_at ? $order->confirmed_at->format('d M Y, H:i') : '-' }}</p>
+        @if($order->failed_at)
+            <p class="text-slate-600 mb-2"><span class="font-medium text-slate-800">{{ __('Failed Time:') }}</span> {{ $order->failed_at->format('d M Y, H:i') }}</p>
+        @endif
         <p class="text-slate-600 mb-2"><span class="font-medium text-slate-800">{{ __('Seats Booked:') }}</span></p>
         <div class="flex flex-wrap gap-2 mb-4">
             @foreach($order->seats as $seat)

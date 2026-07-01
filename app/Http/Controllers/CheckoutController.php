@@ -7,25 +7,26 @@ use App\Http\Requests\Booking\CheckoutRequest;
 use App\Repositories\Interfaces\OrderRepositoryInterface;
 use App\Repositories\Interfaces\ShowtimeRepositoryInterface;
 use App\Repositories\Interfaces\SeatRepositoryInterface;
+use App\Services\PaymentServiceInterface;
 use Illuminate\Support\Facades\Auth;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
     protected $orderRepo;
     protected $showtimeRepo;
     protected $seatRepo;
+    protected $paymentService;
 
     public function __construct(
         OrderRepositoryInterface $orderRepo,
         ShowtimeRepositoryInterface $showtimeRepo,
-        SeatRepositoryInterface $seatRepo
+        SeatRepositoryInterface $seatRepo,
+        PaymentServiceInterface $paymentService
     ) {
         $this->orderRepo = $orderRepo;
         $this->showtimeRepo = $showtimeRepo;
         $this->seatRepo = $seatRepo;
+        $this->paymentService = $paymentService;
     }
 
     public function process(CheckoutRequest $request)
@@ -49,7 +50,8 @@ class CheckoutController extends Controller
             'user_id' => Auth::id(),
             'showtime_id' => $showtime->id,
             'total_price' => $totalPrice,
-            'status' => 'confirmed', // Assuming auto confirm for simplicity
+            'status' => 'pending',
+            'pending_at' => now(),
         ]);
 
         // Attach seats with UUIDs
@@ -59,32 +61,20 @@ class CheckoutController extends Controller
         }
         $this->orderRepo->attachSeats($order, $pivotData);
 
-        // Fetch seat names for QR Code
-        $seatNames = $this->seatRepo->getSeatNamesByIds($request->seats);
-
-        // Generate QR Code data
-        $qrData = json_encode([
-            'Order ID' => $order->id,
-            'User' => Auth::user()->name,
-            'Movie' => $showtime->movie->title,
-            'Studio' => $showtime->studio->name,
-            'Time' => \Carbon\Carbon::parse($showtime->start_time)->format('Y-m-d H:i'),
-            'Seats' => $seatNames
-        ]);
-
-        // Generate and save QR Code
-        $fileName = 'qrcodes/order_' . $order->id . '_' . Str::random(10) . '.svg';
+        // Process Payment with Midtrans
+        $paymentType = $request->input('payment_type');
         
-        // Create directory if not exists
-        if (!Storage::exists('qrcodes')) {
-            Storage::makeDirectory('qrcodes');
+        try {
+            $response = $this->paymentService->charge($order, $paymentType, $pricePerSeat, count($request->seats));
+            
+            $this->orderRepo->update($order->id, [
+                'payment_type' => $paymentType,
+                'payment_info' => (array) $response
+            ]);
+
+            return redirect()->route('orders.pay', $order->id)->with('success', 'Order created successfully. Please complete your payment.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['seats' => 'Failed to generate payment: ' . $e->getMessage()]);
         }
-
-        $qrImage = QrCode::format('svg')->size(300)->errorCorrection('H')->generate($qrData);
-        Storage::put($fileName, $qrImage);
-
-        $this->orderRepo->update($order->id, ['qr_code' => $fileName]);
-
-        return redirect()->route('orders.show', $order->id)->with('success', 'Ticket booked successfully!');
     }
 }

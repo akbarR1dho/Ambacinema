@@ -6,5 +6,5 @@ interface MovieRepositoryInterface extends BaseRepositoryInterface
 {
     public function getActiveMoviesForToday();
     public function findWithShowtimes($id);
-    public function getMoviesDatatable();
+    public function getMoviesDatatable(array $filters = []);
 }

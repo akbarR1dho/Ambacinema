@@ -17,7 +17,8 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
     public function getOrdersForUserWithCursor($userId, $filter, $perPage)
     {
         $query = $this->model->with(['showtime.movie', 'showtime.studio', 'seats'])
-            ->where('user_id', $userId);
+            ->where('user_id', $userId)
+            ->whereIn('status', ['pending', 'confirmed']);
 
         if ($filter !== 'all') {
             $now = Carbon::now();
@@ -54,9 +55,32 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
         return $order->seats()->attach($pivotData);
     }
     
-    public function getOrdersDatatable()
+    public function getOrdersDatatable(array $filters = [])
     {
-        return $this->model->with(['user', 'showtime.movie', 'showtime.studio'])->select('orders.*');
+        $query = $this->model->with(['user', 'showtime.movie', 'showtime.studio'])->select('orders.*');
+        
+        if (!empty($filters['studio_id'])) {
+            $query->whereHas('showtime', function($q) use ($filters) {
+                $q->where('studio_id', $filters['studio_id']);
+            });
+        }
+
+        if (!empty($filters['movie_id'])) {
+            $query->whereHas('showtime', function($q) use ($filters) {
+                $q->where('movie_id', $filters['movie_id']);
+            });
+        }
+
+        if (!empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        return $query;
+    }
+
+    public function getFilteredOrders(array $filters)
+    {
+        return $this->getOrdersDatatable($filters)->get();
     }
     
     public function getChartData($filters)

@@ -78,7 +78,7 @@
                                 <!-- Type Tabs -->
                                 <div class="flex flex-wrap gap-2 mb-6">
                                     @foreach($showtimesByDate[$d->date] as $typeName => $studiosGroup)
-                                        <button class="type-btn-{{ $d->date }} px-5 py-2 rounded-xl border border-slate-300 font-bold transition-all focus:outline-none text-slate-600 bg-white hover:border-blue-500 hover:text-slate-900 data-[active=true]:border-blue-500 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600" data-target="type-{{ $d->date }}-{{ Str::slug($typeName) }}" data-type-name="{{ $typeName }}">
+                                        <button class="type-btn-{{ $d->date }} px-5 py-2 rounded-xl border border-slate-300 font-bold transition-all focus:outline-none text-slate-800 bg-white hover:border-blue-500 hover:text-slate-900 data-[active=true]:border-blue-500 data-[active=true]:bg-blue-50" data-target="type-{{ $d->date }}-{{ Str::slug($typeName) }}" data-type-name="{{ $typeName }}">
                                             {{ $typeName }}
                                         </button>
                                     @endforeach

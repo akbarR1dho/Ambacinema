@@ -105,6 +105,10 @@
             margin-top: 1rem;
             float: right;
         }
+        .dataTables_wrapper .dataTables_paginate span {
+            display: flex;
+            gap: 0.375rem;
+        }
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0.5rem 0.875rem !important;
             border-radius: 0.5rem !important;
@@ -115,7 +119,7 @@
             font-size: 0.875rem;
             cursor: pointer;
             transition: all 0.2s;
-            margin: 0 !important;
+            margin: 0 0.125rem !important;
         }
         .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled) {
             background: #f1f5f9 !important;

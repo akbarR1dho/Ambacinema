@@ -5,7 +5,6 @@
     <div class="mb-6">
         <a href="{{ route('movie.show', $showtime->movie_id) }}" class="text-blue-600 hover:text-blue-500 text-sm font-medium flex items-center">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             {{ __('Back to Showtimes') }}
         </a>
     </div>
@@ -52,7 +51,7 @@
                                             flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-t-lg border-b-4 text-xs font-bold transition-all duration-200 cursor-pointer
                                             {{ $isBooked 
                                                 ? 'bg-slate-200 border-slate-300 text-slate-400 cursor-not-allowed' 
-                                                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 peer-checked:bg-blue-600 peer-checked:border-blue-800 peer-checked:text-white peer-checked:shadow-[0_0_15px_rgba(37,99,235,0.5)]' 
+                                                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 peer-checked:border-blue-800 peer-checked:shadow-[0_0_15px_rgba(37,99,235,0.5)]' 
                                             }}
                                         ">
                                             {{ $seat->seat_number }}
@@ -71,7 +70,7 @@
                         <span class="text-sm text-slate-500">{{ __('Available') }}</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="w-6 h-6 rounded-t bg-blue-600 border-b-2 border-blue-800 mr-2 shadow-[0_0_10px_rgba(37,99,235,0.3)]"></div>
+                        <div class="w-6 h-6 rounded-t bg-white border-b-2 border-blue-800 mr-2 shadow-[0_0_10px_rgba(37,99,235,0.3)]"></div>
                         <span class="text-sm text-slate-500">{{ __('Selected') }}</span>
                     </div>
                     <div class="flex items-center">
@@ -112,6 +111,47 @@
                         <span class="text-blue-600">Rp <span id="totalPrice">0</span></span>
                     </div>
                 </div>
+                <div class="border-t border-slate-200 pt-4 mb-6">
+                    <h4 class="font-bold text-slate-800 mb-3">{{ __('Payment Method') }}</h4>
+                    <div class="space-y-2 mb-4">
+                        <label class="relative flex cursor-pointer rounded-lg text-slate-800 bg-white p-3 border border-slate-300 shadow-sm focus:outline-none hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                            <input type="radio" name="payment_type" value="bca_va" class="sr-only peer payment-radio" form="bookingForm">
+                            <span class="flex flex-1">
+                                <span class="flex flex-col text-left">
+                                    <span class="block text-sm font-medium">{{ __('BCA Virtual Account') }}</span>
+                                </span>
+                            </span>
+                            <svg class="h-5 w-5 text-blue-600 opacity-0 peer-checked:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="pointer-events-none absolute -inset-px rounded-lg border-2 border-transparent peer-checked:border-blue-500" aria-hidden="true"></span>
+                        </label>
+                        <label class="relative flex cursor-pointer rounded-lg text-slate-800 bg-white p-3 border border-slate-300 shadow-sm focus:outline-none hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                            <input type="radio" name="payment_type" value="echannel" class="sr-only peer payment-radio" form="bookingForm">
+                            <span class="flex flex-1">
+                                <span class="flex flex-col text-left">
+                                    <span class="block text-sm font-medium">{{ __('Mandiri Bill (VA)') }}</span>
+                                </span>
+                            </span>
+                            <svg class="h-5 w-5 text-blue-600 opacity-0 peer-checked:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="pointer-events-none absolute -inset-px rounded-lg border-2 border-transparent peer-checked:border-blue-500" aria-hidden="true"></span>
+                        </label>
+                        <label class="relative flex cursor-pointer rounded-lg text-slate-800 bg-white p-3 border border-slate-300 shadow-sm focus:outline-none hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors">
+                            <input type="radio" name="payment_type" value="gopay" class="sr-only peer payment-radio" form="bookingForm">
+                            <span class="flex flex-1">
+                                <span class="flex flex-col text-left">
+                                    <span class="block text-sm font-medium">{{ __('QRIS') }}</span>
+                                </span>
+                            </span>
+                            <svg class="h-5 w-5 text-blue-600 opacity-0 peer-checked:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="pointer-events-none absolute -inset-px rounded-lg border-2 border-transparent peer-checked:border-blue-500" aria-hidden="true"></span>
+                        </label>
+                    </div>
+                </div>
 
                 <button type="button" onclick="document.getElementById('bookingForm').submit()" id="checkoutBtn" disabled class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold py-4 px-4 rounded-xl transition-colors uppercase tracking-wider shadow-lg">
                     {{ __('Confirm & Pay') }}
@@ -126,6 +166,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const checkboxes = document.querySelectorAll('input[name="seats[]"]');
+        const paymentRadios = document.querySelectorAll('.payment-radio');
         const seatCountEl = document.getElementById('seatCount');
         const selectedSeatsListEl = document.getElementById('selectedSeatsList');
         const totalPriceEl = document.getElementById('totalPrice');
@@ -151,11 +192,16 @@
             const total = selectedCount * pricePerSeat;
             totalPriceEl.innerText = total.toLocaleString('id-ID');
 
-            checkoutBtn.disabled = selectedCount === 0;
+            const isPaymentSelected = Array.from(paymentRadios).some(r => r.checked);
+            checkoutBtn.disabled = selectedCount === 0 || !isPaymentSelected;
         }
 
         checkboxes.forEach(cb => {
             cb.addEventListener('change', updateSummary);
+        });
+        
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', updateSummary);
         });
     });
 </script>

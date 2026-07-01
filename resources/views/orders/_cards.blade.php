@@ -20,16 +20,24 @@
                 </div>
                 <div class="text-right">
                     <p class="text-xs text-slate-500 uppercase tracking-wider">Status</p>
-                    <span class="text-green-600 font-bold uppercase text-sm">{{ $order->status }}</span>
+                    <span class="{{ $order->status == 'pending' ? 'text-orange-500' : ($order->status == 'failed' ? 'text-red-500' : 'text-green-600') }} font-bold uppercase text-sm">
+                        {{ $order->status }}
+                    </span>
                 </div>
             </div>
             <div class="mb-6">
                 <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Seats</p>
                 <p class="text-slate-700 font-medium truncate">{{ $order->seats->pluck('seat_number')->implode(', ') }}</p>
             </div>
-            <a href="{{ route('orders.show', $order->id) }}" class="block w-full text-center bg-white hover:bg-blue-600 text-blue-600 hover:text-white font-semibold py-2 rounded-lg transition-colors border border-slate-300 hover:border-transparent shadow-sm">
-                View e-Ticket
-            </a>
+            @if($order->status == 'pending')
+                <a href="{{ route('orders.pay', $order->id) }}" class="block w-full text-center bg-white border border-slate-300 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-700 text-slate-800 font-semibold py-2 rounded-lg transition-colors shadow-sm">
+                    Pay Ticket
+                </a>
+            @else
+                <a href="{{ route('orders.show', $order->id) }}" class="block w-full text-center bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-semibold py-2 rounded-lg transition-colors shadow-sm">
+                    View e-Ticket
+                </a>
+            @endif
         </div>
     </div>
 @endforeach

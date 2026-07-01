@@ -21,11 +21,7 @@ class MovieController extends Controller
 
     public function apiIndex(Request $request)
     {
-        $query = $this->movieRepo->getMoviesDatatable();
-
-        if ($request->filled('search')) {
-            $query->whereRaw('LOWER(title) like ?', ['%' . strtolower($request->search) . '%']);
-        }
+        $query = $this->movieRepo->getMoviesDatatable($request->only('search'));
 
         $movies = $query->select('id', 'title as name')->orderBy('title', 'asc')->cursorPaginate(5);
 
@@ -35,11 +31,7 @@ class MovieController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->movieRepo->getMoviesDatatable();
-            
-            if ($request->filled('age_rating')) {
-                $data->where('age_rating', $request->age_rating);
-            }
+            $data = $this->movieRepo->getMoviesDatatable($request->only('age_rating'));
             
             return DataTables::of($data)
                 ->addIndexColumn()

@@ -50,12 +50,13 @@
                     d.age_rating = $('#ageRatingFilter').val();
                 }
             },
+            order: [[2, 'asc']],
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'poster', name: 'poster', orderable: false, searchable: false },
                 { data: 'title', name: 'title' },
-                { data: 'duration', name: 'duration' },
-                { data: 'age_rating', name: 'age_rating' },
+                { data: 'duration', name: 'duration', searchable: false },
+                { data: 'age_rating', name: 'age_rating', orderable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             language: {

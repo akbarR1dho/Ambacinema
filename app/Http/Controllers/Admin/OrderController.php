@@ -19,23 +19,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->orderRepo->getOrdersDatatable();
-            
-            if ($request->filled('studio_id')) {
-                $data->whereHas('showtime', function($q) use ($request) {
-                    $q->where('studio_id', $request->studio_id);
-                });
-            }
-
-            if ($request->filled('movie_id')) {
-                $data->whereHas('showtime', function($q) use ($request) {
-                    $q->where('movie_id', $request->movie_id);
-                });
-            }
-
-            if ($request->filled('status')) {
-                $data->where('status', $request->status);
-            }
+            $data = $this->orderRepo->getOrdersDatatable($request->only(['studio_id', 'movie_id', 'status']));
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -52,8 +36,13 @@ class OrderController extends Controller
                     return 'Rp ' . number_format($row->total_price, 0, ',', '.');
                 })
                 ->editColumn('status', function($row){
-                    $color = $row->status == 'confirmed' ? 'green' : 'yellow';
-                    return '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-'.$color.'-900/50 text-'.$color.'-400 border border-'.$color.'-500">'.ucfirst($row->status).'</span>';
+                    $classes = match($row->status) {
+                        'confirmed' => 'border-green-500 text-green-600 bg-green-50',
+                        'pending' => 'border-orange-500 text-orange-500 bg-orange-50',
+                        'failed', 'expired' => 'border-red-500 text-red-600 bg-red-50',
+                        default => 'border-slate-500 text-slate-600 bg-slate-50',
+                    };
+                    return '<span class="px-3 py-1 text-xs font-bold rounded-full border '.$classes.'">'.ucfirst($row->status).'</span>';
                 })
                 ->addColumn('action', function($row){
                     $showUrl = route('admin.orders.show', $row->id);
@@ -72,5 +61,10 @@ class OrderController extends Controller
     {
         $order = $this->orderRepo->findAdminOrderWithRelations($id);
         return view('admin.orders.show', compact('order'));
+    }
+
+    public function export(Request $request, \App\Services\OrderExportService $exportService)
+    {
+        return $exportService->downloadExcel($request->only(['studio_id', 'movie_id', 'status']));
     }
 }

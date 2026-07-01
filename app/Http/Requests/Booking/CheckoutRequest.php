@@ -23,6 +23,7 @@ class CheckoutRequest extends FormRequest
             'showtime_id' => ['required', 'exists:showtimes,id'],
             'seats' => ['required', 'array', 'min:1'],
             'seats.*' => ['exists:seats,id'],
+            'payment_type' => ['required', 'in:bca_va,echannel,gopay'],
         ];
     }
 }

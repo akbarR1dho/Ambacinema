@@ -20,11 +20,7 @@ class StudioTypeController extends Controller
 
     public function apiIndex(Request $request)
     {
-        $query = $this->studioTypeRepo->getStudioTypesDatatable();
-
-        if ($request->filled('search')) {
-            $query->whereRaw('LOWER(name) like ?', ['%' . strtolower($request->search) . '%']);
-        }
+        $query = $this->studioTypeRepo->getStudioTypesDatatable($request->only('search'));
 
         $studioTypes = $query->orderBy('name', 'asc')->cursorPaginate(5);
 
@@ -37,19 +33,14 @@ class StudioTypeController extends Controller
             $data = $this->studioTypeRepo->getStudioTypesDatatable();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('price', function($row){
-                    $prices = [
-                        $row->price_weekday,
-                        $row->price_friday,
-                        $row->price_weekend
-                    ];
-                    $min = min($prices);
-                    $max = max($prices);
-                    
-                    if ($min == $max) {
-                        return 'Rp ' . number_format($min, 0, ',', '.');
-                    }
-                    return 'Rp ' . number_format($min, 0, ',', '.') . ' - Rp ' . number_format($max, 0, ',', '.');
+                ->addColumn('regular_day', function($row){
+                    return 'Rp ' . number_format($row->price_weekday, 0, ',', '.');
+                })
+                ->addColumn('friday', function($row){
+                    return 'Rp ' . number_format($row->price_friday, 0, ',', '.');
+                })
+                ->addColumn('weekend', function($row){
+                    return 'Rp ' . number_format($row->price_weekend, 0, ',', '.');
                 })
                 ->addColumn('action', function($row){
                     $editUrl = route('admin.studio-types.edit', $row->id);
@@ -97,13 +88,6 @@ class StudioTypeController extends Controller
 
     public function destroy(string $id)
     {   
-        $studioType = $this->studioTypeRepo->find($id);
-        
-        // Re-assign existing studios to Regular (ID 1)
-        foreach ($studioType->studios as $studio) {
-            $studio->update(['studio_type_id' => 1]);
-        }
-        
         $this->studioTypeRepo->delete($id);
 
         return redirect()->route('admin.studio-types.index')->with('success', 'Studio Type deleted successfully.');

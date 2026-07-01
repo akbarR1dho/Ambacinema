@@ -14,8 +14,9 @@
             <tr>
                 <th>{{ __('No') }}</th>
                 <th>{{ __('Name') }}</th>
-                <th class="min-tablet">{{ __('Price Range') }}</th>
-                <th class="min-desktop">{{ __('Description') }}</th>
+                <th class="min-tablet">{{ __('Regular Day') }}</th>
+                <th class="min-tablet">{{ __('Friday') }}</th>
+                <th class="min-tablet">{{ __('Weekend') }}</th>
                 <th class="min-tablet">{{ __('Action') }}</th>
             </tr>
         </thead>
@@ -32,11 +33,13 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('admin.studio-types.index') }}",
+            order: [[1, 'asc']],
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                 {data: 'name', name: 'name'},
-                {data: 'price', name: 'price'},
-                {data: 'description', name: 'description'},
+                {data: 'regular_day', name: 'regular_day', searchable: false, orderable: false},
+                {data: 'friday', name: 'friday', searchable: false, orderable: false},
+                {data: 'weekend', name: 'weekend', searchable: false, orderable: false},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });

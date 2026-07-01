@@ -202,5 +202,13 @@
     "All Types": "Semua Tipe",
     "All Ratings": "Semua Rating",
     "All Statuses": "Semua Status",
-    "Total Period Revenue": "Total Pendapatan Periode"
+    "Total Period Revenue": "Total Pendapatan Periode",
+    "Export Excel": "Ekspor Excel",
+    "Booking Time": "Waktu Pesan",
+    "Confirmation Time": "Waktu Konfirmasi",
+    "Pending": "Menunggu Pembayaran",
+    "Failed": "Gagal",
+    "Pay Now": "Bayar Sekarang",
+    "This ticket cannot be paid.": "Tiket ini tidak dapat dibayar.",
+    "Payment successful! Ticket confirmed.": "Pembayaran berhasil! Tiket dikonfirmasi."
 }

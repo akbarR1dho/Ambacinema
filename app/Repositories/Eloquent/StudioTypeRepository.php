@@ -12,8 +12,14 @@ class StudioTypeRepository extends BaseRepository implements StudioTypeRepositor
         parent::__construct($model);
     }
 
-    public function getStudioTypesDatatable()
+    public function getStudioTypesDatatable(array $filters = [])
     {
-        return $this->model->select('studio_types.*');
+        $query = $this->model->select('studio_types.*');
+
+        if (!empty($filters['search'])) {
+            $query->whereRaw('LOWER(name) like ?', ['%' . strtolower($filters['search']) . '%']);
+        }
+
+        return $query;
     }
 }

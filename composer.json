@@ -10,7 +10,9 @@
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
         "league/flysystem-aws-s3-v3": "^3.35",
+        "midtrans/midtrans-php": "^2.6",
         "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/simple-excel": "^3.10",
         "yajra/laravel-datatables-oracle": "^13.1"
     },
     "require-dev": {

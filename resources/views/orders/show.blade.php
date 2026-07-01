@@ -31,11 +31,17 @@
                 </div> 
                 <div>
                     <h1 class="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tight leading-tight">{{ $order->showtime->movie->title }}</h1>
-                    <span class="inline-block mt-2 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full border border-blue-200 uppercase">{{ __('Confirmed') }}</span>
+                    @if($order->status == 'pending')
+                        <span class="inline-block mt-2 px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full border border-yellow-200 uppercase">{{ __('Pending') }}</span>
+                    @elseif($order->status == 'confirmed')
+                        <span class="inline-block mt-2 px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full border border-green-200 uppercase">{{ __('Confirmed') }}</span>
+                    @else
+                        <span class="inline-block mt-2 px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full border border-red-200 uppercase">{{ $order->status }}</span>
+                    @endif
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 md:gap-6 mb-8 mt-6 md:mt-10">
+            <div class="grid grid-cols-2 gap-4 md:gap-6 mb-6 mt-6 md:mt-10">
                 <div>
                     <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Date') }}</p>
                     <p class="text-base md:text-lg font-bold text-slate-900">{{ \Carbon\Carbon::parse($order->showtime->start_time)->format('d M Y') }}</p>
@@ -53,6 +59,17 @@
                     <p class="text-base md:text-lg font-bold text-blue-600">{{ $order->seats->pluck('seat_number')->implode(', ') }}</p>
                 </div>
             </div>
+            
+            <div class="grid grid-cols-2 gap-4 md:gap-6 mb-8 border-t border-slate-200 pt-6">
+                <div>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Booking Time') }}</p>
+                    <p class="text-sm font-medium text-slate-700">{{ $order->pending_at ? $order->pending_at->format('d M Y, H:i') : '-' }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Confirmation Time') }}</p>
+                    <p class="text-sm font-medium text-slate-700">{{ $order->confirmed_at ? $order->confirmed_at->format('d M Y, H:i') : '-' }}</p>
+                </div>
+            </div>
 
             <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                 <div>
@@ -66,20 +83,33 @@
             </div>
         </div>
 
-        <!-- Right Side (QR Code) -->
+        <!-- Right Side (QR Code or Payment) -->
         <div class="w-full md:w-1/3 p-6 md:p-8 flex flex-col items-center justify-center relative">
-            <h3 class="text-black font-bold text-xl uppercase tracking-widest mb-6">{{ __('Scan Entry') }}</h3>
-            
-            <div class="bg-white p-2 border-4 border-black rounded-xl mb-6">
-                @if($order->qr_code)
-                    <img src="{{ Storage::url($order->qr_code) }}" alt="QR Code" class="w-48 h-48">
-                @else
-                    <div class="w-48 h-48 bg-gray-200 flex items-center justify-center text-gray-500">{{ __('No QR Code') }}</div>
-                @endif
-            </div>
+            @if($order->status == 'pending')
+                <div class="flex flex-col items-center text-center">
+                    <svg class="w-16 h-16 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <h3 class="text-yellow-600 font-bold text-xl uppercase tracking-widest mb-2">{{ __('Payment Required') }}</h3>
+                    <p class="text-slate-500 text-sm mb-2">{{ __('You have not completed the payment for this ticket.') }}</p>
+                    <p class="text-slate-600 font-medium text-sm">{{ __('Please return to the "My Tickets" page and click the "Pay" button to complete your transaction.') }}</p>
+                </div>
+            @elseif($order->status == 'confirmed')
+                <h3 class="text-black font-bold text-xl uppercase tracking-widest mb-6">{{ __('Scan Entry') }}</h3>
+                
+                <div class="bg-white p-2 border-4 border-black rounded-xl mb-6">
+                    @if($order->qr_code)
+                        <img src="{{ Storage::url($order->qr_code) }}" alt="QR Code" class="w-48 h-48">
+                    @else
+                        <div class="w-48 h-48 bg-gray-200 flex items-center justify-center text-gray-500">{{ __('No QR Code') }}</div>
+                    @endif
+                </div>
 
-            <p class="text-gray-500 text-xs text-center">{{ __('Please present this QR code at the studio entrance.') }}</p>
-            <p class="text-black font-bold text-sm mt-4 uppercase">{{ __('Order') }} #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</p>
+                <p class="text-gray-500 text-xs text-center">{{ __('Please present this QR code at the studio entrance.') }}</p>
+            @else
+                <h3 class="text-red-600 font-bold text-xl uppercase tracking-widest mb-6">{{ __('Order Failed') }}</h3>
+                <p class="text-gray-500 text-xs text-center">{{ __('This order was not successful.') }}</p>
+            @endif
+            
+            <p class="text-black font-bold text-center text-sm mt-4 uppercase">{{ __('Order') }} #{{ str_pad($order->id, 6, '0', STR_PAD_LEFT) }}</p>
         </div>
     </div>
 </div>

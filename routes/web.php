@@ -22,6 +22,11 @@ Route::get('/booking/showtime/{id}', [BookingController::class, 'selectSeat'])->
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process')->middleware('auth');
 Route::get('/orders', [OrderHistoryController::class, 'index'])->name('orders.index')->middleware('auth');
 Route::get('/orders/{id}', [OrderHistoryController::class, 'show'])->name('orders.show')->middleware('auth');
+Route::get('/orders/{id}/pay', [OrderHistoryController::class, 'paymentPage'])->name('orders.pay')->middleware('auth');
+
+Route::post('/orders/{id}/check-status', [OrderHistoryController::class, 'checkStatus'])->name('orders.check_status')->middleware('auth');
+Route::get('/orders/{id}/poll-status', [OrderHistoryController::class, 'pollStatus'])->name('orders.poll_status')->middleware('auth');
+Route::post('/midtrans/notification', [OrderHistoryController::class, 'midtransCallback']);
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -55,5 +60,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('studios', StudioController::class);
     Route::resource('movies', MovieController::class);
     Route::resource('showtimes', ShowtimeController::class);
+    Route::get('orders/export', [OrderController::class, 'export'])->name('orders.export');
     Route::resource('orders', OrderController::class)->only(['index', 'show']);
 });

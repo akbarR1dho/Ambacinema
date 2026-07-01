@@ -81,6 +81,7 @@
                     d.studio_id = $('#filter_studio_id').val();
                 }
             },
+            order: [[1, 'asc']],
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'movie_title', name: 'movie.title' },

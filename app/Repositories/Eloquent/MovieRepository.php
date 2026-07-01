@@ -25,8 +25,18 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
         return $this->model->with('showtimes')->findOrFail($id);
     }
     
-    public function getMoviesDatatable()
+    public function getMoviesDatatable(array $filters = [])
     {
-        return $this->model->select('movies.*');
+        $query = $this->model->select('movies.*');
+
+        if (!empty($filters['search'])) {
+            $query->whereRaw('LOWER(title) like ?', ['%' . strtolower($filters['search']) . '%']);
+        }
+
+        if (!empty($filters['age_rating'])) {
+            $query->where('age_rating', $filters['age_rating']);
+        }
+
+        return $query;
     }
 }

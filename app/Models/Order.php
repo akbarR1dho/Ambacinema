@@ -13,7 +13,15 @@ class Order extends Model
     {
         return (string) \Symfony\Component\Uid\Uuid::v7();
     }
-    protected $fillable = ['user_id', 'showtime_id', 'total_price', 'status', 'qr_code'];
+    protected $fillable = ['user_id', 'showtime_id', 'total_price', 'status', 'qr_code', 'pending_at', 'confirmed_at', 'failed_at', 'payment_type', 'payment_info'];
+
+    protected $casts = [
+        'id' => 'string',
+        'pending_at' => 'datetime',
+        'confirmed_at' => 'datetime',
+        'failed_at' => 'datetime',
+        'payment_info' => 'array',
+    ];
 
     public function user()
     {

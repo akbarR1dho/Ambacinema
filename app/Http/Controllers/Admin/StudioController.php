@@ -30,11 +30,7 @@ class StudioController extends Controller
 
     public function apiIndex(Request $request)
     {
-        $query = $this->studioRepo->getStudiosDatatable();
-
-        if ($request->filled('search')) {
-            $query->whereRaw('LOWER(name) like ?', ['%' . strtolower($request->search) . '%']);
-        }
+        $query = $this->studioRepo->getStudiosDatatable($request->only('search'));
 
         $studios = $query->orderBy('name', 'asc')->cursorPaginate(5);
 
@@ -44,36 +40,12 @@ class StudioController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->studioRepo->getStudiosDatatable();
-            
-            if ($request->filled('type_filter')) {
-                if ($request->type_filter == 'regular') {
-                    $data->whereNull('studio_type_id');
-                } else {
-                    $data->where('studio_type_id', $request->type_filter);
-                }
-            }
+            $data = $this->studioRepo->getStudiosDatatable($request->only('type_filter'));
 
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('type', function($row){
                     return $row->studioType ? $row->studioType->name : 'Regular';
-                })
-                ->addColumn('price', function($row){
-                    if (!$row->studioType) {
-                        return 'Rp 50.000';
-                    }
-                    $prices = [
-                        $row->studioType->price_weekday,
-                        $row->studioType->price_friday,
-                        $row->studioType->price_weekend
-                    ];
-                    $min = min($prices);
-                    $max = max($prices);
-                    if ($min == $max) {
-                        return 'Rp ' . number_format($min, 0, ',', '.');
-                    }
-                    return 'Rp ' . number_format($min, 0, ',', '.') . ' - Rp ' . number_format($max, 0, ',', '.');
                 })
                 ->addColumn('action', function($row){
                     $editUrl = route('admin.studios.edit', $row->id);
@@ -104,25 +76,7 @@ class StudioController extends Controller
 
     public function store(StoreStudioRequest $request)
     {
-        DB::transaction(function () use ($request) {
-            $studio = $this->studioRepo->create($request->only('name', 'total_seats', 'studio_type_id'));
-            
-            // Auto generate seats
-            $seats = [];
-            for ($i = 1; $i <= $request->total_seats; $i++) {
-                // simple naming logic e.g., A1, A2...
-                $row = chr(65 + floor(($i - 1) / 10)); // A, B, C...
-                $col = (($i - 1) % 10) + 1;
-                $seats[] = [
-                    'id' => (string) \Symfony\Component\Uid\Uuid::v7(),
-                    'studio_id' => $studio->id,
-                    'seat_number' => $row . str_pad($col, 2, '0', STR_PAD_LEFT),
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ];
-            }
-            $this->seatRepo->insertSeats($seats);
-        });
+        $this->studioRepo->createWithSeats($request->only('name', 'total_seats', 'studio_type_id'));
 
         return redirect()->route('admin.studios.index')->with('success', 'Studio created successfully.');
     }
@@ -152,29 +106,5 @@ class StudioController extends Controller
         $this->studioRepo->delete($id);
 
         return redirect()->route('admin.studios.index')->with('success', 'Studio deleted successfully.');
-    }
-
-    private function generateSeats(Studio $studio)
-    {
-        $total = $studio->total_seats;
-        $rows = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-        
-        $seatCount = 0;
-        $seatsToInsert = [];
-        foreach ($rows as $row) {
-            for ($num = 1; $num <= 10; $num++) {
-                if ($seatCount >= $total) break 2;
-                $seatsToInsert[] = [
-                    'id' => (string) \Symfony\Component\Uid\Uuid::v7(),
-                    'studio_id' => $studio->id,
-                    'seat_number' => $row . $num,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-                $seatCount++;
-            }
-        }
-        
-        $this->seatRepo->insertSeats($seatsToInsert);
     }
 }
