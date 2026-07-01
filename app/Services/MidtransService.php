@@ -87,19 +87,21 @@ class MidtransService implements PaymentServiceInterface
 
     public function handleNotification($notificationPayload): void
     {
-        // For notification, we usually expect a Midtrans\Notification object, 
-        // which automatically parses the input payload if $notificationPayload is not provided.
-        $notification = new \Midtrans\Notification();
+        // Extract order_id directly from the payload array passed by Laravel Request.
+        // We do this because 'php://input' can be empty in serverless environments (like Vercel)
+        // after Laravel already read it, causing new \Midtrans\Notification() to fail.
+        $orderId = $notificationPayload['order_id'] ?? null;
 
-        $transaction = $notification->transaction_status;
-        $type = $notification->payment_type;
-        $orderId = $notification->order_id;
-        $fraud = $notification->fraud_status;
+        if (!$orderId) {
+            return;
+        }
 
         $order = Order::find($orderId);
 
         if ($order) {
-            $this->updateOrderStatus($order, $transaction, $type, $fraud);
+            // We use checkStatus to fetch the real status from Midtrans API directly,
+            // which guarantees 100% security against webhook spoofing.
+            $this->checkStatus($order);
         }
     }
 
