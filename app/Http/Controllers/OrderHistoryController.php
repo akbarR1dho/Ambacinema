@@ -75,7 +75,6 @@ class OrderHistoryController extends Controller
 
     public function midtransCallback(Request $request)
     {
-        \Log::info('Midtrans Webhook:', $request->all());
         $this->paymentService->handleNotification($request->all());
         return response()->json(['message' => 'Notification processed successfully']);
     }

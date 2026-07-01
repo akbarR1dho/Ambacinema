@@ -89,7 +89,6 @@ class MidtransService implements PaymentServiceInterface
     {
         // Extract order_id directly from the payload array passed by Laravel Request.
         // We do this because 'php://input' can be empty in serverless environments (like Vercel)
-        // after Laravel already read it, causing new \Midtrans\Notification() to fail.
         $orderId = $notificationPayload['order_id'] ?? null;
 
         if (!$orderId) {
@@ -99,9 +98,22 @@ class MidtransService implements PaymentServiceInterface
         $order = Order::find($orderId);
 
         if ($order) {
-            // We use checkStatus to fetch the real status from Midtrans API directly,
-            // which guarantees 100% security against webhook spoofing.
-            $this->checkStatus($order);
+            // Verify signature key to prevent spoofing
+            $statusCode = $notificationPayload['status_code'] ?? '';
+            $grossAmount = $notificationPayload['gross_amount'] ?? '';
+            $serverKey = config('midtrans.server_key');
+            $signatureKey = $notificationPayload['signature_key'] ?? '';
+
+            // Midtrans signature rule: SHA512(order_id + status_code + gross_amount + server_key)
+            $calculatedSignature = hash("sha512", $orderId . $statusCode . $grossAmount . $serverKey);
+
+            if ($calculatedSignature === $signatureKey) {
+                $transaction = $notificationPayload['transaction_status'] ?? '';
+                $type = $notificationPayload['payment_type'] ?? '';
+                $fraud = $notificationPayload['fraud_status'] ?? '';
+
+                $this->updateOrderStatus($order, $transaction, $type, $fraud);
+            }
         }
     }
 
