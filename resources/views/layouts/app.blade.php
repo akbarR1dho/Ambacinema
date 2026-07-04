@@ -50,7 +50,7 @@
                 </div>
                 <div class="flex items-center">
                     <!-- Language Switcher -->
-                    <div class="relative mr-3 sm:mr-5">
+                    <div class="relative mr-4 sm:mr-4">
                         <button id="lang-menu-btn" class="flex items-center text-sm font-medium text-slate-700 hover:text-blue-600 focus:outline-none bg-slate-100 px-2 py-1 rounded-md border border-slate-200">
                             @if(App::getLocale() === 'id')
                                 <svg class="w-4 h-4 mr-1.5 rounded-sm object-cover border border-slate-200" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg"><path fill="#e00000" d="M0 0h640v240H0z"/><path fill="#fff" d="M0 240h640v240H0z"/></svg>
@@ -73,7 +73,7 @@
                     </div>
 
                     @auth
-                        <div class="relative ml-1 sm:ml-3">
+                        <div class="relative">
                             <button id="user-menu-btn" class="flex items-center space-x-3">
                                 <div class="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold ring-2 ring-white shadow-sm hover:ring-blue-300 transition-all">
                                     {{ substr(Auth::user()->name, 0, 1) }}

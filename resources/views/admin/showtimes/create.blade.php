@@ -12,24 +12,28 @@
         
         <div class="mb-4">
             <label for="movie_id" class="block text-sm font-medium text-slate-700">{{ __('Movie') }}</label>
-            <select name="movie_id" id="movie_id" required class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                <option value="">{{ __('Select a Movie') }}</option>
-                @foreach($movies as $movie)
-                    <option value="{{ $movie->id }}" {{ old('movie_id') == $movie->id ? 'selected' : '' }}>{{ $movie->title }} ({{ $movie->duration }} {{ __('mins') }})</option>
-                @endforeach
-            </select>
-            @error('movie_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+            <div class="mt-1 block w-full">
+                <x-infinite-select 
+                    id="movie_id" 
+                    api-url="{{ route('admin.api.movies') }}" 
+                    default-label="{{ __('Select a Movie') }}" 
+                    placeholder="{{ __('Search movie...') }}"
+                />
+            </div>
+            @error('movie_id') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-4">
             <label for="studio_id" class="block text-sm font-medium text-slate-700">{{ __('Studio') }}</label>
-            <select name="studio_id" id="studio_id" required class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                <option value="">{{ __('Select a Studio') }}</option>
-                @foreach($studios as $studio)
-                    <option value="{{ $studio->id }}" {{ old('studio_id') == $studio->id ? 'selected' : '' }}>{{ $studio->name }} ({{ $studio->total_seats }} {{ __('seats') }})</option>
-                @endforeach
-            </select>
-            @error('studio_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+            <div class="mt-1 block w-full">
+                <x-infinite-select 
+                    id="studio_id" 
+                    api-url="{{ route('admin.api.studios') }}" 
+                    default-label="{{ __('Select a Studio') }}" 
+                    placeholder="{{ __('Search studio...') }}"
+                />
+            </div>
+            @error('studio_id') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-6">

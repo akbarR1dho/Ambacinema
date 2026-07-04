@@ -37,9 +37,9 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
                 {data: 'name', name: 'name'},
-                {data: 'regular_day', name: 'regular_day', searchable: false, orderable: false},
-                {data: 'friday', name: 'friday', searchable: false, orderable: false},
-                {data: 'weekend', name: 'weekend', searchable: false, orderable: false},
+                {data: 'weekday', name: 'price_weekday', searchable: false},
+                {data: 'friday', name: 'price_friday', searchable: false},
+                {data: 'weekend', name: 'price_weekend', searchable: false},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });

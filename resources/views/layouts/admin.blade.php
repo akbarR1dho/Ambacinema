@@ -99,15 +99,28 @@
         }
         .dataTables_wrapper .dataTables_paginate {
             display: flex;
+            flex-wrap: nowrap;
             align-items: center;
             justify-content: flex-end;
             gap: 0.375rem;
             margin-top: 1rem;
             float: right;
+            overflow-x: auto;
         }
-        .dataTables_wrapper .dataTables_paginate span {
+        .dataTables_wrapper .dataTables_paginate > span:not(.ellipsis) {
             display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
             gap: 0.375rem;
+        }
+        .dataTables_wrapper .dataTables_paginate .ellipsis {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.25rem;
+            color: #64748b;
+            font-weight: bold;
+            line-height: 1;
         }
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 0.5rem 0.875rem !important;
@@ -120,6 +133,9 @@
             cursor: pointer;
             transition: all 0.2s;
             margin: 0 0.125rem !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled) {
             background: #f1f5f9 !important;
@@ -136,8 +152,7 @@
         .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            background: transparent !important;
-            border-color: transparent !important;
+            background: #f8fafc !important;
         }
         
         /* Clearfix for datatables */
@@ -148,21 +163,76 @@
         }
 
         /* Responsive Extensions Override */
+        table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control,
+        table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control {
+            position: relative;
+            padding-left: 30px !important;
+        }
         table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control:before, 
         table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
+            content: '+' !important;
             background-color: #2563eb !important;
-            box-shadow: none !important;
+            background-image: none !important;
+            color: white !important;
             border: 2px solid #fff !important;
-            line-height: 16px !important;
+            box-shadow: 0 0 3px rgba(0,0,0,0.2) !important;
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            height: 18px;
+            width: 18px;
+            margin-top: -9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 50%;
+            line-height: 1 !important;
         }
         table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td.dtr-control:before, 
         table.dataTable.dtr-inline.collapsed>tbody>tr.parent>th.dtr-control:before {
-            background-color: #94a3b8 !important;
+            content: '-' !important;
+            background-color: #ef4444 !important;
+        }
+
+        /* Beautiful Child Row Styling */
+        table.dataTable>tbody>tr.child ul.dtr-details {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        table.dataTable>tbody>tr.child ul.dtr-details>li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.75rem 0;
+        }
+        table.dataTable>tbody>tr.child ul.dtr-details>li:last-child {
+            border-bottom: none;
+        }
+        table.dataTable>tbody>tr.child ul.dtr-details>li .dtr-title {
+            font-weight: 600;
+            color: #64748b;
+            min-width: 120px;
+        }
+        table.dataTable>tbody>tr.child ul.dtr-details>li .dtr-data {
+            color: #0f172a;
+            text-align: right;
+            font-weight: 500;
         }
         
         /* Mobile View adjustments */
         @media (max-width: 768px) {
-            .dataTables_wrapper .dataTables_length,
+            .dataTables_wrapper .dataTables_length {
+                float: none !important;
+                text-align: center !important;
+                margin-bottom: 1rem !important;
+            }
             .dataTables_wrapper .dataTables_filter {
                 float: none !important;
                 text-align: left !important;
@@ -181,6 +251,10 @@
             .dataTables_wrapper .dataTables_paginate {
                 justify-content: center !important;
                 margin-top: 1rem !important;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+                padding: 0.375rem 0.5rem !important;
+                font-size: 0.75rem !important;
             }
         }
     </style>
@@ -316,10 +390,57 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Custom DataTables Pager (3 numbers with ellipsis)
+            $.fn.DataTable.ext.pager.three_numbers_with_ellipsis = function(page, pages) {
+                var numbers = [];
+                var start = page - 1;
+                if (start < 0) { start = 0; }
+                var end = start + 3;
+                if (end > pages) {
+                    end = pages;
+                    start = pages - 3;
+                    if (start < 0) { start = 0; }
+                }
+                for (var i = start; i < end; i++) {
+                    numbers.push(i);
+                }
+                
+                var result = [];
+                if (start > 0) {
+                    result.push('ellipsis');
+                }
+                result = result.concat(numbers);
+                if (end < pages) {
+                    result.push('ellipsis');
+                }
+                
+                return ['first', 'previous', result, 'next', 'last'];
+            };
+
             // Global DataTables Default Settings
             $.extend( true, $.fn.dataTable.defaults, {
-                responsive: true
+                responsive: true,
+                pagingType: 'three_numbers_with_ellipsis',
+                language: {
+                    paginate: {
+                        first: "&laquo;",
+                        previous: "&lsaquo;",
+                        next: "&rsaquo;",
+                        last: "&raquo;"
+                    }
+                }
             } );
+
+            // // SIMULASI: Ubah teks angka menjadi ratusan (misal 1 -> 101) khusus untuk tes visual
+            // $(document).on('draw.dt', function() {
+            //     $('.dataTables_paginate .paginate_button').each(function() {
+            //         var txt = $(this).text();
+            //         // Jika teksnya murni angka
+            //         if (/^\d+$/.test(txt)) {
+            //             $(this).text(parseInt(txt) + 880); // Tambahkan 100
+            //         }
+            //     });
+            // });
 
             // Sidebar Toggle Logic
             const sidebar = $('#admin-sidebar');
@@ -389,6 +510,22 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     event.target.closest('form').submit();
+                }
+            });
+        }
+        function showErrorAlert(message) {
+            Swal.fire({
+                title: '<div class="flex items-center justify-center"><img src="{{ asset("images/logo.png") }}" alt="Logo" class="h-10 mr-4"><span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span></div>',
+                html: `<p class="text-slate-400 mt-2">${message}</p>`,
+                icon: 'error',
+                iconColor: '#ef4444',
+                confirmButtonText: '{{ __("OK") }}',
+                background: '#0f172a',
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'border border-slate-800 rounded-2xl shadow-2xl',
+                    confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto',
+                    actions: 'w-full flex justify-center mt-6'
                 }
             });
         }

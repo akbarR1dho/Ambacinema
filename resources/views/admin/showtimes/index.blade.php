@@ -74,21 +74,23 @@
         $('#showtimes-table').DataTable({
             processing: true,
             serverSide: true,
+            searching: false,
+            searchable: false,
             ajax: {
                 url: "{{ route('admin.showtimes.index') }}",
                 data: function (d) {
                     d.movie_id = $('#filter_movie_id').val();
                     d.studio_id = $('#filter_studio_id').val();
-                }
+                },
             },
-            order: [[1, 'asc']],
+            order: [[3, 'desc']],
             columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                { data: 'movie_title', name: 'movie.title' },
-                { data: 'studio_name', name: 'studio.name' },
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false },
+                { data: 'movie_title', name: 'movie.title', orderable: false },
+                { data: 'studio_name', name: 'studio.name', orderable: false },
                 { data: 'start_time', name: 'start_time' },
                 { data: 'end_time', name: 'end_time' },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
+                { data: 'action', name: 'action', orderable: false }
             ],
             language: {
                 search: "",

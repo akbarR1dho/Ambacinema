@@ -33,7 +33,7 @@ class StudioTypeController extends Controller
             $data = $this->studioTypeRepo->getStudioTypesDatatable();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('regular_day', function($row){
+                ->addColumn('weekday', function($row){
                     return 'Rp ' . number_format($row->price_weekday, 0, ',', '.');
                 })
                 ->addColumn('friday', function($row){

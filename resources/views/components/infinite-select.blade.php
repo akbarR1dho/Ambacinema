@@ -21,7 +21,7 @@
             <input type="text" class="infinite-select-search w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" placeholder="{{ $placeholder }}">
         </div>
         <ul class="infinite-select-list max-h-40 overflow-y-auto py-1">
-            <li class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-sm text-slate-700 font-medium dropdown-item" data-value="" data-name="{{ $defaultLabel }}">
+            <li class="px-4 py-2 hover:bg-blue-50 hover:text-blue-600 cursor-pointer text-sm text-slate-700 font-medium dropdown-item" data-value="" data-name="{{ $defaultLabel }}">
                 {{ $defaultLabel }}
             </li>
             <li class="loading-sentinel px-3 py-2 text-sm text-center text-slate-500 hidden">
@@ -95,7 +95,7 @@
                     .then(data => {
                         data.data.forEach(item => {
                             const li = document.createElement('li');
-                            li.className = 'px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer text-slate-700 dynamic-item dropdown-item';
+                            li.className = 'px-3 py-2 text-sm hover:bg-blue-50 hover:text-blue-600 cursor-pointer text-slate-700 dynamic-item dropdown-item';
                             li.dataset.value = item.id;
                             li.dataset.name = item.name;
                             li.textContent = item.name;

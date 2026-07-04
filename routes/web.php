@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\StudioTypeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\UserDashboardController;
 
+use App\Http\Controllers\Admin\UploadController;
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/movie/{id}', [BookingController::class, 'showMovie'])->name('movie.show');
 Route::get('/booking/showtime/{id}', [BookingController::class, 'selectSeat'])->name('booking.seat')->middleware('auth');
@@ -55,6 +57,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/api/studio-types', [StudioTypeController::class, 'apiIndex'])->name('api.studio-types');
     Route::get('/api/studios', [StudioController::class, 'apiIndex'])->name('api.studios');
     Route::get('/api/movies', [MovieController::class, 'apiIndex'])->name('api.movies');
+    Route::post('/api/upload/presigned-url', [UploadController::class, 'presignedUrl'])->name('api.upload.presigned');
 
     Route::resource('studio-types', StudioTypeController::class)->except(['show']);
     Route::resource('studios', StudioController::class);

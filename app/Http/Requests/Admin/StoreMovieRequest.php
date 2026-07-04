@@ -24,7 +24,7 @@ class StoreMovieRequest extends FormRequest
             'description' => ['required', 'string'],
             'duration' => ['required', 'integer', 'min:1'],
             'age_rating' => ['required', 'in:SU,13+,17+,21+'],
-            'poster' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'poster_path' => ['nullable', 'string', 'max:1000'],
         ];
     }
 }

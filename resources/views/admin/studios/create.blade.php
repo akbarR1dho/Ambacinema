@@ -18,13 +18,15 @@
 
         <div class="mb-4">
             <label for="studio_type_id" class="block text-sm font-medium text-slate-700">{{ __('Studio Type') }}</label>
-            <select name="studio_type_id" id="studio_type_id" required class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                <option value="">{{ __('Select Type') }}</option>
-                @foreach($studioTypes as $type)
-                    <option value="{{ $type->id }}" {{ old('studio_type_id') == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
-                @endforeach
-            </select>
-            @error('studio_type_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+            <div class="mt-1 block w-full">
+                <x-infinite-select 
+                    id="studio_type_id" 
+                    api-url="{{ route('admin.api.studio-types') }}" 
+                    default-label="{{ __('Select Type') }}" 
+                    placeholder="{{ __('Search type...') }}"
+                />
+            </div>
+            @error('studio_type_id') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-6">

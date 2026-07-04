@@ -67,10 +67,10 @@ class MovieController extends Controller
 
     public function store(StoreMovieRequest $request)
     {
-        $data = $request->except('poster');
+        $data = $request->except('poster_path');
         
-        if ($request->hasFile('poster')) {
-            $data['poster'] = $request->file('poster')->store('posters');
+        if ($request->filled('poster_path')) {
+            $data['poster'] = $request->poster_path;
         }
 
         $this->movieRepo->create($data);
@@ -96,14 +96,13 @@ class MovieController extends Controller
 
         $data = $request->only('title', 'description', 'duration', 'age_rating');
 
-        if ($request->hasFile('poster')) {
+        if ($request->filled('poster_path')) {
             // Delete old poster if exists
             if ($movie->poster && Storage::exists($movie->poster)) {
                 Storage::delete($movie->poster);
             }
             
-            $path = $request->file('poster')->store('posters');
-            $data['poster'] = $path;
+            $data['poster'] = $request->poster_path;
         }
 
         $this->movieRepo->update($id, $data);

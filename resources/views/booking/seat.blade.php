@@ -92,8 +92,8 @@
                     @endif
                     <div>
                         <h4 class="font-bold text-lg text-slate-900 leading-tight">{{ $showtime->movie->title }}</h4>
-                        <p class="text-sm text-slate-500 mt-1">{{ \Carbon\Carbon::parse($showtime->start_time)->format('D, d M Y') }}</p>
-                        <p class="text-sm text-slate-500">{{ \Carbon\Carbon::parse($showtime->start_time)->format('H:i') }} | {{ $showtime->studio->name }}</p>
+                        <p class="text-sm text-slate-500 mt-1">{{ \Carbon\Carbon::parse($showtime->start_time)->translatedFormat('D, d M Y') }}</p>
+                        <p class="text-sm text-slate-500">{{ \Carbon\Carbon::parse($showtime->start_time)->translatedFormat('H:i') }} | {{ $showtime->studio->name }}</p>
                     </div>
                 </div>
 

@@ -29,7 +29,7 @@
             </div>
             <div class="flex justify-between mb-3 gap-2">
                 <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Show Date:') }}</span>
-                <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->showtime->start_time)->format('d M Y') }}</span>
+                <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->showtime->start_time)->translatedFormat('d M Y') }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
                 <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Show Time:') }}</span>
@@ -37,7 +37,7 @@
             </div>
             <div class="flex justify-between mb-3 gap-2">
                 <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Booking Time:') }}</span>
-                <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y, H:i') }}</span>
+                <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->created_at)->translatedFormat('d M Y, H:i') }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
                 <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Price/Seat:') }}</span>
@@ -74,8 +74,8 @@
                                 <div class="flex justify-center mb-2">
                                     <div class="flex flex-col sm:flex-row bg-white py-3 px-3 sm:px-6 rounded-xl border border-slate-200 shadow-sm items-center gap-2 sm:gap-3 w-full sm:w-auto overflow-hidden">
                                         <span class="text-base sm:text-lg md:text-xl font-black text-blue-600 font-mono select-all break-all text-center" id="bca-va">{{ $order->payment_info['va_numbers'][0]['va_number'] ?? '-' }}</span>
-                                        <button onclick="navigator.clipboard.writeText(document.getElementById('bca-va').innerText); this.innerHTML='<svg class=\'w-5 h-5 text-green-500\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M5 13l4 4L19 7\'></path></svg>'; setTimeout(() => this.innerHTML='<svg class=\'w-5 h-5 text-slate-400 hover:text-blue-600 transition-colors\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z\'></path></svg>', 2000);" class="p-2 bg-slate-50 hover:bg-slate-100 sm:bg-transparent rounded-lg transition-colors focus:outline-none flex-shrink-0 w-full sm:w-auto flex justify-center mt-2 sm:mt-0" title="Copy VA Number">
-                                            <svg class="w-5 h-5 text-slate-400 hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                        <button onclick="copyToClipboard('bca-va', this)" class="p-2 bg-slate-50 hover:bg-slate-100 sm:bg-transparent rounded-lg transition-colors focus:outline-none flex-shrink-0 w-full sm:w-auto flex justify-center mt-2 sm:mt-0 text-slate-400 hover:text-blue-600 transition-colors" title="Copy VA Number">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                         </button>
                                     </div>
                                 </div>
@@ -86,8 +86,8 @@
                                 <div class="flex justify-center mb-2">
                                     <div class="flex flex-col sm:flex-row bg-white py-3 px-3 sm:px-6 rounded-xl border border-slate-200 shadow-sm items-center gap-2 sm:gap-3 w-full sm:w-auto overflow-hidden">
                                         <span class="text-base sm:text-lg md:text-xl font-black text-blue-600 font-mono select-all break-all text-center" id="mandiri-va">{{ $order->payment_info['bill_key'] ?? '-' }}</span>
-                                        <button onclick="navigator.clipboard.writeText(document.getElementById('mandiri-va').innerText); this.innerHTML='<svg class=\'w-5 h-5 text-green-500\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M5 13l4 4L19 7\'></path></svg>'; setTimeout(() => this.innerHTML='<svg class=\'w-5 h-5 text-slate-400 hover:text-blue-600 transition-colors\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z\'></path></svg>', 2000);" class="p-2 bg-slate-50 hover:bg-slate-100 sm:bg-transparent rounded-lg transition-colors focus:outline-none flex-shrink-0 w-full sm:w-auto flex justify-center mt-2 sm:mt-0" title="Copy Bill Key">
-                                            <svg class="w-5 h-5 text-slate-400 hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                        <button onclick="copyToClipboard('mandiri-va', this)" class="p-2 bg-slate-50 hover:bg-slate-100 sm:bg-transparent rounded-lg transition-colors focus:outline-none flex-shrink-0 w-full sm:w-auto flex justify-center mt-2 sm:mt-0 text-slate-400 hover:text-blue-600" title="Copy Bill Key">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                         </button>
                                     </div>
                                 </div>
@@ -101,13 +101,12 @@
                     </div>
                     
                     <div id="payment-status-container">
-                        <p class="text-slate-500 text-sm text-center mb-6">{{ __('Waiting for payment to be completed. This page will update automatically.') }}</p>
                         <div class="flex justify-center items-center gap-2 mb-6">
                             <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            <span class="text-sm font-medium text-slate-600">{{ __('Checking status in real-time...') }}</span>
+                            <span class="text-sm font-medium text-slate-600">{{ __('Waiting for payment to be completed...') }}</span>
                         </div>
                     </div>
                 @endif
@@ -120,21 +119,49 @@
                         <a href="{{ route('orders.show', $order->id) }}" class="inline-flex items-center py-3 px-8 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-green-600 hover:bg-green-700">
                             {{ __('View e-Ticket') }}
                         </a>
-                        <!-- <a href="{{ route('orders.show', $order->id) }}" class="inline-flex justify-center items-center py-3 px-8 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform hover:-translate-y-0.5 uppercase tracking-wider">
-                            {{ __('View E-Ticket') }}
-                        </a> -->
                     </div>
                 </div>
-
-                <!-- <div class="flex justify-center mt-2 {{ $order->status == 'confirmed' ? 'hidden' : '' }}" id="return-button-container">
-                    <a href="{{ route('orders.show', $order->id) }}" class="text-slate-500 hover:text-slate-700 text-sm font-medium underline">{{ __('Return to Ticket Details') }}</a>
-                </div> -->
             </div>
     </div>
 </div>
+
+<!-- Toast Notification -->
+<div id="copy-toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white border border-slate-200 text-slate-800 px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transition-all duration-300 translate-y-24 opacity-0 pointer-events-none z-50">
+    <div class="bg-green-100 text-green-600 p-1.5 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    </div>
+    <span class="font-bold text-sm">{{ __('Copied to clipboard!') }}</span>
+</div>
+
 @endsection
 
 @push('scripts')
+<script>
+    function copyToClipboard(elementId, btnElement) {
+        const textToCopy = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(textToCopy);
+        
+        const originalHTML = btnElement.innerHTML;
+        
+        btnElement.innerHTML = '<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+        
+        const toast = document.getElementById('copy-toast');
+        if(toast) {
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        setTimeout(() => {
+            btnElement.innerHTML = originalHTML;
+        }, 2000);
+    }
+</script>
+
 @if($order->status == 'pending')
 <script>
     document.addEventListener('DOMContentLoaded', function() {

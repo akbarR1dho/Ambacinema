@@ -7,7 +7,7 @@
 </div>
 
 <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm max-w-3xl">
-    <form action="{{ route('admin.movies.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.movies.store') }}" method="POST" id="movieForm">
         @csrf
         
         <div class="mb-4">
@@ -40,9 +40,10 @@
         </div>
 
         <div class="mb-6">
-            <label for="poster" class="block text-sm font-medium text-slate-700">{{ __('Poster Image') }}</label>
-            <input type="file" name="poster" id="poster" accept="image/*" class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            @error('poster') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+            <label for="poster_file" class="block text-sm font-medium text-slate-700">{{ __('Poster Image') }}</label>
+            <input type="file" id="poster_file" accept=".jpg,.jpeg,.png,.webp" class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <input type="hidden" name="poster_path" id="poster_path">
+            @error('poster_path') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
         </div>
 
         <div class="flex justify-end">
@@ -53,3 +54,82 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.getElementById('movieForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const fileInput = document.getElementById('poster_file');
+    const form = this;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+
+    if (!fileInput.files.length) {
+        form.submit();
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    if (!allowedTypes.includes(file.type)) {
+        showErrorAlert('Only JPG, PNG, and WEBP files are allowed.');
+        return;
+    }
+
+    if (file.size > maxSize) {
+        showErrorAlert('File size must be less than 2MB.');
+        return;
+    }
+
+    try {
+        // 1. Request Presigned URL
+        const response = await fetch('{{ route('admin.api.upload.presigned') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                file_name: file.name,
+                content_type: file.type,
+                file_size: file.size
+            })
+        });
+
+        if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.message || 'Failed to get upload URL');
+        }
+
+        const data = await response.json();
+
+        // 2. Upload directly to S3
+        const uploadResponse = await fetch(data.url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': file.type
+            },
+            body: file
+        });
+
+        if (!uploadResponse.ok) {
+            throw new Error('Failed to upload file to S3');
+        }
+
+        // 3. Set hidden input and submit the form
+        document.getElementById('poster_path').value = data.path;
+        form.submit();
+
+    } catch (error) {
+        console.error(error);
+        showErrorAlert(error.message || 'An error occurred during file upload. Please try again.');
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+    }
+});
+</script>
+@endpush

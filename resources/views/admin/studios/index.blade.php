@@ -53,7 +53,7 @@
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'name', name: 'name' },
                 { data: 'type', name: 'type', orderable: false, searchable: false },
-                { data: 'total_seats', name: 'total_seats' },
+                { data: 'total_seats', name: 'total_seats', searchable: false },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             language: {

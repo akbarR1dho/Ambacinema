@@ -30,55 +30,139 @@
                     <span class="text-xl md:text-2xl font-extrabold text-blue-600 tracking-tighter uppercase italic">Amba<span class="text-slate-900">cinema</span></span>
                 </div> 
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tight leading-tight">{{ $order->showtime->movie->title }}</h1>
-                    @if($order->status == 'pending')
+                    <h1 class="text-2xl md:text-3xl font-black text-slate-900 uppercase tracking-tight leading-tight mb-2">{{ $order->showtime->movie->title }}</h1>
+                    <!-- @if($order->status == 'pending')
                         <span class="inline-block mt-2 px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full border border-yellow-200 uppercase">{{ __('Pending') }}</span>
                     @elseif($order->status == 'confirmed')
                         <span class="inline-block mt-2 px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full border border-green-200 uppercase">{{ __('Confirmed') }}</span>
                     @else
                         <span class="inline-block mt-2 px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full border border-red-200 uppercase">{{ $order->status }}</span>
+                    @endif -->
+                    @if($order->status == 'confirmed')
+                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold bg-green-100 text-green-700 uppercase tracking-wide border border-green-200">{{ __('Confirmed') }}</span>
+                    @elseif($order->status == 'pending')
+                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold bg-yellow-100 text-yellow-700 uppercase tracking-wide border border-yellow-200">{{ __('Pending') }}</span>
+                    @else
+                        <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold bg-red-100 text-red-700 uppercase tracking-wide border border-red-200">{{ __('Failed') }}</span>
                     @endif
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 md:gap-6 mb-6 mt-6 md:mt-10">
                 <div>
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Date') }}</p>
-                    <p class="text-base md:text-lg font-bold text-slate-900">{{ \Carbon\Carbon::parse($order->showtime->start_time)->format('d M Y') }}</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Date') }}</p>
+                    <p class="text-base md:text-lg font-bold text-slate-900">{{ \Carbon\Carbon::parse($order->showtime->start_time)->translatedFormat('d M Y') }}</p>
                 </div>
                 <div>
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Time') }}</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Time') }}</p>
                     <p class="text-base md:text-lg font-bold text-slate-900">{{ \Carbon\Carbon::parse($order->showtime->start_time)->format('H:i') }}</p>
                 </div>
                 <div>
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Studio') }}</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Studio') }}</p>
                     <p class="text-base md:text-lg font-bold text-slate-900">{{ $order->showtime->studio->name }}</p>
                 </div>
                 <div>
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Seats') }}</p>
-                    <p class="text-base md:text-lg font-bold text-blue-600">{{ $order->seats->pluck('seat_number')->implode(', ') }}</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Seats') }}</p>
+                    <div>
+                        <div id="seats-container" class="flex flex-wrap gap-2 relative transition-all duration-300 max-h-[100px] overflow-hidden">
+                            @foreach($order->seats as $seat)
+                                <span class="bg-slate-50 text-slate-900 border border-slate-200 px-3 py-1.5 rounded-lg text-sm font-bold">{{ $seat->seat_number }}</span>
+                            @endforeach
+                            <div id="seats-gradient" class="hidden absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white to-transparent pointer-events-none transition-opacity duration-300"></div>
+                        </div>
+
+                        <button type="button" id="seats-toggle-btn" onclick="toggleSeats()" class="hidden mt-3 text-xs font-bold text-slate-700 hover:text-blue-600 transition-colors items-center gap-1 focus:outline-none">
+                            <span id="seats-toggle-text">{{ __('View All') }}</span>
+                            <svg id="seats-icon-down" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <svg id="seats-icon-up" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                        </button>
+
+                        <script>
+                            (function() {
+                                const container = document.getElementById('seats-container');
+                                const gradient = document.getElementById('seats-gradient');
+                                const toggleBtn = document.getElementById('seats-toggle-btn');
+                                
+                                function checkOverflow() {
+                                    if (container.classList.contains('max-h-[100px]')) {
+                                        if (container.scrollHeight > 100) {
+                                            gradient.classList.remove('hidden');
+                                            toggleBtn.classList.remove('hidden');
+                                            toggleBtn.classList.add('flex');
+                                        } else {
+                                            gradient.classList.add('hidden');
+                                            toggleBtn.classList.add('hidden');
+                                            toggleBtn.classList.remove('flex');
+                                        }
+                                    }
+                                }
+                                
+                                // Check shortly after render
+                                setTimeout(checkOverflow, 50);
+                                
+                                // Check on window resize
+                                window.addEventListener('resize', () => {
+                                    if (container.classList.contains('max-h-[100px]')) {
+                                        checkOverflow();
+                                    } else {
+                                        // If expanded and window widened enough to not overflow
+                                        if (container.scrollHeight <= 100) {
+                                            toggleSeats();
+                                            checkOverflow();
+                                        }
+                                    }
+                                });
+                            })();
+
+                            function toggleSeats() {
+                                const container = document.getElementById('seats-container');
+                                const gradient = document.getElementById('seats-gradient');
+                                const text = document.getElementById('seats-toggle-text');
+                                const iconDown = document.getElementById('seats-icon-down');
+                                const iconUp = document.getElementById('seats-icon-up');
+                                
+                                const isExpanded = !container.classList.contains('max-h-[100px]');
+                                
+                                if (isExpanded) {
+                                    // Collapse
+                                    container.classList.add('max-h-[100px]');
+                                    if(gradient) gradient.classList.remove('opacity-0');
+                                    text.innerText = '{{ __('View All') }}';
+                                    iconDown.classList.remove('hidden');
+                                    iconUp.classList.add('hidden');
+                                } else {
+                                    // Expand
+                                    container.classList.remove('max-h-[100px]');
+                                    if(gradient) gradient.classList.add('opacity-0');
+                                    text.innerText = '{{ __('Less') }}';
+                                    iconDown.classList.add('hidden');
+                                    iconUp.classList.remove('hidden');
+                                }
+                            }
+                        </script>
+                    </div>
                 </div>
             </div>
             
             <div class="grid grid-cols-2 gap-4 md:gap-6 mb-8 border-t border-slate-200 pt-6">
                 <div>
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Booking Time') }}</p>
-                    <p class="text-sm font-medium text-slate-700">{{ $order->pending_at ? $order->pending_at->format('d M Y, H:i') : '-' }}</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Booking Time') }}</p>
+                    <p class="text-sm font-medium text-slate-700">{{ $order->pending_at ? $order->pending_at->translatedFormat('d M Y, H:i') : '-' }}</p>
                 </div>
                 <div>
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Confirmation Time') }}</p>
-                    <p class="text-sm font-medium text-slate-700">{{ $order->confirmed_at ? $order->confirmed_at->format('d M Y, H:i') : '-' }}</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Confirmation Time') }}</p>
+                    <p class="text-sm font-medium text-slate-700">{{ $order->confirmed_at ? $order->confirmed_at->translatedFormat('d M Y, H:i') : '-' }}</p>
                 </div>
             </div>
 
             <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
                 <div>
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Booked By') }}</p>
-                    <p class="text-slate-900 font-medium">{{ $order->user->name }}</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Booked By') }}</p>
+                    <p class="text-slate-900 font-bold">{{ $order->user->name }}</p>
                 </div>
                 <div class="text-left sm:text-right">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Total Payment') }}</p>
-                    <p class="text-xl font-bold text-slate-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Total Payment') }}</p>
+                    <p class="text-xl font-black text-blue-600">Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
                 </div>
             </div>
         </div>
