@@ -533,7 +533,7 @@
             event.preventDefault();
             Swal.fire({
                 title: '<div class="flex items-center justify-center"><img src="{{ asset("images/logo.png") }}" alt="Logo" class="h-10 mr-4"><span class="text-2xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span></div>',
-                html: `<p class="text-slate-400 mt-2">${message}<br><span class="text-red-400 text-xs mt-1 block">{{ __("This action cannot be undone.") }}</span></p>`,
+                html: `<p class="text-slate-400 mt-2">${message}<br><span class="text-red-400 text-xs mt-1 block">{{ __("This action cannot be undone") }}.</span></p>`,
                 icon: 'warning',
                 iconColor: '#ef4444',
                 showCancelButton: true,

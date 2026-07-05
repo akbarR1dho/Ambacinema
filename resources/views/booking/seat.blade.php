@@ -25,9 +25,9 @@
                     <div class="flex flex-col min-w-max px-4 md:px-8">
                         <!-- Cinema Screen -->
                         <div class="w-4/5 md:w-3/4 mx-auto mb-16 relative">
+                            <p class="text-center text-slate-400 text-xs font-semibold tracking-[0.3em] mb-2 uppercase">{{ __('Cinema Screen') }}</p>
                             <div class="h-2 w-full bg-gradient-to-r from-blue-900 via-blue-500 to-blue-900 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.5)]"></div>
                             <div class="w-full h-12 bg-gradient-to-b from-blue-500/20 to-transparent transform perspective-1000 rotateX-45 blur-sm mt-2"></div>
-                            <p class="text-center text-slate-400 text-xs font-semibold tracking-[0.3em] mt-4 uppercase">{{ __('Cinema Screen') }}</p>
                         </div>
 
                         @php

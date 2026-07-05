@@ -24,7 +24,7 @@
     <div class="h-[400px] w-full object-cover opacity-40 bg-[url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center"></div>
     <div class="absolute inset-0 z-20 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight">{{ __('EXPERIENCE') }} <br><span class="text-blue-400">{{ __('CINEMA') }}</span> {{ __('LIKE NEVER BEFORE') }}</h1>
-        <p class="text-blue-100 text-lg md:text-xl max-w-2xl mb-8">{{ __('Book your tickets now for the latest blockbuster movies playing in Ambacinema theaters.') }}</p>
+        <p class="text-blue-100 text-lg md:text-xl max-w-2xl mb-8">{{ __('Book your tickets now for the latest blockbuster movies playing in Ambacinema theaters') }}.</p>
         <!-- <div>
             <a href="#now-playing" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-colors inline-block uppercase tracking-wider text-sm shadow-lg shadow-blue-900/30">Now Playing</a>
         </div> -->

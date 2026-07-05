@@ -9,14 +9,14 @@
             name="filter_movie_id" 
             apiUrl="{{ route('admin.api.movies') }}" 
             defaultLabel="{{ __('All Movies') }}" 
-            placeholder="{{ __('Search movies...') }}" 
+            placeholder="{{ __('Search movies') }}..." 
         />
         <x-infinite-select 
             id="filter_studio_id" 
             name="filter_studio_id" 
             apiUrl="{{ route('admin.api.studios') }}" 
             defaultLabel="{{ __('All Studios') }}" 
-            placeholder="{{ __('Search studios...') }}" 
+            placeholder="{{ __('Search studios') }}..." 
         />
         <a href="{{ route('admin.showtimes.create') }}" class="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
             + {{ __('Add New Showtime') }}

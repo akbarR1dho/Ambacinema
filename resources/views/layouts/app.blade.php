@@ -133,7 +133,7 @@
                         <span class="text-2xl sm:text-3xl font-extrabold text-blue-500 tracking-tighter uppercase italic">Amba<span class="text-white">cinema</span></span>
                     </a>
                     <p class="text-slate-400 text-sm leading-relaxed max-w-sm mt-2">
-                        {{ __('Experience the magic of cinema with cutting-edge technology and premium comfort. Book your tickets easily and enjoy the show!') }}
+                        {{ __('Experience the magic of cinema with cutting-edge technology and premium comfort. Book your tickets easily and enjoy the show') }}!
                     </p>
                 </div>
                 <div class="md:col-span-2 grid grid-cols-2 gap-8 md:gap-12">

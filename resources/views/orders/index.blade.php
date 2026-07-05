@@ -11,7 +11,7 @@
         
         <form action="{{ route('orders.index') }}" method="GET" class="w-full sm:w-auto" id="filterForm">
             <div class="flex items-center gap-2 w-full sm:w-auto">
-                <label for="filter-date" class="text-sm font-medium text-slate-500 whitespace-nowrap hidden sm:block">{{ __('Time Range:') }}</label>
+                <label for="filter-date" class="text-sm font-medium text-slate-500 whitespace-nowrap hidden sm:block">{{ __('Time Range') }}:</label>
                 <select name="date_filter" id="filter-date" class="w-full sm:w-auto px-4 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" onchange="document.getElementById('filterForm').submit()">
                     <option value="all" {{ request('date_filter', 'today') == 'all' ? 'selected' : '' }}>{{ __('All Time') }}</option>
                     <option value="today" {{ request('date_filter', 'today') == 'today' ? 'selected' : '' }}>{{ __('Today') }}</option>
@@ -34,7 +34,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            <p class="text-sm text-slate-500 mt-2">{{ __('Loading more tickets...') }}</p>
+            <p class="text-sm text-slate-500 mt-2">{{ __('Loading more tickets') }}...</p>
         </div>
     @else
         <div class="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">

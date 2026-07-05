@@ -8,7 +8,7 @@
             id="typeFilter" 
             api-url="{{ route('admin.api.studio-types') }}" 
             default-label="{{ __('All Types') }}" 
-            placeholder="{{ __('Search type...') }}"
+            placeholder="{{ __('Search type') }}..."
         />
         <a href="{{ route('admin.studios.create') }}" class="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors whitespace-nowrap">
             + {{ __('Add New Studio') }}
@@ -58,7 +58,7 @@
             ],
             language: {
                 search: "",
-                searchPlaceholder: "{{ __('Search studios...') }}"
+                searchPlaceholder: "{{ __('Search studios') }}..."
             }
         });
 

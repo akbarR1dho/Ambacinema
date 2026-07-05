@@ -8,13 +8,13 @@
             id="studioFilter" 
             api-url="{{ route('admin.api.studios') }}" 
             default-label="{{ __('All Studios') }}" 
-            placeholder="{{ __('Search studio...') }}"
+            placeholder="{{ __('Search studio') }}..."
         />
         <x-infinite-select 
             id="movieFilter" 
             api-url="{{ route('admin.api.movies') }}" 
             default-label="{{ __('All Movies') }}" 
-            placeholder="{{ __('Search movie...') }}"
+            placeholder="{{ __('Search movie') }}..."
         />
         <select id="statusFilter" class="w-full sm:w-40 bg-white border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-[38px]">
             <option value="">{{ __('All Statuses') }}</option>
@@ -75,7 +75,7 @@
             ],
             language: {
                 search: "",
-                searchPlaceholder: "{{ __('Search orders...') }}"
+                searchPlaceholder: "{{ __('Search orders') }}..."
             }
         });
 

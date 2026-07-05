@@ -41,7 +41,11 @@
                 {data: 'friday', name: 'price_friday', searchable: false},
                 {data: 'weekend', name: 'price_weekend', searchable: false},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
-            ]
+            ],
+            language: {
+                search: "",
+                searchPlaceholder: "{{ __('Search studio types') }}..."
+            }
         });
     });
 </script>

@@ -174,7 +174,7 @@
                     <svg class="w-16 h-16 text-yellow-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     <h3 class="text-yellow-600 font-bold text-xl uppercase tracking-widest mb-2">{{ __('Payment Required') }}</h3>
                     <p class="text-slate-500 text-sm mb-2">{{ __('You have not completed the payment for this ticket.') }}</p>
-                    <p class="text-slate-600 font-medium text-sm">{{ __('Please return to the "My Tickets" page and click the "Pay" button to complete your transaction.') }}</p>
+                    <p class="text-slate-600 font-medium text-sm">{{ __('Please return to the "My Tickets" page and click the "Pay" button to complete your transaction') }}.</p>
                 </div>
             @elseif($order->status == 'confirmed')
                 <h3 class="text-black font-bold text-xl uppercase tracking-widest mb-6">{{ __('Scan Entry') }}</h3>
@@ -187,7 +187,7 @@
                     @endif
                 </div>
 
-                <p class="text-gray-500 text-xs text-center">{{ __('Please present this QR code at the studio entrance.') }}</p>
+                <p class="text-gray-500 text-xs text-center">{{ __('Please present this QR code at the studio entrance') }}.</p>
             @else
                 <h3 class="text-red-600 font-bold text-xl uppercase tracking-widest mb-6">{{ __('Order Failed') }}</h3>
                 <p class="text-gray-500 text-xs text-center">{{ __('This order was not successful.') }}</p>

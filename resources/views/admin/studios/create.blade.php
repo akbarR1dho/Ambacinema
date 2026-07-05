@@ -23,7 +23,7 @@
                     id="studio_type_id" 
                     api-url="{{ route('admin.api.studio-types') }}" 
                     default-label="{{ __('Select Type') }}" 
-                    placeholder="{{ __('Search type...') }}"
+                    placeholder="{{ __('Search type') }}..."
                 />
             </div>
             @error('studio_type_id') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
@@ -32,7 +32,7 @@
         <div class="mb-6">
             <label for="total_seats" class="block text-sm font-medium text-slate-700">{{ __('Total Seats') }}</label>
             <input type="number" name="total_seats" id="total_seats" value="{{ old('total_seats') }}" required min="1" max="500" class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            <p class="text-xs text-slate-500 mt-1">{{ __('Seats will be generated automatically up to this amount.') }}</p>
+            <p class="text-xs text-slate-500 mt-1">{{ __('Seats will be generated automatically up to this amount') }}.</p>
             @error('total_seats') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
         </div>
 

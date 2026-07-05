@@ -18,17 +18,17 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
-                <label for="price_weekday" class="block text-sm font-medium text-slate-700">{{ __('Weekday Price (Mon-Thu)') }}</label>
+                <label for="price_weekday" class="block text-sm font-medium text-slate-700 mb-2">{{ __('Weekday Price') }} <span class="text-xs text-slate-400 font-normal ml-1">({{ __('Mon-Thu') }})</span></label>
                 <input type="number" name="price_weekday" id="price_weekday" value="{{ old('price_weekday', 40000) }}" required min="0" class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 @error('price_weekday') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
             </div>
             <div>
-                <label for="price_friday" class="block text-sm font-medium text-slate-700">{{ __('Friday Price') }}</label>
+                <label for="price_friday" class="block text-sm font-medium text-slate-700 mb-2">{{ __('Friday Price') }}</label>
                 <input type="number" name="price_friday" id="price_friday" value="{{ old('price_friday', 50000) }}" required min="0" class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 @error('price_friday') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
             </div>
             <div>
-                <label for="price_weekend" class="block text-sm font-medium text-slate-700">{{ __('Weekend Price (Sat-Sun)') }}</label>
+                <label for="price_weekend" class="block text-sm font-medium text-slate-700 mb-2">{{ __('Weekend Price') }} <span class="text-xs text-slate-400 font-normal ml-1">({{ __('Sat-Sun') }})</span></label>
                 <input type="number" name="price_weekend" id="price_weekend" value="{{ old('price_weekend', 60000) }}" required min="0" class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 @error('price_weekend') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
             </div>

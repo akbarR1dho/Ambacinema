@@ -61,7 +61,7 @@
             ],
             language: {
                 search: "",
-                searchPlaceholder: "{{ __('Search movies...') }}"
+                searchPlaceholder: "{{ __('Search movies') }}..."
             }
         });
 

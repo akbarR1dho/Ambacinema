@@ -75,12 +75,12 @@ document.getElementById('movieForm').addEventListener('submit', async function(e
     const maxSize = 2 * 1024 * 1024; // 2MB
 
     if (!allowedTypes.includes(file.type)) {
-        showErrorAlert('Only JPG, PNG, and WEBP files are allowed.');
+        showErrorAlert('{{ __("Only JPG, PNG, and WEBP files are allowed") }}.');
         return;
     }
 
     if (file.size > maxSize) {
-        showErrorAlert('File size must be less than 2MB.');
+        showErrorAlert('{{ __("File size must be less than 2MB") }}.');
         return;
     }
 
@@ -101,7 +101,7 @@ document.getElementById('movieForm').addEventListener('submit', async function(e
 
         if (!response.ok) {
             const errData = await response.json();
-            throw new Error(errData.message || 'Failed to get upload URL');
+            throw new Error(errData.message || '{{ __("Failed to get upload URL") }}.');
         }
 
         const data = await response.json();
@@ -125,7 +125,7 @@ document.getElementById('movieForm').addEventListener('submit', async function(e
 
     } catch (error) {
         console.error(error);
-        showErrorAlert(error.message || 'An error occurred during file upload. Please try again.');
+        showErrorAlert(error.message || '{{ __("An error occurred during file upload. Please try again") }}.');
         submitBtn.innerHTML = originalBtnText;
         submitBtn.disabled = false;
         submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');

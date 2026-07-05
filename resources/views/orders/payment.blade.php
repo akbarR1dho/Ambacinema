@@ -14,37 +14,37 @@
 
     <div class="rounded-2xl shadow-2xl bg-white overflow-hidden p-5 sm:p-8 text-center max-w-lg mx-auto">
         <h2 class="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight mb-4">{{ __('Complete Payment') }}</h2>
-        <p class="text-slate-500 text-sm mb-8">{{ __('You are about to pay for your movie ticket at Ambacinema.') }}</p>
+        <p class="text-slate-500 text-sm mb-8">{{ __('You are about to pay for your movie ticket at Ambacinema') }}.</p>
 
         <div class="bg-slate-50 p-4 sm:p-6 rounded-xl border border-slate-200 text-left mb-8 shadow-inner">
             <h3 class="text-lg font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">{{ __('Order Summary') }}</h3>
             
             <div class="flex justify-between mb-3 gap-2">
-                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Movie:') }}</span>
+                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Movie') }}:</span>
                 <span class="text-sm font-bold text-slate-900 text-right">{{ $order->showtime->movie->title }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
-                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Studio:') }}</span>
+                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Studio') }}:</span>
                 <span class="text-sm font-bold text-slate-900 text-right">{{ $order->showtime->studio->name }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
-                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Show Date:') }}</span>
+                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Showdate') }}:</span>
                 <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->showtime->start_time)->translatedFormat('d M Y') }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
-                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Show Time:') }}</span>
+                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Showtime') }}:</span>
                 <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->showtime->start_time)->format('H:i') }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
-                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Booking Time:') }}</span>
+                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Booking Time') }}:</span>
                 <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->created_at)->translatedFormat('d M Y, H:i') }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
-                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Price/Seat:') }}</span>
+                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Price per Seat') }}:</span>
                 <span class="text-sm font-bold text-slate-900 text-right">Rp {{ number_format($order->total_price / max($order->seats->count(), 1), 0, ',', '.') }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
-                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Seats:') }}</span>
+                <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Seats') }}:</span>
                 <span class="text-sm font-bold text-blue-600 text-right">{{ $order->seats->pluck('seat_number')->implode(', ') }}</span>
             </div>
             <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-200">
@@ -70,7 +70,7 @@
                             <p class="text-sm font-bold text-slate-700 mb-4 uppercase">{{ str_replace('_', ' ', $order->payment_type == 'gopay' ? 'qris' : $order->payment_type) }}</p>
                             
                             @if($order->payment_type == 'bca_va')
-                                <p class="text-xs text-slate-500 mb-2">{{ __('Virtual Account Number:') }}</p>
+                                <p class="text-xs text-slate-500 mb-2">{{ __('Virtual Account Number') }}:</p>
                                 <div class="flex justify-center mb-2">
                                     <div class="flex flex-col sm:flex-row bg-white py-3 px-3 sm:px-6 rounded-xl border border-slate-200 shadow-sm items-center gap-2 sm:gap-3 w-full sm:w-auto overflow-hidden">
                                         <span class="text-base sm:text-lg md:text-xl font-black text-blue-600 font-mono select-all break-all text-center" id="bca-va">{{ $order->payment_info['va_numbers'][0]['va_number'] ?? '-' }}</span>
@@ -79,10 +79,10 @@
                                         </button>
                                     </div>
                                 </div>
-                                <p class="text-xs text-slate-400 mt-2">{{ __('Transfer the exact amount to the virtual account above.') }}</p>
+                                <p class="text-xs text-slate-400 mt-2">{{ __('Transfer the exact amount to the virtual account above') }}.</p>
                             @elseif($order->payment_type == 'echannel')
-                                <p class="text-xs text-slate-500 mb-2">{{ __('Biller Code:') }} <span class="font-bold text-slate-900">{{ $order->payment_info['biller_code'] ?? '-' }}</span></p>
-                                <p class="text-xs text-slate-500 mb-2 mt-4">{{ __('Bill Key (VA Number):') }}</p>
+                                <p class="text-xs text-slate-500 mb-2">{{ __('Biller Code') }} : <span class="font-bold text-slate-900">{{ $order->payment_info['biller_code'] ?? '-' }}</span></p>
+                                <p class="text-xs text-slate-500 mb-2 mt-4">{{ __('Bill Key (VA Number)') }}:</p>
                                 <div class="flex justify-center mb-2">
                                     <div class="flex flex-col sm:flex-row bg-white py-3 px-3 sm:px-6 rounded-xl border border-slate-200 shadow-sm items-center gap-2 sm:gap-3 w-full sm:w-auto overflow-hidden">
                                         <span class="text-base sm:text-lg md:text-xl font-black text-blue-600 font-mono select-all break-all text-center" id="mandiri-va">{{ $order->payment_info['bill_key'] ?? '-' }}</span>
@@ -106,7 +106,7 @@
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            <span class="text-sm font-medium text-slate-600">{{ __('Waiting for payment to be completed...') }}</span>
+                            <span class="text-sm font-medium text-slate-600">{{ __('Waiting for payment to be completed') }}...</span>
                         </div>
                     </div>
                 @endif
@@ -115,7 +115,7 @@
                     <div class="bg-green-50 border border-green-200 rounded-xl p-6 text-center mb-6">
                         <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <h4 class="text-xl font-bold text-green-700 mb-2">{{ __('Payment Successful!') }}</h4>
-                        <p class="text-green-600 text-sm mb-6">{{ __('Your ticket has been confirmed and is ready to use.') }}</p>
+                        <p class="text-green-600 text-sm mb-6">{{ __('Your ticket has been confirmed and is ready to use') }}.</p>
                         <a href="{{ route('orders.show', $order->id) }}" class="inline-flex items-center py-3 px-8 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-green-600 hover:bg-green-700">
                             {{ __('View e-Ticket') }}
                         </a>
@@ -130,7 +130,7 @@
     <div class="bg-green-100 text-green-600 p-1.5 rounded-lg">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
     </div>
-    <span class="font-bold text-sm">{{ __('Copied to clipboard!') }}</span>
+    <span class="font-bold text-sm">{{ __('Copied to clipboard') }}!</span>
 </div>
 
 @endsection
@@ -225,7 +225,7 @@
             
             if (distance < 0) {
                 if(countdownElement) {
-                    countdownElement.innerHTML = "EXPIRED";
+                    countdownElement.innerHTML = "{{ __('EXPIRED') }}";
                     countdownElement.classList.remove('text-red-600');
                     countdownElement.classList.add('text-slate-500');
                 }

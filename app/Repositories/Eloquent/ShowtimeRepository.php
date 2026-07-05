@@ -23,16 +23,26 @@ class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInt
         $dates = collect();
         $showtimesByDate = [];
 
+        $startDate = Carbon::today();
+        $endDate = Carbon::today()->addDays($days - 1);
+
+        $allTimes = $this->model->with(['studio', 'studio.studioType'])
+            ->where('movie_id', $movieId)
+            ->whereDate('start_time', '>=', $startDate->format('Y-m-d'))
+            ->whereDate('start_time', '<=', $endDate->format('Y-m-d'))
+            ->where('start_time', '>=', now())
+            ->orderBy('start_time', 'asc')
+            ->get();
+
+        $groupedTimes = $allTimes->groupBy(function($item) {
+            return Carbon::parse($item->start_time)->format('Y-m-d');
+        });
+
         for ($i = 0; $i < $days; $i++) {
             $date = Carbon::today()->addDays($i);
             $dateString = $date->format('Y-m-d');
             
-            $times = $this->model->with(['studio', 'studio.studioType'])
-                ->where('movie_id', $movieId)
-                ->whereDate('start_time', $dateString)
-                ->where('start_time', '>=', now())
-                ->orderBy('start_time', 'asc')
-                ->get();
+            $times = $groupedTimes->get($dateString, collect());
                 
             $timesByType = [];
             foreach ($times as $st) {
@@ -67,7 +77,7 @@ class ShowtimeRepository extends BaseRepository implements ShowtimeRepositoryInt
 
     public function findWithRelations($id)
     {
-        return $this->model->with(['movie', 'studio'])->findOrFail($id);
+        return $this->model->with(['movie', 'studio.studioType'])->findOrFail($id);
     }
     
     public function getShowtimesDatatable($filters = [])

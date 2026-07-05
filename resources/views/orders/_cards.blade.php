@@ -15,11 +15,11 @@
         <div class="p-6">
             <div class="flex justify-between items-center mb-4">
                 <div>
-                    <p class="text-xs text-slate-500 uppercase tracking-wider">Studio</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider">{{ __('Studio') }}</p>
                     <p class="text-slate-900 font-medium">{{ $order->showtime->studio->name }}</p>
                 </div>
                 <div class="text-right">
-                    <p class="text-xs text-slate-500 uppercase tracking-wider">Status</p>
+                    <p class="text-xs text-slate-500 uppercase tracking-wider">{{ __('Status') }}</p>
                     <span class="{{ $order->status == 'pending' ? 'text-orange-500' : ($order->status == 'failed' ? 'text-red-500' : 'text-green-600') }} font-bold uppercase text-sm">
                         @if($order->status == 'confirmed') {{ __('Confirmed') }}
                         @else {{ __('Pending') }}
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="mb-6">
-                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Seats</p>
+                <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">{{ __('Seats') }}</p>
                 <p class="text-slate-700 font-medium truncate">{{ $order->seats->pluck('seat_number')->implode(', ') }}</p>
             </div>
             @if($order->status == 'pending')
@@ -37,7 +37,7 @@
                 </a>
             @else
                 <a href="{{ route('orders.show', $order->id) }}" class="block w-full text-center bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-semibold py-2 rounded-lg transition-colors shadow-sm">
-                    View e-Ticket
+                    {{ __('View e-Ticket') }}
                 </a>
             @endif
         </div>

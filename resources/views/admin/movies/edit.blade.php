@@ -49,7 +49,7 @@
             @endif
             <input type="file" id="poster_file" accept=".jpg,.jpeg,.png,.webp" class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
             <input type="hidden" name="poster_path" id="poster_path">
-            <p class="text-xs text-slate-500 mt-1">{{ __('Leave blank to keep current poster.') }}</p>
+            <p class="text-xs text-slate-500 mt-1">{{ __('Leave blank to keep current poster') }}.</p>
             @error('poster_path') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
         </div>
 
@@ -91,7 +91,6 @@ document.getElementById('movieForm').addEventListener('submit', async function(e
         return;
     }
 
-    submitBtn.innerHTML = '{{ __('Saving...') }}';
     submitBtn.disabled = true;
     submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
 

@@ -119,9 +119,9 @@ class ShowtimeController extends Controller
     public function edit(string $id)
     {
         $showtime = $this->showtimeRepo->find($id);
-        $movies = $this->movieRepo->all();
-        $studios = $this->studioRepo->all();
-        return view('admin.showtimes.edit', compact('showtime', 'movies', 'studios'));
+        $movie = $this->movieRepo->find($showtime->movie_id)->title;
+        $studio = $this->studioRepo->find($showtime->studio_id)->name;
+        return view('admin.showtimes.edit', compact('showtime', 'movie', 'studio'));
     }
 
     public function update(UpdateShowtimeRequest $request, string $id)

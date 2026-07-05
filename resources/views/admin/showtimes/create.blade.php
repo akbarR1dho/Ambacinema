@@ -17,7 +17,7 @@
                     id="movie_id" 
                     api-url="{{ route('admin.api.movies') }}" 
                     default-label="{{ __('Select a Movie') }}" 
-                    placeholder="{{ __('Search movie...') }}"
+                    placeholder="{{ __('Search movie') }}..."
                 />
             </div>
             @error('movie_id') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
@@ -30,7 +30,7 @@
                     id="studio_id" 
                     api-url="{{ route('admin.api.studios') }}" 
                     default-label="{{ __('Select a Studio') }}" 
-                    placeholder="{{ __('Search studio...') }}"
+                    placeholder="{{ __('Search studio') }}..."
                 />
             </div>
             @error('studio_id') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
@@ -39,7 +39,7 @@
         <div class="mb-6">
             <label for="start_time" class="block text-sm font-medium text-slate-700">{{ __('Start Time') }}</label>
             <input type="datetime-local" name="start_time" id="start_time" value="{{ old('start_time') }}" min="{{ now()->addHour()->startOfHour()->format('Y-m-d\TH:i') }}" required class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            <p class="text-xs text-slate-500 mt-1">{{ __('Must be scheduled from the start of the next hour onwards.') }}</p>
+            <p class="text-xs text-slate-500 mt-1">{{ __('Must be scheduled from the start of the next hour onwards') }}.</p>
             @error('start_time') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
         </div>
 

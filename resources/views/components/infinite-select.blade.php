@@ -25,7 +25,7 @@
                 {{ $defaultLabel }}
             </li>
             <li class="loading-sentinel px-3 py-2 text-sm text-center text-slate-500 hidden">
-                {{ __('Loading...') }}
+                {{ __('Loading') }}...
             </li>
         </ul>
     </div>

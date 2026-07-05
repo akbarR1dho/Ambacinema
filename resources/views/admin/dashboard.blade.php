@@ -4,7 +4,7 @@
 <div class="mb-6 flex justify-between items-center">
     <div>
         <h2 class="text-2xl font-bold text-slate-900">{{ __('Dashboard Overview') }}</h2>
-        <p class="text-sm text-slate-500">{{ __('Welcome to the Ambacinema administration panel.') }}</p>
+        <p class="text-sm text-slate-500">{{ __('Welcome to the Ambacinema administration panel') }}.</p>
     </div>
 </div>
 
@@ -83,7 +83,7 @@
                     id="filter-studio" 
                     api-url="{{ route('admin.api.studios') }}" 
                     default-label="{{ __('All Studios') }}" 
-                    placeholder="{{ __('Search studio...') }}"
+                    placeholder="{{ __('Search studio') }}..."
                 />
             </div>
 
@@ -93,7 +93,7 @@
                     id="filter-movie" 
                     api-url="{{ route('admin.api.movies') }}" 
                     default-label="{{ __('All Movies') }}" 
-                    placeholder="{{ __('Search movie...') }}"
+                    placeholder="{{ __('Search movie') }}..."
                 />
             </div>
 

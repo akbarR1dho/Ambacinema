@@ -90,8 +90,8 @@ class StudioController extends Controller
     public function edit(string $id)
     {
         $studio = $this->studioRepo->find($id);
-        $studioTypes = $this->studioTypeRepo->all();
-        return view('admin.studios.edit', compact('studio', 'studioTypes'));
+        $studioType = $this->studioTypeRepo->find($studio->studio_type_id)->name;
+        return view('admin.studios.edit', compact('studio', 'studioType'));
     }
 
     public function update(UpdateStudioRequest $request, string $id)
