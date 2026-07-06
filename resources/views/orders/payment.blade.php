@@ -45,7 +45,7 @@
             </div>
             <div class="flex justify-between mb-3 gap-2">
                 <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Seats') }}:</span>
-                <span class="text-sm font-bold text-blue-600 text-right">{{ $order->seats->pluck('seat_number')->implode(', ') }}</span>
+                <span class="text-sm font-bold text-slate-900 text-right">{{ $order->seats->pluck('seat_number')->implode(', ') }}</span>
             </div>
             <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-200">
                 <span class="text-base font-bold text-slate-900">{{ __('Total Payment') }}</span>
