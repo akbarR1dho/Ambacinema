@@ -69,10 +69,9 @@
             <div class="w-full sm:w-auto">
                 <label for="filter-date" class="block text-xs font-medium text-slate-500 mb-1">{{ __('Time Range') }}</label>
                 <select id="filter-date" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:min-w-[150px]">
-                    <option value="">{{ __('All Time') }}</option>
                     <option value="today">{{ __('Today') }}</option>
                     <option value="weekly">{{ __('This Week') }}</option>
-                    <option value="monthly">{{ __('This Month') }}</option>
+                    <option value="monthly" selected>{{ __('This Month') }}</option>
                     <option value="annual">{{ __('This Year') }}</option>
                 </select>
             </div>
