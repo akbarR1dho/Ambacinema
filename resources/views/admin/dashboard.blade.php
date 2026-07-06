@@ -174,7 +174,7 @@
                     data: {
                         labels: data.labels,
                         datasets: [{
-                            label: 'Income',
+                            label: '{{ __("Income") }}',
                             data: data.data,
                             backgroundColor: gradient,
                             borderColor: 'rgb(37, 99, 235)', // blue-600
