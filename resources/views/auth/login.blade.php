@@ -41,7 +41,13 @@
                 @enderror
             </div>
 
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row justify-between gap-4">
+                <div class="flex items-center">
+                    <input id="remember" name="remember" type="checkbox" class="h-5 w-5 border-slate-300 rounded transition-colors">
+                    <label for="remember" class="ml-2 block text-sm font-medium text-slate-700 select-none">
+                        {{ __('Remember me') }}
+                    </label>
+                </div>
                 <div class="text-sm">
                     <span class="text-slate-500">{{ __("Don't have an account?") }}</span>
                     <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-700 font-bold ml-1 transition-colors">{{ __('Sign up') }}</a>

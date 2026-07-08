@@ -1,1 +1,0 @@
-<?php $studios = \App\Models\Studio::where("name", "Studio Two")->get(); if ($studios->count() > 1) { for ($i = 1; $i < $studios->count(); $i++) { $studios[$i]->name = "Studio Two " . $i; $studios[$i]->save(); } } echo "Done";

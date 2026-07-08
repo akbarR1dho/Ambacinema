@@ -59,15 +59,10 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
     {
         $query = $this->model->with(['user', 'showtime.movie', 'showtime.studio'])->select('orders.*');
         
-        if (!empty($filters['studio_id'])) {
+        if (!empty($filters['studio_id']) || !empty($filters['movie_id'])) {
             $query->whereHas('showtime', function($q) use ($filters) {
-                $q->where('studio_id', $filters['studio_id']);
-            });
-        }
-
-        if (!empty($filters['movie_id'])) {
-            $query->whereHas('showtime', function($q) use ($filters) {
-                $q->where('movie_id', $filters['movie_id']);
+                if (!empty($filters['studio_id'])) $q->where('studio_id', $filters['studio_id']);
+                if (!empty($filters['movie_id'])) $q->where('movie_id', $filters['movie_id']);
             });
         }
 
