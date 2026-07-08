@@ -296,14 +296,18 @@
         document.getElementById('btn-reset-filters').addEventListener('click', function() {
             filterIds.forEach(id => {
                 const el = document.getElementById(id);
-                el.value = '';
                 
-                if (el.classList.contains('infinite-select-input')) {
-                    const container = el.closest('.infinite-select-container');
-                    const label = container.querySelector('.infinite-select-label');
-                    const defaultItem = container.querySelector('[data-value=""]');
-                    if (defaultItem) {
-                        label.textContent = defaultItem.dataset.name;
+                if (id === 'filter-date') {
+                    el.value = 'monthly';
+                } else {
+                    el.value = '';
+                    if (el.classList.contains('infinite-select-input')) {
+                        const container = el.closest('.infinite-select-container');
+                        const label = container.querySelector('.infinite-select-label');
+                        const defaultItem = container.querySelector('[data-value=""]');
+                        if (defaultItem) {
+                            label.textContent = defaultItem.dataset.name;
+                        }
                     }
                 }
             });
