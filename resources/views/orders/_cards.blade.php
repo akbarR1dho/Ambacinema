@@ -9,7 +9,7 @@
             <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-90"></div>
             <div class="absolute bottom-4 left-4 right-4">
                 <h3 class="text-xl font-bold text-white truncate drop-shadow-md">{{ $order->showtime->movie->title }}</h3>
-                <p class="text-sm text-blue-300 font-medium drop-shadow-md">{{ \Carbon\Carbon::parse($order->showtime->start_time)->translatedFormat('d M Y, H:i') }}</p>
+                <p class="text-sm text-blue-300 font-medium drop-shadow-md">{{ $order->showtime->start_time_local->translatedFormat('d M Y, H:i') }}</p>
             </div>
         </div>
         <div class="p-6">

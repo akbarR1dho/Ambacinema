@@ -78,7 +78,7 @@
                                 <!-- Type Tabs -->
                                 <div class="flex flex-wrap gap-2 mb-6">
                                     @foreach($showtimesByDate[$d->date] as $typeName => $studiosGroup)
-                                        <button class="type-btn-{{ $d->date }} px-5 py-2 rounded-xl border border-slate-300 font-bold transition-all focus:outline-none text-slate-800 bg-white hover:border-blue-500 hover:text-slate-900 data-[active=true]:border-blue-500 data-[active=true]:bg-blue-50" data-target="type-{{ $d->date }}-{{ Str::slug($typeName) }}" data-type-name="{{ $typeName }}">
+                                        <button class="type-btn-{{ $d->date }} px-5 py-2 rounded-xl border cursor-pointer border-slate-300 font-bold transition-all focus:outline-none text-slate-800 bg-white hover:border-blue-500 hover:text-slate-900 data-[active=true]:border-blue-500 data-[active=true]:bg-blue-50" data-target="type-{{ $d->date }}-{{ Str::slug($typeName) }}" data-type-name="{{ $typeName }}">
                                             {{ $typeName }}
                                         </button>
                                     @endforeach
@@ -90,7 +90,7 @@
                                             @foreach($studiosGroup as $studioId => $studioShowtimes)
                                                 <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden transition-colors hover:border-slate-300 shadow-sm">
                                                     <!-- Accordion Header -->
-                                                    <button class="accordion-btn w-full px-6 py-5 flex justify-between items-center focus:outline-none bg-white hover:bg-slate-50 transition-colors">
+                                                    <button class="accordion-btn w-full cursor-pointer px-6 py-5 flex justify-between items-center focus:outline-none bg-white hover:bg-slate-50 transition-colors">
                                                         <span class="text-lg font-bold text-slate-900 uppercase tracking-wider">{{ $studioShowtimes->first()->studio->name }}</span>
                                                         <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200 accordion-icon rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                                     </button>
@@ -100,11 +100,11 @@
                                                             @foreach($studioShowtimes as $st)
                                                                 @auth
                                                                     <a href="{{ route('booking.seat', $st->id) }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-bold rounded-xl transition-all duration-200 shadow-sm text-lg">
-                                                                        {{ \Carbon\Carbon::parse($st->start_time)->format('H:i') }}
+                                                                        {{ $st->start_time_local->format('H:i') }}
                                                                     </a>
                                                                 @else
                                                                     <button type="button" onclick="promptLogin(event)" class="inline-flex items-center justify-center px-6 py-2.5 bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-bold rounded-xl transition-all duration-200 shadow-sm text-lg focus:outline-none">
-                                                                        {{ \Carbon\Carbon::parse($st->start_time)->format('H:i') }}
+                                                                        {{ $st->start_time_local->format('H:i') }}
                                                                     </button>
                                                                 @endauth
                                                             @endforeach

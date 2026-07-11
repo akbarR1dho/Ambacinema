@@ -15,8 +15,10 @@ class MovieRepository extends BaseRepository implements MovieRepositoryInterface
     public function getActiveMoviesForToday()
     {
         return $this->model->whereHas('showtimes', function ($query) {
-            $query->whereDate('start_time', now()->toDateString())
-                  ->where('start_time', '>', now());
+            $now = \Carbon\Carbon::now('Asia/Jakarta');
+            $query->where('start_time', '>=', $now->copy()->startOfDay()->setTimezone('UTC'))
+                  ->where('start_time', '<=', $now->copy()->endOfDay()->setTimezone('UTC'))
+                  ->where('start_time', '>', \Carbon\Carbon::now());
         })->latest()->get();
     }
 

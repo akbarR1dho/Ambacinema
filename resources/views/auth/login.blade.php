@@ -43,8 +43,8 @@
 
             <div class="flex flex-col sm:flex-row justify-between gap-4">
                 <div class="flex items-center">
-                    <input id="remember" name="remember" type="checkbox" class="h-5 w-5 border-slate-300 rounded transition-colors">
-                    <label for="remember" class="ml-2 block text-sm font-medium text-slate-700 select-none">
+                    <input id="remember" name="remember" type="checkbox" class="h-5 w-5 border-slate-300 rounded transition-colors cursor-pointer">
+                    <label for="remember" class="ml-2 block text-sm font-medium text-slate-700 select-none cursor-pointer">
                         {{ __('Remember me') }}
                     </label>
                 </div>

@@ -12,7 +12,7 @@
         <form action="{{ route('orders.index') }}" method="GET" class="w-full sm:w-auto" id="filterForm">
             <div class="flex items-center gap-2 w-full sm:w-auto">
                 <label for="filter-date" class="text-sm font-medium text-slate-500 whitespace-nowrap hidden sm:block">{{ __('Time Range') }}:</label>
-                <select name="date_filter" id="filter-date" class="w-full sm:w-auto px-4 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" onchange="document.getElementById('filterForm').submit()">
+                <select name="date_filter" id="filter-date" class="cursor-pointer w-full sm:w-auto px-4 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" onchange="document.getElementById('filterForm').submit()">
                     <option value="all" {{ request('date_filter', 'today') == 'all' ? 'selected' : '' }}>{{ __('All Time') }}</option>
                     <option value="today" {{ request('date_filter', 'today') == 'today' ? 'selected' : '' }}>{{ __('Today') }}</option>
                     <option value="weekly" {{ request('date_filter', 'today') == 'weekly' ? 'selected' : '' }}>{{ __('This Week') }}</option>

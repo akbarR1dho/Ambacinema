@@ -23,6 +23,34 @@ class Order extends Model
         'payment_info' => 'array',
     ];
 
+    public function getPendingAtLocalAttribute()
+    {
+        return $this->pending_at ? $this->pending_at->timezone('Asia/Jakarta') : null;
+    }
+
+    public function getConfirmedAtLocalAttribute()
+    {
+        return $this->confirmed_at ? $this->confirmed_at->timezone('Asia/Jakarta') : null;
+    }
+
+    public function getFailedAtLocalAttribute()
+    {
+        return $this->failed_at ? $this->failed_at->timezone('Asia/Jakarta') : null;
+    }
+
+    public function getCreatedAtLocalAttribute()
+    {
+        return $this->created_at ? $this->created_at->timezone('Asia/Jakarta') : null;
+    }
+
+    public function getExpiryTimeLocalAttribute()
+    {
+        if (isset($this->payment_info['expiry_time'])) {
+            return \Carbon\Carbon::parse($this->payment_info['expiry_time'], 'Asia/Jakarta');
+        }
+        return $this->created_at_local ? $this->created_at_local->copy()->addHours(24) : null;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

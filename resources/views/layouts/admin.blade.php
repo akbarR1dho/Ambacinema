@@ -312,14 +312,14 @@
         <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-30 relative shadow-sm">
             <div class="flex items-center">
                 <!-- Hamburger Button (Visible on all screens) -->
-                <button id="sidebar-toggle-btn" class="text-slate-500 hover:text-blue-600 focus:outline-none p-2 rounded-md hover:bg-slate-100 transition-colors mr-4">
+                <button id="sidebar-toggle-btn" class="cursor-pointer text-slate-500 hover:text-blue-600 focus:outline-none p-2 rounded-md hover:bg-slate-100 transition-colors mr-4">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
             </div>
             <div class="flex-1 flex justify-end">
                 <!-- Language Switcher Admin -->
                 <div class="relative mr-4 self-center" id="lang-dropdown-wrapper">
-                     <button id="lang-menu-btn" class="flex items-center text-sm font-medium text-slate-700 hover:text-blue-600 focus:outline-none bg-slate-100 px-2 py-1 rounded-md border border-slate-200">
+                     <button id="lang-menu-btn" class="cursor-pointer flex items-center text-sm font-medium text-slate-700 hover:text-blue-600 focus:outline-none bg-slate-100 px-2 py-1 rounded-md border border-slate-200">
                         @if(App::getLocale() === 'id')
                             <svg class="w-4 h-4 mr-1.5 rounded-sm object-cover border border-slate-200" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg"><path fill="#e00000" d="M0 0h640v240H0z"/><path fill="#fff" d="M0 240h640v240H0z"/></svg>
                         @else
@@ -341,7 +341,7 @@
                 </div>
 
                 <div class="relative self-center" id="profile-dropdown-wrapper">
-                    <button class="flex items-center space-x-3" id="profile-dropdown-btn">
+                    <button class="cursor-pointer flex items-center space-x-3" id="profile-dropdown-btn">
                         <!-- <div class="text-right hidden sm:block">
                             <span class="block text-sm font-medium text-slate-700">{{ __('Welcome') }}, {{ Auth::user()->name }}</span>
                             <span class="block text-xs text-slate-500 capitalize">{{ Auth::user()->role }}</span>
@@ -360,7 +360,7 @@
                             <div class="border-t border-slate-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" id="logout-form">
                                 @csrf
-                                <button type="button" onclick="confirmLogout(event)" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors">{{ __('Sign out') }}</button>
+                                <button type="button" onclick="confirmLogout(event)" class="cursor-pointer block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium transition-colors">{{ __('Sign out') }}</button>
                             </form>
                         </div>
                     </div>
@@ -503,8 +503,8 @@
                 buttonsStyling: false,
                 customClass: {
                     popup: 'border border-slate-800 rounded-2xl shadow-2xl',
-                    confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto',
-                    cancelButton: 'bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto mt-3 sm:mt-0 sm:ml-3',
+                    confirmButton: 'cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto',
+                    cancelButton: 'cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto mt-3 sm:mt-0 sm:ml-3',
                     actions: 'w-full flex flex-col sm:flex-row justify-center mt-6'
                 }
             }).then((result) => {
@@ -543,8 +543,8 @@
                 buttonsStyling: false,
                 customClass: {
                     popup: 'border border-slate-800 rounded-2xl shadow-2xl',
-                    confirmButton: 'bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto',
-                    cancelButton: 'bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto mt-3 sm:mt-0 sm:ml-3',
+                    confirmButton: 'cursor-pointer bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto',
+                    cancelButton: 'cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-6 rounded-xl transition-colors w-full sm:w-auto mt-3 sm:mt-0 sm:ml-3',
                     actions: 'w-full flex flex-col sm:flex-row justify-center mt-6'
                 }
             }).then((result) => {

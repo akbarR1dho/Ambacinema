@@ -92,8 +92,8 @@
                     @endif
                     <div>
                         <h4 class="font-bold text-lg text-slate-900 leading-tight">{{ $showtime->movie->title }}</h4>
-                        <p class="text-sm text-slate-500 mt-1">{{ \Carbon\Carbon::parse($showtime->start_time)->translatedFormat('D, d M Y') }}</p>
-                        <p class="text-sm text-slate-500">{{ \Carbon\Carbon::parse($showtime->start_time)->translatedFormat('H:i') }} | {{ $showtime->studio->name }}</p>
+                        <p class="text-sm text-slate-500 mt-1">{{ $showtime->start_time_local->translatedFormat('D, d M Y') }}</p>
+                        <p class="text-sm text-slate-500">{{ $showtime->start_time_local->translatedFormat('H:i') }} | {{ $showtime->studio->name }}</p>
                     </div>
                 </div>
 
@@ -153,7 +153,7 @@
                     </div>
                 </div>
 
-                <button type="button" onclick="document.getElementById('bookingForm').submit()" id="checkoutBtn" disabled class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold py-4 px-4 rounded-xl transition-colors uppercase tracking-wider shadow-lg">
+                <button type="button" onclick="document.getElementById('bookingForm').submit()" id="checkoutBtn" disabled class="cursor-pointer w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold py-4 px-4 rounded-xl transition-colors uppercase tracking-wider shadow-lg">
                     {{ __('Confirm & Pay') }}
                 </button>
                 @error('seats') <p class="text-red-500 text-xs mt-2 text-center">{{ $message }}</p> @enderror

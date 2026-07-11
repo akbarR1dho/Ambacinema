@@ -30,7 +30,7 @@
 
         <div class="mb-4">
             <label for="age_rating" class="block text-sm font-medium text-slate-700">{{ __('Age Rating') }}</label>
-            <select name="age_rating" id="age_rating" required class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <select name="age_rating" id="age_rating" required class="cursor-pointer mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 <option value="SU" {{ old('age_rating') == 'SU' ? 'selected' : '' }}>SU</option>
                 <option value="13+" {{ old('age_rating') == '13+' ? 'selected' : '' }}>13+</option>
                 <option value="17+" {{ old('age_rating') == '17+' ? 'selected' : '' }}>17+</option>
@@ -41,13 +41,13 @@
 
         <div class="mb-6">
             <label for="poster_file" class="block text-sm font-medium text-slate-700">{{ __('Poster Image') }}</label>
-            <input type="file" id="poster_file" accept=".jpg,.jpeg,.png,.webp" class="mt-1 block w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 text-slate-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <input type="file" id="poster_file" accept=".jpg,.jpeg,.png,.webp" class="mt-1 block w-full text-slate-700 bg-white border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 cursor-pointer file:cursor-pointer file:mr-4 file:py-2.5 file:px-4 file:rounded-l-lg file:border-0 file:border-r file:border-slate-300 file:text-sm file:font-semibold file:bg-slate-50 file:text-slate-700 hover:file:bg-slate-100 transition-colors">
             <input type="hidden" name="poster_path" id="poster_path">
             @error('poster_path') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
         </div>
 
         <div class="flex justify-end">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+            <button type="submit" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
                 {{ __('Save Movie') }}
             </button>
         </div>

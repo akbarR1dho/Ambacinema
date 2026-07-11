@@ -12,7 +12,7 @@
 
 <div class="relative w-full sm:min-w-[12rem] sm:w-auto infinite-select-container" data-api-url="{{ $apiUrl }}">
     <input type="hidden" id="{{ $id }}" name="{{ $name }}" class="infinite-select-input" value="">
-    <button type="button" class="infinite-select-btn bg-white border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full flex justify-between items-center text-slate-700">
+    <button type="button" class="infinite-select-btn cursor-pointer bg-white border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full flex justify-between items-center text-slate-700">
         <span class="infinite-select-label truncate">{{ $defaultLabel }}</span>
         <svg class="w-4 h-4 text-slate-400 flex-shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
     </button>

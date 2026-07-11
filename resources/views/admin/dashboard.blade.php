@@ -68,11 +68,11 @@
         <div class="flex flex-col sm:flex-row flex-wrap gap-4 items-start sm:items-end w-full lg:w-auto">
             <div class="w-full sm:w-auto">
                 <label for="filter-date" class="block text-xs font-medium text-slate-500 mb-1">{{ __('Time Range') }}</label>
-                <select id="filter-date" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:min-w-[150px]">
-                    <option value="today">{{ __('Today') }}</option>
-                    <option value="weekly">{{ __('This Week') }}</option>
-                    <option value="monthly" selected>{{ __('This Month') }}</option>
-                    <option value="annual">{{ __('This Year') }}</option>
+                <select id="filter-date" class="cursor-pointer w-full px-3 py-2 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:min-w-[150px]">
+                    <option class="cursor-pointer" value="today">{{ __('Today') }}</option>
+                    <option class="cursor-pointer" value="weekly">{{ __('This Week') }}</option>
+                    <option class="cursor-pointer" value="monthly" selected>{{ __('This Month') }}</option>
+                    <option class="cursor-pointer" value="annual">{{ __('This Year') }}</option>
                 </select>
             </div>
             
@@ -97,7 +97,7 @@
             </div>
 
             <div class="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0">
-                <button id="btn-reset-filters" class="w-full sm:w-auto px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium rounded-lg transition-colors shadow-sm">{{ __('Reset') }}</button>
+                <button id="btn-reset-filters" class="cursor-pointer w-full sm:w-auto px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-medium rounded-lg transition-colors shadow-sm">{{ __('Reset') }}</button>
             </div>
         </div>
     </div>

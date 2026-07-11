@@ -16,13 +16,13 @@
             default-label="{{ __('All Movies') }}" 
             placeholder="{{ __('Search movie') }}..."
         />
-        <select id="statusFilter" class="w-full sm:w-40 bg-white border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-[38px]">
+        <select id="statusFilter" class="cursor-pointer w-full sm:w-40 bg-white border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 h-[38px]">
             <option value="">{{ __('All Statuses') }}</option>
             <option value="pending">{{ __('Pending') }}</option>
             <option value="confirmed">{{ __('Confirmed') }}</option>
             <option value="failed">{{ __('Failed') }}</option>
         </select>
-        <button type="button" id="exportExcelBtn" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 h-[38px]">
+        <button type="button" id="exportExcelBtn" class="cursor-pointer w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 h-[38px]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             {{ __('Export Excel') }}
         </button>

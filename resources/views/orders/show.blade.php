@@ -51,11 +51,11 @@
             <div class="grid grid-cols-2 gap-4 md:gap-6 mb-6 mt-6 md:mt-10">
                 <div>
                     <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Date') }}</p>
-                    <p class="text-base md:text-lg font-bold text-slate-900">{{ \Carbon\Carbon::parse($order->showtime->start_time)->translatedFormat('d M Y') }}</p>
+                    <p class="text-base md:text-lg font-bold text-slate-900">{{ $order->showtime->start_time_local->translatedFormat('d M Y') }}</p>
                 </div>
                 <div>
                     <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Time') }}</p>
-                    <p class="text-base md:text-lg font-bold text-slate-900">{{ \Carbon\Carbon::parse($order->showtime->start_time)->format('H:i') }}</p>
+                    <p class="text-base md:text-lg font-bold text-slate-900">{{ $order->showtime->start_time_local->format('H:i') }}</p>
                 </div>
                 <div>
                     <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Studio') }}</p>
@@ -71,7 +71,7 @@
                             <div id="seats-gradient" class="hidden absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white to-transparent pointer-events-none transition-opacity duration-300"></div>
                         </div>
 
-                        <button type="button" id="seats-toggle-btn" onclick="toggleSeats()" class="hidden mt-3 text-xs font-bold text-slate-700 hover:text-blue-600 transition-colors items-center gap-1 focus:outline-none">
+                        <button type="button" id="seats-toggle-btn" onclick="toggleSeats()" class="cursor-pointer hidden mt-3 text-xs font-bold text-slate-700 hover:text-blue-600 transition-colors items-center gap-1 focus:outline-none">
                             <span id="seats-toggle-text">{{ __('View All') }}</span>
                             <svg id="seats-icon-down" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             <svg id="seats-icon-up" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
@@ -147,11 +147,11 @@
             <div class="grid grid-cols-2 gap-4 md:gap-6 mb-8 border-t border-slate-200 pt-6">
                 <div>
                     <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Booking Time') }}</p>
-                    <p class="text-sm font-medium text-slate-700">{{ $order->pending_at ? $order->pending_at->translatedFormat('d M Y, H:i') : '-' }}</p>
+                    <p class="text-sm font-medium text-slate-700">{{ $order->pending_at_local ? $order->pending_at_local->translatedFormat('d M Y, H:i') : '-' }}</p>
                 </div>
                 <div>
                     <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">{{ __('Confirmation Time') }}</p>
-                    <p class="text-sm font-medium text-slate-700">{{ $order->confirmed_at ? $order->confirmed_at->translatedFormat('d M Y, H:i') : '-' }}</p>
+                    <p class="text-sm font-medium text-slate-700">{{ $order->confirmed_at_local ? $order->confirmed_at_local->translatedFormat('d M Y, H:i') : '-' }}</p>
                 </div>
             </div>
 

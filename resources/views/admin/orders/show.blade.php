@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     <dt class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">{{ __('Showtime') }}</dt>
-                    <dd class="text-base font-bold text-slate-900">{{ \Carbon\Carbon::parse($order->showtime->start_time)->format('d M Y, H:i') }}</dd>
+                    <dd class="text-base font-bold text-slate-900">{{ $order->showtime->start_time_local->format('d M Y, H:i') }}</dd>
                 </div>
             </dl>
         </div>
@@ -59,16 +59,16 @@
                 </div>
                 <div>
                     <dt class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">{{ __('Booking Time') }}</dt>
-                    <dd class="text-sm font-bold text-slate-800">{{ $order->pending_at ? $order->pending_at->format('d M Y, H:i') : '-' }}</dd>
+                    <dd class="text-sm font-bold text-slate-800">{{ $order->pending_at_local ? $order->pending_at_local->format('d M Y, H:i') : '-' }}</dd>
                 </div>
                 <div>
                     <dt class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">{{ __('Confirmation Time') }}</dt>
-                    <dd class="text-sm font-bold text-slate-800">{{ $order->confirmed_at ? $order->confirmed_at->format('d M Y, H:i') : '-' }}</dd>
+                    <dd class="text-sm font-bold text-slate-800">{{ $order->confirmed_at_local ? $order->confirmed_at_local->format('d M Y, H:i') : '-' }}</dd>
                 </div>
                 @if($order->failed_at)
                     <div>
                         <dt class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">{{ __('Failed Time') }}</dt>
-                        <dd class="text-sm font-bold text-slate-800">{{ $order->failed_at->format('d M Y, H:i') }}</dd>
+                        <dd class="text-sm font-bold text-slate-800">{{ $order->failed_at_local->format('d M Y, H:i') }}</dd>
                     </div>
                 @endif
                 <div class="sm:col-span-2 border-t border-slate-100 pt-6">

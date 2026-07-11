@@ -21,20 +21,26 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
             ->whereIn('status', ['pending', 'confirmed']);
 
         if ($filter !== 'all') {
-            $now = Carbon::now();
+            $now = Carbon::now('Asia/Jakarta');
             
             if ($filter === 'today') {
-                $query->whereDate('created_at', $now->toDateString());
+                $query->where('created_at', '>=', $now->copy()->startOfDay()->setTimezone('UTC'))
+                      ->where('created_at', '<=', $now->copy()->endOfDay()->setTimezone('UTC'));
             } elseif ($filter === 'weekly') {
                 $query->whereBetween('created_at', [
-                    $now->startOfWeek()->toDateTimeString(),
-                    $now->endOfWeek()->toDateTimeString()
+                    $now->copy()->startOfWeek()->setTimezone('UTC')->toDateTimeString(),
+                    $now->copy()->endOfWeek()->setTimezone('UTC')->toDateTimeString()
                 ]);
             } elseif ($filter === 'monthly') {
-                $query->whereYear('created_at', $now->year)
-                      ->whereMonth('created_at', $now->month);
+                $query->whereBetween('created_at', [
+                    $now->copy()->startOfMonth()->setTimezone('UTC')->toDateTimeString(),
+                    $now->copy()->endOfMonth()->setTimezone('UTC')->toDateTimeString()
+                ]);
             } elseif ($filter === 'annual') {
-                $query->whereYear('created_at', $now->year);
+                $query->whereBetween('created_at', [
+                    $now->copy()->startOfYear()->setTimezone('UTC')->toDateTimeString(),
+                    $now->copy()->endOfYear()->setTimezone('UTC')->toDateTimeString()
+                ]);
             }
         }
 
@@ -82,25 +88,31 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
     {
         $query = $this->model->query()
             ->join('showtimes', 'orders.showtime_id', '=', 'showtimes.id')
-            ->selectRaw('DATE(orders.created_at) as date, SUM(orders.total_price) as revenue')
+            ->selectRaw('DATE(orders.created_at AT TIME ZONE \'UTC\' AT TIME ZONE \'Asia/Jakarta\') as date, SUM(orders.total_price) as revenue')
             ->where('orders.status', 'confirmed');
 
         if (!empty($filters['date_filter'])) {
             $filter = $filters['date_filter'];
-            $now = Carbon::now();
+            $now = Carbon::now('Asia/Jakarta');
             
             if ($filter === 'today') {
-                $query->whereDate('orders.created_at', $now->toDateString());
+                $query->where('orders.created_at', '>=', $now->copy()->startOfDay()->setTimezone('UTC'))
+                      ->where('orders.created_at', '<=', $now->copy()->endOfDay()->setTimezone('UTC'));
             } elseif ($filter === 'weekly') {
                 $query->whereBetween('orders.created_at', [
-                    $now->startOfWeek()->toDateTimeString(),
-                    $now->endOfWeek()->toDateTimeString()
+                    $now->copy()->startOfWeek()->setTimezone('UTC')->toDateTimeString(),
+                    $now->copy()->endOfWeek()->setTimezone('UTC')->toDateTimeString()
                 ]);
             } elseif ($filter === 'monthly') {
-                $query->whereYear('orders.created_at', $now->year)
-                      ->whereMonth('orders.created_at', $now->month);
+                $query->whereBetween('orders.created_at', [
+                    $now->copy()->startOfMonth()->setTimezone('UTC')->toDateTimeString(),
+                    $now->copy()->endOfMonth()->setTimezone('UTC')->toDateTimeString()
+                ]);
             } elseif ($filter === 'annual') {
-                $query->whereYear('orders.created_at', $now->year);
+                $query->whereBetween('orders.created_at', [
+                    $now->copy()->startOfYear()->setTimezone('UTC')->toDateTimeString(),
+                    $now->copy()->endOfYear()->setTimezone('UTC')->toDateTimeString()
+                ]);
             }
         }
 

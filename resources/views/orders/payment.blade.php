@@ -29,15 +29,15 @@
             </div>
             <div class="flex justify-between mb-3 gap-2">
                 <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Showdate') }}:</span>
-                <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->showtime->start_time)->translatedFormat('d M Y') }}</span>
+                <span class="text-sm font-bold text-slate-900 text-right">{{ $order->showtime->start_time_local->translatedFormat('d M Y') }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
                 <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Showtime') }}:</span>
-                <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->showtime->start_time)->format('H:i') }}</span>
+                <span class="text-sm font-bold text-slate-900 text-right">{{ $order->showtime->start_time_local->format('H:i') }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
                 <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Booking Time') }}:</span>
-                <span class="text-sm font-bold text-slate-900 text-right">{{ \Carbon\Carbon::parse($order->created_at)->translatedFormat('d M Y, H:i') }}</span>
+                <span class="text-sm font-bold text-slate-900 text-right">{{ $order->created_at_local->translatedFormat('d M Y, H:i') }}</span>
             </div>
             <div class="flex justify-between mb-3 gap-2">
                 <span class="text-sm font-medium text-slate-500 whitespace-nowrap">{{ __('Price per Seat') }}:</span>
@@ -74,7 +74,7 @@
                                 <div class="flex justify-center mb-2">
                                     <div class="flex flex-col sm:flex-row bg-white py-3 px-3 sm:px-6 rounded-xl border border-slate-200 shadow-sm items-center gap-2 sm:gap-3 w-full sm:w-auto overflow-hidden">
                                         <span class="text-base sm:text-lg md:text-xl font-black text-blue-600 font-mono select-all break-all text-center" id="bca-va">{{ $order->payment_info['va_numbers'][0]['va_number'] ?? '-' }}</span>
-                                        <button onclick="copyToClipboard('bca-va', this)" class="p-2 bg-slate-50 hover:bg-slate-100 sm:bg-transparent rounded-lg transition-colors focus:outline-none flex-shrink-0 w-full sm:w-auto flex justify-center mt-2 sm:mt-0 text-slate-400 hover:text-blue-600 transition-colors" title="Copy VA Number">
+                                        <button onclick="copyToClipboard('bca-va', this)" class="cursor-pointer p-2 bg-slate-50 hover:bg-slate-100 sm:bg-transparent rounded-lg transition-colors focus:outline-none flex-shrink-0 w-full sm:w-auto flex justify-center mt-2 sm:mt-0 text-slate-400 hover:text-blue-600 transition-colors" title="Copy VA Number">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                         </button>
                                     </div>
@@ -86,7 +86,7 @@
                                 <div class="flex justify-center mb-2">
                                     <div class="flex flex-col sm:flex-row bg-white py-3 px-3 sm:px-6 rounded-xl border border-slate-200 shadow-sm items-center gap-2 sm:gap-3 w-full sm:w-auto overflow-hidden">
                                         <span class="text-base sm:text-lg md:text-xl font-black text-blue-600 font-mono select-all break-all text-center" id="mandiri-va">{{ $order->payment_info['bill_key'] ?? '-' }}</span>
-                                        <button onclick="copyToClipboard('mandiri-va', this)" class="p-2 bg-slate-50 hover:bg-slate-100 sm:bg-transparent rounded-lg transition-colors focus:outline-none flex-shrink-0 w-full sm:w-auto flex justify-center mt-2 sm:mt-0 text-slate-400 hover:text-blue-600" title="Copy Bill Key">
+                                        <button onclick="copyToClipboard('mandiri-va', this)" class="cursor-pointer p-2 bg-slate-50 hover:bg-slate-100 sm:bg-transparent rounded-lg transition-colors focus:outline-none flex-shrink-0 w-full sm:w-auto flex justify-center mt-2 sm:mt-0 text-slate-400 hover:text-blue-600" title="Copy Bill Key">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                         </button>
                                     </div>
@@ -215,7 +215,7 @@
         setTimeout(pollStatus, pollInterval);
 
         // Countdown Timer
-        const expiryTimeStr = "{!! isset($order->payment_info['expiry_time']) ? \Carbon\Carbon::parse($order->payment_info['expiry_time'])->format('Y/m/d H:i:s') : \Carbon\Carbon::parse($order->created_at)->addHours(24)->format('Y/m/d H:i:s') !!}";
+        const expiryTimeStr = "{!! $order->expiry_time_local->toIso8601String() !!}";
         const expiryTime = new Date(expiryTimeStr).getTime();
         const countdownElement = document.getElementById('countdown-timer');
         
@@ -238,7 +238,6 @@
             
             if(countdownElement) {
                 countdownElement.innerHTML = 
-                    (hours < 10 ? "0" + hours : hours) + ":" + 
                     (minutes < 10 ? "0" + minutes : minutes) + ":" + 
                     (seconds < 10 ? "0" + seconds : seconds);
             }

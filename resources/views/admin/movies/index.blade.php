@@ -4,7 +4,7 @@
 <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
     <h2 class="text-2xl font-bold text-slate-900">{{ __('Movies') }}</h2>
     <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-        <select id="ageRatingFilter" class="bg-white border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full sm:w-auto">
+        <select id="ageRatingFilter" class="cursor-pointer bg-white border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 w-full sm:w-auto">
             <option value="">{{ __('All Ratings') }}</option>
             <option value="SU">SU (Semua Umur)</option>
             <option value="13+">13+</option>
