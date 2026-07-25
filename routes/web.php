@@ -66,3 +66,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('orders/export', [OrderController::class, 'export'])->name('orders.export');
     Route::resource('orders', OrderController::class)->only(['index', 'show']);
 });
+
+Route::get('/keep-alive', function () {
+    try {
+        \Illuminate\Support\Facades\DB::select('SELECT 1');
+        return response()->json(['status' => 'ok', 'message' => 'Database kept alive']);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
+});

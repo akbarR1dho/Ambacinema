@@ -26,5 +26,11 @@
         "CACHE_STORE": "database",
         "SESSION_DRIVER": "database",
         "QUEUE_CONNECTION": "database"
-    }
+    },
+    "crons": [
+        {
+            "path": "/keep-alive",
+            "schedule": "0 0 */3 * *"
+        }
+    ]
 }
