@@ -1,0 +1,16 @@
+name: Keep Alive Supabase & Vercel
+
+on:
+  schedule:
+    # Berjalan setiap hari pada jam 00:00 UTC
+    - cron: '0 0 * * *'
+  # Memungkinkan workflow dijalankan secara manual dari tab Actions
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Keep-Alive Endpoint
+        # Ganti URL bawaan ini dengan URL asli Vercel yang dipunya
+        run: curl -s https://ambacinema.vercel.app/keep-alive
