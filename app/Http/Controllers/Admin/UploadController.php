@@ -10,6 +10,13 @@ use Carbon\Carbon;
 
 class UploadController extends Controller
 {
+    protected $uploadService;
+
+    public function __construct(\App\Services\UploadService $uploadService)
+    {
+        $this->uploadService = $uploadService;
+    }
+
     /**
      * Generate a presigned URL for direct S3 upload.
      */
@@ -21,23 +28,17 @@ class UploadController extends Controller
             'file_size' => 'required|integer|max:2097152', // Max 2MB
         ]);
 
-        $extension = pathinfo($request->file_name, PATHINFO_EXTENSION);
-        $fileName = Str::uuid() . '.' . $extension;
-        $path = 'posters/' . $fileName;
-
-        // Generate temporary upload URL valid for 5 minutes
-        $client = Storage::disk('s3')->getClient();
-        $command = $client->getCommand('PutObject', [
-            'Bucket' => config('filesystems.disks.s3.bucket'),
-            'Key' => $path,
-            'ContentType' => $request->content_type,
-        ]);
-
-        $requestUrl = $client->createPresignedRequest($command, '+5 minutes');
-        
-        return response()->json([
-            'url' => (string) $requestUrl->getUri(),
-            'path' => $path,
-        ]);
+        try {
+            $result = $this->uploadService->generatePresignedUrl(
+                $request->file_name,
+                $request->content_type
+            );
+            
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to generate upload URL: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

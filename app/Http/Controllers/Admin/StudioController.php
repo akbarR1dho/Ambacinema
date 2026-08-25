@@ -13,20 +13,16 @@ use Yajra\DataTables\Facades\DataTables;
 
 class StudioController extends Controller
 {
-    protected $studioRepo;
-
-    protected $studioTypeRepo;
-
-    protected $seatRepo;
+    protected $studioService;
 
     public function __construct(
         StudioRepositoryInterface $studioRepo,
         StudioTypeRepositoryInterface $studioTypeRepo,
-        SeatRepositoryInterface $seatRepo
+        \App\Services\StudioService $studioService
     ) {
         $this->studioRepo = $studioRepo;
         $this->studioTypeRepo = $studioTypeRepo;
-        $this->seatRepo = $seatRepo;
+        $this->studioService = $studioService;
     }
 
     public function apiIndex(Request $request)
@@ -80,7 +76,7 @@ class StudioController extends Controller
 
     public function store(StoreStudioRequest $request)
     {
-        $this->studioRepo->createWithSeats($request->only('name', 'total_seats', 'studio_type_id'));
+        $this->studioService->createStudioWithSeats($request->only('name', 'total_seats', 'studio_type_id'));
 
         return redirect()->route('admin.studios.index')->with('success', 'Studio created successfully.');
     }

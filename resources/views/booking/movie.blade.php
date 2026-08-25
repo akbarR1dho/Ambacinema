@@ -42,8 +42,8 @@
             
             <!-- Tabs -->
             <div class="flex border-b border-slate-200 mb-8">
-                <button id="tab-jadwal" class="px-6 py-3 text-lg font-bold text-blue-600 border-b-2 border-blue-600 transition-colors focus:outline-none">{{ __('Schedule') }}</button>
-                <button id="tab-detail" class="px-6 py-3 text-lg font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 transition-colors focus:outline-none">{{ __('Detail') }}</button>
+                <button id="tab-jadwal" class="px-6 py-3 text-lg font-bold text-blue-600 border-b-2 border-blue-600 transition-colors focus:outline-none hover:text-slate-700 cursor-pointer">{{ __('Schedule') }}</button>
+                <button id="tab-detail" class="px-6 py-3 text-lg font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 transition-colors focus:outline-none cursor-pointer">{{ __('Detail') }}</button>
             </div>
 
             <!-- Detail Content -->
@@ -99,11 +99,11 @@
                                                         <div class="flex flex-wrap gap-4 mt-3">
                                                             @foreach($studioShowtimes as $st)
                                                                 @auth
-                                                                    <a href="{{ route('booking.seat', $st->id) }}" class="inline-flex items-center justify-center px-6 py-2.5 bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-bold rounded-xl transition-all duration-200 shadow-sm text-lg">
+                                                                    <a href="{{ route('booking.seat', $st->id) }}" class="cursor-pointer inline-flex items-center justify-center px-6 py-2.5 bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-bold rounded-xl transition-all duration-200 shadow-sm text-lg">
                                                                         {{ $st->start_time_local->format('H:i') }}
                                                                     </a>
                                                                 @else
-                                                                    <button type="button" onclick="promptLogin(event)" class="inline-flex items-center justify-center px-6 py-2.5 bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-bold rounded-xl transition-all duration-200 shadow-sm text-lg focus:outline-none">
+                                                                    <button type="button" onclick="promptLogin(event)" class="cursor-pointer inline-flex items-center justify-center px-6 py-2.5 bg-white border border-slate-300 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 text-slate-800 font-bold rounded-xl transition-all duration-200 shadow-sm text-lg focus:outline-none">
                                                                         {{ $st->start_time_local->format('H:i') }}
                                                                     </button>
                                                                 @endauth

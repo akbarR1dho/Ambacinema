@@ -15,19 +15,20 @@ use Yajra\DataTables\Facades\DataTables;
 class ShowtimeController extends Controller
 {
     protected $showtimeRepo;
-
     protected $movieRepo;
-
     protected $studioRepo;
+    protected $showtimeService;
 
     public function __construct(
         ShowtimeRepositoryInterface $showtimeRepo,
         MovieRepositoryInterface $movieRepo,
-        StudioRepositoryInterface $studioRepo
+        StudioRepositoryInterface $studioRepo,
+        \App\Services\ShowtimeService $showtimeService
     ) {
         $this->showtimeRepo = $showtimeRepo;
         $this->movieRepo = $movieRepo;
         $this->studioRepo = $studioRepo;
+        $this->showtimeService = $showtimeService;
     }
 
     public function index(Request $request)
@@ -87,33 +88,12 @@ class ShowtimeController extends Controller
 
     public function store(StoreShowtimeRequest $request)
     {
-        $startTime = Carbon::parse($request->start_time, 'Asia/Jakarta')->setTimezone('UTC');
-
-        // Validation: must be at least the start of the next hour
-        $minTime = now()->addHour()->startOfHour();
-        if ($startTime < $minTime) {
-            return back()->withErrors(['start_time' => 'Showtime must be scheduled for '.$minTime->copy()->timezone('Asia/Jakarta')->format('d M Y, H:i').' onwards.'])->withInput();
+        try {
+            $this->showtimeService->createShowtime($request->validated());
+            return redirect()->route('admin.showtimes.index')->with('success', 'Showtime created successfully.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['start_time' => $e->getMessage()])->withInput();
         }
-
-        $movie = $this->movieRepo->find($request->movie_id);
-        // Add 10 minutes overhead for ads
-        $endTime = $startTime->copy()->addMinutes($movie->duration)->addMinutes(10);
-
-        // Validation: check for overlap in the same studio
-        $overlap = $this->showtimeRepo->checkOverlap($request->studio_id, $startTime, $endTime);
-
-        if ($overlap) {
-            return back()->withErrors(['start_time' => 'The selected studio is already booked for this time period.'])->withInput();
-        }
-
-        $this->showtimeRepo->create([
-            'movie_id' => $request->movie_id,
-            'studio_id' => $request->studio_id,
-            'start_time' => $startTime,
-            'end_time' => $endTime,
-        ]);
-
-        return redirect()->route('admin.showtimes.index')->with('success', 'Showtime created successfully.');
     }
 
     public function show(string $id)
@@ -134,37 +114,12 @@ class ShowtimeController extends Controller
 
     public function update(UpdateShowtimeRequest $request, string $id)
     {
-        $showtime = $this->showtimeRepo->find($id);
-
-        $startTime = Carbon::parse($request->start_time, 'Asia/Jakarta')->setTimezone('UTC');
-
-        // Skip current hour validation on update if the time didn't change, otherwise enforce it
-        if ($startTime->format('Y-m-d H:i') !== Carbon::parse($showtime->start_time)->format('Y-m-d H:i')) {
-            $minTime = now()->addHour()->startOfHour();
-            if ($startTime < $minTime) {
-                return back()->withErrors(['start_time' => 'Showtime must be scheduled for '.$minTime->copy()->timezone('Asia/Jakarta')->format('d M Y, H:i').' onwards.'])->withInput();
-            }
+        try {
+            $this->showtimeService->updateShowtime($id, $request->validated());
+            return redirect()->route('admin.showtimes.index')->with('success', 'Showtime updated successfully.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['start_time' => $e->getMessage()])->withInput();
         }
-
-        $movie = $this->movieRepo->find($request->movie_id);
-        // Add 10 minutes overhead for ads
-        $endTime = $startTime->copy()->addMinutes($movie->duration)->addMinutes(10);
-
-        // Validation: check for overlap in the same studio, excluding this specific showtime
-        $overlap = $this->showtimeRepo->checkOverlap($request->studio_id, $startTime, $endTime, $id);
-
-        if ($overlap) {
-            return back()->withErrors(['start_time' => 'The selected studio is already booked for this time period.'])->withInput();
-        }
-
-        $this->showtimeRepo->update($id, [
-            'movie_id' => $request->movie_id,
-            'studio_id' => $request->studio_id,
-            'start_time' => $startTime,
-            'end_time' => $endTime,
-        ]);
-
-        return redirect()->route('admin.showtimes.index')->with('success', 'Showtime updated successfully.');
     }
 
     public function destroy(string $id)

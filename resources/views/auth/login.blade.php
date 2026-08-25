@@ -24,7 +24,7 @@
                 <label for="password" class="block text-sm font-medium text-slate-700">{{ __('Password') }}</label>
                 <div class="relative mt-1">
                     <input id="password" type="password" name="password" required class="block w-full bg-slate-50 border border-slate-300 rounded-xl shadow-sm py-3 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 transition-colors">
-                    <button type="button" onclick="const p = document.getElementById('password'); const open = document.getElementById('eye-open-login'); const closed = document.getElementById('eye-closed-login'); if(p.type==='password'){p.type='text';open.classList.add('hidden');closed.classList.remove('hidden');}else{p.type='password';open.classList.remove('hidden');closed.classList.add('hidden');}" class="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 hover:text-blue-600 focus:outline-none transition-colors">
+                    <button type="button" onclick="const p = document.getElementById('password'); const open = document.getElementById('eye-open-login'); const closed = document.getElementById('eye-closed-login'); if(p.type==='password'){p.type='text';open.classList.add('hidden');closed.classList.remove('hidden');}else{p.type='password';open.classList.remove('hidden');closed.classList.add('hidden');}" class="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 hover:text-blue-600 focus:outline-none transition-colors cursor-pointer">
                         <!-- Eye Open Icon (Default) -->
                         <svg id="eye-open-login" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -55,7 +55,7 @@
             </div>
 
             <div>
-                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white transition-all transform hover:-translate-y-0.5">
+                <button type="submit" class="cursor-pointer w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white transition-all transform hover:-translate-y-0.5">
                     {{ __('Sign in') }}
                 </button>
             </div>

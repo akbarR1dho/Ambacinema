@@ -13,10 +13,12 @@ use Yajra\DataTables\Facades\DataTables;
 class MovieController extends Controller
 {
     protected $movieRepo;
+    protected $movieService;
 
-    public function __construct(MovieRepositoryInterface $movieRepo)
+    public function __construct(MovieRepositoryInterface $movieRepo, \App\Services\MovieService $movieService)
     {
         $this->movieRepo = $movieRepo;
+        $this->movieService = $movieService;
     }
 
     public function apiIndex(Request $request)
@@ -70,15 +72,12 @@ class MovieController extends Controller
 
     public function store(StoreMovieRequest $request)
     {
-        $data = $request->except('poster_path');
-
-        if ($request->filled('poster_path')) {
-            $data['poster'] = $request->poster_path;
+        try {
+            $this->movieService->createMovie($request->validated());
+            return redirect()->route('admin.movies.index')->with('success', 'Movie created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Failed to create movie: ' . $e->getMessage());
         }
-
-        $this->movieRepo->create($data);
-
-        return redirect()->route('admin.movies.index')->with('success', 'Movie created successfully.');
     }
 
     public function show(string $id)
@@ -97,22 +96,12 @@ class MovieController extends Controller
 
     public function update(UpdateMovieRequest $request, string $id)
     {
-        $movie = $this->movieRepo->find($id);
-
-        $data = $request->only('title', 'description', 'duration', 'age_rating');
-
-        if ($request->filled('poster_path')) {
-            // Delete old poster if exists
-            if ($movie->poster && Storage::exists($movie->poster)) {
-                Storage::delete($movie->poster);
-            }
-
-            $data['poster'] = $request->poster_path;
+        try {
+            $this->movieService->updateMovie($id, $request->validated());
+            return redirect()->route('admin.movies.index')->with('success', 'Movie updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Failed to update movie: ' . $e->getMessage());
         }
-
-        $this->movieRepo->update($id, $data);
-
-        return redirect()->route('admin.movies.index')->with('success', 'Movie updated successfully.');
     }
 
     public function destroy(string $id)

@@ -57,79 +57,79 @@
 
 @push('scripts')
 <script>
-document.getElementById('movieForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const fileInput = document.getElementById('poster_file');
-    const form = this;
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.innerHTML;
+    document.getElementById('movieForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const fileInput = document.getElementById('poster_file');
+        const form = this;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
 
-    if (!fileInput.files.length) {
-        form.submit();
-        return;
-    }
-
-    const file = fileInput.files[0];
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    const maxSize = 2 * 1024 * 1024; // 2MB
-
-    if (!allowedTypes.includes(file.type)) {
-        showErrorAlert('{{ __("Only JPG, PNG, and WEBP files are allowed") }}.');
-        return;
-    }
-
-    if (file.size > maxSize) {
-        showErrorAlert('{{ __("File size must be less than 2MB") }}.');
-        return;
-    }
-
-    try {
-        // 1. Request Presigned URL
-        const response = await fetch('{{ route('admin.api.upload.presigned') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                file_name: file.name,
-                content_type: file.type,
-                file_size: file.size
-            })
-        });
-
-        if (!response.ok) {
-            const errData = await response.json();
-            throw new Error(errData.message || '{{ __("Failed to get upload URL") }}.');
+        if (!fileInput.files.length) {
+            form.submit();
+            return;
         }
 
-        const data = await response.json();
+        const file = fileInput.files[0];
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        const maxSize = 2 * 1024 * 1024; // 2MB
 
-        // 2. Upload directly to S3
-        const uploadResponse = await fetch(data.url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': file.type
-            },
-            body: file
-        });
-
-        if (!uploadResponse.ok) {
-            throw new Error('Failed to upload file to S3');
+        if (!allowedTypes.includes(file.type)) {
+            showErrorAlert('{{ __("Only JPG, PNG, and WEBP files are allowed") }}.');
+            return;
         }
 
-        // 3. Set hidden input and submit the form
-        document.getElementById('poster_path').value = data.path;
-        form.submit();
+        if (file.size > maxSize) {
+            showErrorAlert('{{ __("File size must be less than 2MB") }}.');
+            return;
+        }
 
-    } catch (error) {
-        console.error(error);
-        showErrorAlert(error.message || '{{ __("An error occurred during file upload. Please try again") }}.');
-        submitBtn.innerHTML = originalBtnText;
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
-    }
-});
+        try {
+            // 1. Request Presigned URL
+            const response = await fetch('{{ route('admin.api.upload.presigned') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    file_name: file.name,
+                    content_type: file.type,
+                    file_size: file.size
+                })
+            });
+
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.message || '{{ __("Failed to get upload URL") }}.');
+            }
+
+            const data = await response.json();
+
+            // 2. Upload directly to S3
+            const uploadResponse = await fetch(data.url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': file.type
+                },
+                body: file
+            });
+
+            if (!uploadResponse.ok) {
+                throw new Error('Failed to upload file to S3');
+            }
+
+            // 3. Set hidden input and submit the form
+            document.getElementById('poster_path').value = data.path;
+            form.submit();
+
+        } catch (error) {
+            console.error(error);
+            showErrorAlert(error.message || '{{ __("An error occurred during file upload. Please try again") }}.');
+            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
+    });
 </script>
 @endpush
