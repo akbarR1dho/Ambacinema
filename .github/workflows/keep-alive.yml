@@ -10,7 +10,16 @@ on:
 jobs:
   ping:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write # Izin untuk menulis status action, wajib untuk keepalive
+      contents: write # Izin opsional, jaga-jaga jika action butuh menulis ke repo
     steps:
+      - name: Checkout Repository # Perlu dicheckout agar keepalive tahu repo mana yang dikelola
+        uses: actions/checkout@v4
+
       - name: Ping Keep-Alive Endpoint
         # Ganti URL bawaan ini dengan URL asli Vercel yang dipunya
         run: curl -s https://ambacinema.vercel.app/keep-alive
+
+      - name: Cegah Penonaktifan Workflow Otomatis
+        uses: gautamkrishnar/keepalive-workflow@v2
