@@ -9,6 +9,8 @@ class Order extends Model
 {
     use HasUuids;
 
+    public const HOLD_DURATION_MINUTES = 5;
+
     public function newUniqueId()
     {
         return (string) \Symfony\Component\Uid\Uuid::v7();
@@ -43,12 +45,53 @@ class Order extends Model
         return $this->created_at ? $this->created_at->timezone('Asia/Jakarta') : null;
     }
 
-    public function getExpiryTimeLocalAttribute()
+    public function getExpiryTimeUtcAttribute()
     {
         if (isset($this->payment_info['expiry_time'])) {
-            return \Carbon\Carbon::parse($this->payment_info['expiry_time'], 'Asia/Jakarta');
+            try {
+                return \Carbon\Carbon::parse($this->payment_info['expiry_time'], 'Asia/Jakarta')->setTimezone('UTC');
+            } catch (\Exception $e) {
+                // Ignore and fall back to calculation below
+            }
         }
-        return $this->created_at_local ? $this->created_at_local->copy()->addHours(24) : null;
+        $time = $this->pending_at ?? $this->created_at;
+        return $time ? $time->copy()->addMinutes(self::HOLD_DURATION_MINUTES) : null;
+    }
+
+    public function getExpiryTimeLocalAttribute()
+    {
+        $utc = $this->expiry_time_utc;
+        return $utc ? $utc->copy()->setTimezone('Asia/Jakarta') : null;
+    }
+
+    public function isExpired(): bool
+    {
+        if ($this->status !== 'pending') {
+            return false;
+        }
+        $expiry = $this->expiry_time_utc;
+        return $expiry ? now()->greaterThan($expiry) : false;
+    }
+
+    public function getRemainingHoldSecondsAttribute(): int
+    {
+        if ($this->status !== 'pending') {
+            return 0;
+        }
+        $expiry = $this->expiry_time_utc;
+        if (!$expiry) {
+            return 0;
+        }
+        $diff = now()->diffInSeconds($expiry, false);
+        return max(0, (int) $diff);
+    }
+
+    public function markAsFailed(string $reason = 'expired'): void
+    {
+        $this->update([
+            'status' => 'failed',
+            'failed_at' => now(),
+        ]);
     }
 
     public function user()

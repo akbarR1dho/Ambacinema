@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Repositories\Interfaces\OrderRepositoryInterface;
 use App\Repositories\Interfaces\ShowtimeRepositoryInterface;
+use App\Models\Seat;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
@@ -27,18 +29,37 @@ class CheckoutService
     {
         $showtime = $this->showtimeRepo->findWithRelations($validatedData['showtime_id']);
         
-        // Double check if seats are already booked
-        $bookedSeats = $this->orderRepo->checkSeatsAvailability($showtime->id, $validatedData['seats']);
-
-        if ($bookedSeats) {
-            throw new Exception('One or more selected seats have already been booked. Please try again.');
-        }
-
         $pricePerSeat = $showtime->studio->studioType ? $showtime->studio->studioType->getPriceForDate($showtime->start_time) : 50000;
         $totalPrice = count($validatedData['seats']) * $pricePerSeat;
 
         return DB::transaction(function () use ($validatedData, $paymentType, $userId, $showtime, $pricePerSeat, $totalPrice) {
-            // Create Order
+            // 1. Release any expired pending holds for this showtime
+            $this->orderRepo->releaseExpiredOrders($showtime->id);
+
+            // 2. If the current user already had a pending order for this showtime (e.g. re-selected seats),
+            // release the old hold so they do not hold multiple sets of seats concurrently.
+            $previousHolds = Order::where('user_id', $userId)
+                ->where('showtime_id', $showtime->id)
+                ->where('status', 'pending')
+                ->get();
+            foreach ($previousHolds as $prevOrder) {
+                $prevOrder->update([
+                    'status' => 'failed',
+                    'failed_at' => now(),
+                ]);
+            }
+
+            // 3. Lock selected seat rows to prevent concurrent bookings
+            Seat::whereIn('id', $validatedData['seats'])->lockForUpdate()->get();
+
+            // 4. Double check if any of the selected seats are already confirmed or actively held
+            $isUnavailable = $this->orderRepo->checkSeatsAvailability($showtime->id, $validatedData['seats']);
+
+            if ($isUnavailable) {
+                throw new Exception(__('One or more selected seats have already been booked or are currently on hold. Please choose different seats.'));
+            }
+
+            // 5. Create Order with status 'pending' (Establishes the Temporary Hold)
             $order = $this->orderRepo->create([
                 'user_id' => $userId,
                 'showtime_id' => $showtime->id,
@@ -47,20 +68,29 @@ class CheckoutService
                 'pending_at' => now(),
             ]);
 
-            // Attach seats with UUIDs
+            // 6. Attach seats with UUIDs
             $pivotData = [];
             foreach ($validatedData['seats'] as $seatId) {
                 $pivotData[$seatId] = ['id' => (string) \Symfony\Component\Uid\Uuid::v7()];
             }
             $this->orderRepo->attachSeats($order, $pivotData);
 
-            // Process Payment with Midtrans
-            $response = $this->paymentService->charge($order, $paymentType, $pricePerSeat, count($validatedData['seats']));
-            
-            $this->orderRepo->update($order->id, [
-                'payment_type' => $paymentType,
-                'payment_info' => (array) $response
-            ]);
+            // 7. Process Payment with Midtrans
+            try {
+                $response = $this->paymentService->charge($order, $paymentType, $pricePerSeat, count($validatedData['seats']));
+                
+                $this->orderRepo->update($order->id, [
+                    'payment_type' => $paymentType,
+                    'payment_info' => (array) $response
+                ]);
+            } catch (Exception $e) {
+                // If payment charge creation fails, release hold immediately
+                $order->update([
+                    'status' => 'failed',
+                    'failed_at' => now(),
+                ]);
+                throw $e;
+            }
 
             return $order;
         });

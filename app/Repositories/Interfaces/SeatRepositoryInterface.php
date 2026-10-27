@@ -6,6 +6,7 @@ interface SeatRepositoryInterface extends BaseRepositoryInterface
 {
     public function getSeatsByStudio($studioId);
     public function getBookedSeatIdsForShowtime($showtimeId);
+    public function getSeatHoldStatusesForShowtime($showtimeId);
     public function getSeatNamesByIds(array $seatIds);
     public function insertSeats(array $seats);
 }

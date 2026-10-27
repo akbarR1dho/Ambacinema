@@ -47,27 +47,69 @@ class OrderHistoryController extends Controller
     {
         $order = $this->orderRepo->findUserOrderWithRelations($id, Auth::id());
         
-        // if ($order->status !== 'pending') {
-        //     return redirect()->route('orders.show', $id)->with('error', 'This ticket cannot be paid or has already been paid.');
-        // }
+        if ($order->status === 'confirmed') {
+            return redirect()->route('orders.show', $id)->with('info', __('This order has already been paid and confirmed.'));
+        }
+
+        if ($order->status === 'pending' && $order->isExpired()) {
+            $order->update([
+                'status' => 'failed',
+                'failed_at' => now(),
+            ]);
+        }
 
         return view('orders.payment', compact('order'));
     }
 
+    public function cancelHold($id)
+    {
+        $order = $this->orderRepo->findUserOrderWithRelations($id, Auth::id());
 
+        if ($order->status === 'pending') {
+            $order->update([
+                'status' => 'failed',
+                'failed_at' => now(),
+            ]);
+
+            return redirect()->route('booking.seat', $order->showtime_id)
+                ->with('success', __('Seat hold has been released. You can now select new seats.'));
+        }
+
+        return redirect()->route('orders.show', $order->id);
+    }
 
     public function checkStatus($id)
     {
         $order = $this->orderRepo->findUserOrderWithRelations($id, Auth::id());
         
+        if ($order->status === 'pending' && $order->isExpired()) {
+            $order->update([
+                'status' => 'failed',
+                'failed_at' => now(),
+            ]);
+            return redirect()->route('orders.show', $order->id)->with('error', __('Payment hold period expired.'));
+        }
+
         $this->paymentService->checkStatus($order);
         
-        return redirect()->route('orders.show', $order->id)->with('success', 'Ticket status updated successfully.');
+        return redirect()->route('orders.show', $order->id)->with('success', __('Ticket status updated successfully.'));
     }
 
     public function pollStatus($id)
     {
         $order = $this->orderRepo->findUserOrderWithRelations($id, Auth::id());
+
+        if ($order->status === 'confirmed') {
+            return response()->json(['status' => 'confirmed']);
+        }
+
+        if ($order->status === 'pending' && $order->isExpired()) {
+            $order->update([
+                'status' => 'failed',
+                'failed_at' => now(),
+            ]);
+            return response()->json(['status' => 'failed', 'reason' => 'expired']);
+        }
         
         $result = $this->paymentService->checkStatus($order);
         return response()->json($result);

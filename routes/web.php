@@ -21,10 +21,12 @@ use App\Http\Controllers\Admin\UploadController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/movie/{id}', [BookingController::class, 'showMovie'])->name('movie.show');
 Route::get('/booking/showtime/{id}', [BookingController::class, 'selectSeat'])->name('booking.seat')->middleware('auth');
+Route::get('/booking/showtime/{id}/seats-status', [BookingController::class, 'getSeatsStatus'])->name('booking.seats_status')->middleware('auth');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process')->middleware('auth');
 Route::get('/orders', [OrderHistoryController::class, 'index'])->name('orders.index')->middleware('auth');
 Route::get('/orders/{id}', [OrderHistoryController::class, 'show'])->name('orders.show')->middleware('auth');
 Route::get('/orders/{id}/pay', [OrderHistoryController::class, 'paymentPage'])->name('orders.pay')->middleware('auth');
+Route::post('/orders/{id}/cancel', [OrderHistoryController::class, 'cancelHold'])->name('orders.cancel')->middleware('auth');
 
 Route::post('/orders/{id}/check-status', [OrderHistoryController::class, 'checkStatus'])->name('orders.check_status')->middleware('auth');
 Route::get('/orders/{id}/poll-status', [OrderHistoryController::class, 'pollStatus'])->name('orders.poll_status')->middleware('auth');

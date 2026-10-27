@@ -16,6 +16,8 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 
     public function getOrdersForUserWithCursor($userId, $filter, $perPage)
     {
+        $this->releaseExpiredOrders();
+
         $query = $this->model->with(['showtime.movie', 'showtime.studio', 'seats'])
             ->where('user_id', $userId)
             ->whereIn('status', ['pending', 'confirmed']);
@@ -49,11 +51,50 @@ class OrderRepository extends BaseRepository implements OrderRepositoryInterface
 
     public function checkSeatsAvailability($showtimeId, array $seatIds)
     {
+        $this->releaseExpiredOrders($showtimeId);
+
         return DB::table('order_seat')
             ->join('orders', 'order_seat.order_id', '=', 'orders.id')
             ->where('orders.showtime_id', $showtimeId)
+            ->whereIn('orders.status', ['confirmed', 'pending'])
             ->whereIn('order_seat.seat_id', $seatIds)
             ->exists();
+    }
+
+    public function releaseExpiredOrders(?string $showtimeId = null): int
+    {
+        $query = $this->model->where('status', 'pending');
+
+        if ($showtimeId) {
+            $query->where('showtime_id', $showtimeId);
+        }
+
+        $pendingOrders = $query->get();
+        $count = 0;
+
+        foreach ($pendingOrders as $order) {
+            if ($order->isExpired()) {
+                $order->update([
+                    'status' => 'failed',
+                    'failed_at' => now(),
+                ]);
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    public function getUserPendingOrderForShowtime($userId, $showtimeId)
+    {
+        $this->releaseExpiredOrders($showtimeId);
+
+        return $this->model->with(['seats'])
+            ->where('user_id', $userId)
+            ->where('showtime_id', $showtimeId)
+            ->where('status', 'pending')
+            ->latest()
+            ->first();
     }
     
     public function attachSeats($order, array $pivotData)

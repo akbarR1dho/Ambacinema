@@ -12,4 +12,6 @@ interface OrderRepositoryInterface extends BaseRepositoryInterface
     public function getChartData($filters);
     public function findUserOrderWithRelations($id, $userId);
     public function findAdminOrderWithRelations($id);
+    public function releaseExpiredOrders(?string $showtimeId = null);
+    public function getUserPendingOrderForShowtime($userId, $showtimeId);
 }

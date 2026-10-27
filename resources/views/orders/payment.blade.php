@@ -56,13 +56,17 @@
             <div class="mb-8">
                 @if($order->status == 'pending')
                     <div id="payment-instructions-box">
-                        <h3 class="text-xl font-black text-slate-900 uppercase tracking-tight mb-4 text-center">{{ __('Payment Instructions') }}</h3>
-                        
+                        <h3 class="text-xl font-black text-slate-900 uppercase tracking-tight mb-2 text-center">{{ __('Payment Instructions') }}</h3>
+                        <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg py-1.5 px-3 max-w-sm mx-auto mb-4 text-center font-medium">
+                            <svg class="w-3.5 h-3.5 inline mr-1 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            {{ __('Your seats are held temporarily. Complete payment before the timer expires.') }}
+                        </p>
+
                         <div class="bg-red-50 border border-red-100 rounded-xl p-4 mb-6 text-center max-w-sm mx-auto shadow-sm">
                             <p class="text-xs font-bold text-red-500 mb-1 uppercase tracking-wider">{{ __('Complete payment in') }}</p>
                             <div class="flex items-center justify-center gap-2">
                                 <svg class="w-5 h-5 text-red-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span class="text-2xl font-black text-red-600 font-mono tracking-widest" id="countdown-timer">--:--:--</span>
+                                <span class="text-2xl font-black text-red-600 font-mono tracking-widest" id="countdown-timer">--:--</span>
                             </div>
                         </div>
 
@@ -98,6 +102,16 @@
                                 </div>
                             @endif
                         </div>
+
+                        <div id="cancel-hold-box" class="mb-6">
+                            <form action="{{ route('orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to cancel this order and release the seats?') }}');">
+                                @csrf
+                                <button type="submit" class="cursor-pointer text-xs font-semibold text-slate-400 hover:text-red-600 transition-colors inline-flex items-center gap-1.5 py-1 px-3 rounded-lg hover:bg-red-50 border border-transparent hover:border-red-200">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    {{ __('Cancel Order & Release Seats') }}
+                                </button>
+                            </form>
+                        </div>
                     </div>
                     
                     <div id="payment-status-container">
@@ -111,6 +125,7 @@
                     </div>
                 @endif
 
+                <!-- Payment Success Container -->
                 <div id="payment-success-container" class="{{ $order->status == 'confirmed' ? '' : 'hidden' }}">
                     <div class="bg-green-50 border border-green-200 rounded-xl p-6 text-center mb-6">
                         <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -119,6 +134,28 @@
                         <a href="{{ route('orders.show', $order->id) }}" class="inline-flex items-center py-3 px-8 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-green-600 hover:bg-green-700">
                             {{ __('View e-Ticket') }}
                         </a>
+                    </div>
+                </div>
+
+                <!-- Hold / Payment Expired Container -->
+                <div id="payment-expired-container" class="{{ $order->status == 'failed' ? '' : 'hidden' }}">
+                    <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6 sm:p-8 text-center mb-6 shadow-sm">
+                        <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-200">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-black text-red-700 mb-2 uppercase tracking-wide">{{ __('Payment Time Expired') }}</h4>
+                        <p class="text-slate-600 text-sm max-w-md mx-auto mb-6 leading-relaxed">
+                            {{ __('Your temporary seat hold has expired and the seats have been released back to other cinema viewers. Please re-select your seats.') }}
+                        </p>
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                            <a href="{{ route('booking.seat', $order->showtime_id) }}" class="w-full sm:w-auto inline-flex items-center justify-center py-3 px-6 rounded-xl shadow-md text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                {{ __('Select Seats Again') }}
+                            </a>
+                            <a href="{{ route('home') }}" class="w-full sm:w-auto inline-flex items-center justify-center py-3 px-6 rounded-xl border border-slate-300 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+                                {{ __('Back to Home') }}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -167,9 +204,25 @@
     document.addEventListener('DOMContentLoaded', function() {
         const pollInterval = 5000; // 5 seconds
         let isPolling = false;
+        let isExpired = false;
+
+        function showExpiredUI() {
+            isExpired = true;
+            const instructionsBox = document.getElementById('payment-instructions-box');
+            if (instructionsBox) instructionsBox.classList.add('hidden');
+            
+            const statusContainer = document.getElementById('payment-status-container');
+            if (statusContainer) statusContainer.classList.add('hidden');
+            
+            const expiredContainer = document.getElementById('payment-expired-container');
+            if (expiredContainer) {
+                expiredContainer.classList.remove('hidden');
+                expiredContainer.classList.add('block');
+            }
+        }
         
         const pollStatus = () => {
-            if (isPolling) return;
+            if (isPolling || isExpired) return;
             isPolling = true;
             
             fetch("{{ route('orders.poll_status', $order->id) }}", {
@@ -188,17 +241,13 @@
                     const statusContainer = document.getElementById('payment-status-container');
                     if (statusContainer) statusContainer.classList.add('hidden');
                     
-                    const returnBtn = document.getElementById('return-button-container');
-                    if (returnBtn) returnBtn.classList.add('hidden');
-                    
-                    // Keep the payment box but show success message inside it
                     const successContainer = document.getElementById('payment-success-container');
                     if (successContainer) {
                         successContainer.classList.remove('hidden');
                         successContainer.classList.add('block');
                     }
                 } else if (data.status === 'failed') {
-                    window.location.href = "{{ route('orders.show', $order->id) }}";
+                    showExpiredUI();
                 } else {
                     isPolling = false;
                     setTimeout(pollStatus, pollInterval);
@@ -207,7 +256,9 @@
             .catch(error => {
                 console.error('Polling error:', error);
                 isPolling = false;
-                setTimeout(pollStatus, pollInterval);
+                if (!isExpired) {
+                    setTimeout(pollStatus, pollInterval);
+                }
             });
         };
         
@@ -218,34 +269,38 @@
         const expiryTimeStr = "{!! $order->expiry_time_local->toIso8601String() !!}";
         const expiryTime = new Date(expiryTimeStr).getTime();
         const countdownElement = document.getElementById('countdown-timer');
+        let countdownInterval = null;
         
         const updateCountdown = () => {
             const now = new Date().getTime();
             const distance = expiryTime - now;
             
-            if (distance < 0) {
-                if(countdownElement) {
+            if (distance <= 0) {
+                if (countdownElement) {
                     countdownElement.innerHTML = "{{ __('EXPIRED') }}";
-                    countdownElement.classList.remove('text-red-600');
-                    countdownElement.classList.add('text-slate-500');
                 }
+                if (countdownInterval) clearInterval(countdownInterval);
+                showExpiredUI();
+                // Notify backend that order expired
+                fetch("{{ route('orders.poll_status', $order->id) }}", {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                }).catch(() => {});
                 return;
             }
             
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
             
-            if(countdownElement) {
+            if (countdownElement) {
                 countdownElement.innerHTML = 
                     (minutes < 10 ? "0" + minutes : minutes) + ":" + 
                     (seconds < 10 ? "0" + seconds : seconds);
             }
         };
         
-        if(countdownElement) {
+        if (countdownElement) {
             updateCountdown();
-            setInterval(updateCountdown, 1000);
+            countdownInterval = setInterval(updateCountdown, 1000);
         }
     });
 </script>

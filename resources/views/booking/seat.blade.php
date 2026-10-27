@@ -9,6 +9,46 @@
         </a>
     </div>
 
+    <!-- @if(session('success'))
+        <div class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 text-green-800 text-sm font-medium">
+            <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif -->
+
+    @if($userActivePendingOrder)
+        <!-- Active Temporary Hold Banner for Current User -->
+        <div id="user-active-hold-banner" class="mb-8 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-2xl p-5 sm:p-6 shadow-md flex flex-col md:flex-row items-center justify-between gap-5">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-600 shrink-0 shadow-inner">
+                    <svg class="w-7 h-7 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h4 class="font-bold text-slate-900 text-base sm:text-lg">{{ __('You have seats on temporary hold for this showtime!') }}</h4>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-200 text-amber-800">{{ __('Temporary Hold') }}</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                        {{ __('Seats') }}: <span class="font-bold text-slate-900">{{ $userActivePendingOrder->seats->pluck('seat_number')->implode(', ') }}</span> • 
+                        {{ __('Remaining time') }}: <span id="banner-hold-timer" class="font-mono font-black text-amber-700 tracking-wider">--:--</span>
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                <form action="{{ route('orders.cancel', $userActivePendingOrder->id) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to cancel this seat hold?') }}');">
+                    @csrf
+                    <button type="submit" class="cursor-pointer px-4 py-2.5 border border-slate-300 text-slate-700 hover:bg-slate-100 rounded-xl text-xs sm:text-sm font-semibold transition-colors">
+                        {{ __('Cancel Hold') }}
+                    </button>
+                </form>
+                <a href="{{ route('orders.pay', $userActivePendingOrder->id) }}" class="cursor-pointer px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                    {{ __('Continue to Payment') }}
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+            </div>
+        </div>
+    @endif
+
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Seat Map -->
         <div class="w-full lg:w-2/3 bg-white border border-slate-200 rounded-2xl p-8 shadow-2xl">
@@ -40,19 +80,30 @@
                             <div class="flex justify-center gap-2 mb-4">
                                 @foreach($seatsInRow as $seat)
                                     @php
-                                        $isBooked = in_array($seat->id, $bookedSeatIds);
+                                        $isConfirmed = in_array($seat->id, $confirmedSeatIds ?? []);
+                                        $isHeld = in_array($seat->id, $heldSeatIds ?? []);
+                                        $isUnavailable = $isConfirmed || $isHeld || in_array($seat->id, $bookedSeatIds ?? []);
                                         $seatNum = (int) substr($seat->seat_number, 1);
                                         // 3 separators for a 10-seat row: after 2, 5, and 8
                                         $hasAisle = (in_array($seatNum, [2, 5, 8]) && count($seatsInRow) > 5);
                                     @endphp
                                     <div class="relative group {{ $hasAisle ? 'mr-6 md:mr-10' : '' }}">
-                                        <input type="checkbox" name="seats[]" value="{{ $seat->id }}" id="seat-{{ $seat->id }}" class="peer hidden" {{ $isBooked ? 'disabled' : '' }}>
-                                        <label for="seat-{{ $seat->id }}" class="
-                                            flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-t-lg border-b-4 text-xs font-bold transition-all duration-200 cursor-pointer
-                                            {{ $isBooked 
-                                                ? 'bg-slate-200 border-slate-300 text-slate-400 cursor-not-allowed' 
-                                                : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 peer-checked:border-blue-800 peer-checked:shadow-[0_0_15px_rgba(37,99,235,0.5)]' 
-                                            }}
+                                        <input type="checkbox" name="seats[]" value="{{ $seat->id }}" id="seat-{{ $seat->id }}" 
+                                            data-seat-id="{{ $seat->id }}"
+                                            data-seat-number="{{ $seat->seat_number }}"
+                                            class="peer hidden seat-checkbox" 
+                                            {{ $isUnavailable ? 'disabled' : '' }}>
+                                        <label for="seat-{{ $seat->id }}" id="label-seat-{{ $seat->id }}" 
+                                            title="{{ $isConfirmed ? __('Booked') : ($isHeld ? __('On Temporary Hold (Waiting for payment)') : __('Available')) }}"
+                                            class="
+                                            flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-t-lg border-b-4 text-xs font-bold transition-all duration-200 select-none
+                                            @if($isConfirmed)
+                                                bg-slate-200 border-slate-300 text-slate-400 cursor-not-allowed
+                                            @elseif($isHeld)
+                                                bg-amber-100 border-amber-400 text-amber-800 cursor-not-allowed shadow-[0_0_8px_rgba(251,191,36,0.25)]
+                                            @else
+                                                bg-white border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer peer-checked:border-blue-800 peer-checked:shadow-[0_0_15px_rgba(37,99,235,0.5)]
+                                            @endif
                                         ">
                                             {{ $seat->seat_number }}
                                         </label>
@@ -64,18 +115,22 @@
                 </div>
 
                 <!-- Legend -->
-                <div class="flex items-center justify-center space-x-8 mt-12 pt-6 border-t border-slate-200">
+                <div class="flex flex-wrap items-center justify-center gap-6 md:gap-8 mt-12 pt-6 border-t border-slate-200">
                     <div class="flex items-center">
-                        <div class="w-6 h-6 rounded-t bg-white border-b-2 border-slate-300 mr-2 shadow-sm"></div>
-                        <span class="text-sm text-slate-500">{{ __('Available') }}</span>
+                        <div class="w-6 h-6 rounded-t bg-white border-b-4 border-slate-300 mr-2 shadow-sm"></div>
+                        <span class="text-xs md:text-sm text-slate-600 font-medium">{{ __('Available') }}</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="w-6 h-6 rounded-t bg-white border-b-2 border-blue-800 mr-2 shadow-[0_0_10px_rgba(37,99,235,0.3)]"></div>
-                        <span class="text-sm text-slate-500">{{ __('Selected') }}</span>
+                        <div class="w-6 h-6 rounded-t bg-white border-b-4 border-blue-800 mr-2 shadow-[0_0_10px_rgba(37,99,235,0.3)]"></div>
+                        <span class="text-xs md:text-sm text-slate-600 font-medium">{{ __('Selected') }}</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="w-6 h-6 rounded-t bg-slate-200 border-b-2 border-slate-300 mr-2"></div>
-                        <span class="text-sm text-slate-500">{{ __('Booked') }}</span>
+                        <div class="w-6 h-6 rounded-t bg-amber-100 border-b-4 border-amber-400 mr-2 shadow-[0_0_6px_rgba(251,191,36,0.3)]"></div>
+                        <span class="text-xs md:text-sm text-slate-600 font-medium">{{ __('On Hold') }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-6 h-6 rounded-t bg-slate-200 border-b-4 border-slate-300 mr-2"></div>
+                        <span class="text-xs md:text-sm text-slate-600 font-medium">{{ __('Booked') }}</span>
                     </div>
                 </div>
             </form>
@@ -178,9 +233,8 @@
             let selectedLabels = [];
             
             checkboxes.forEach(cb => {
-                if(cb.checked) {
+                if(cb.checked && !cb.disabled) {
                     selectedCount++;
-                    // Find the label text corresponding to this checkbox
                     const label = document.querySelector(`label[for="${cb.id}"]`).innerText.trim();
                     selectedLabels.push(label);
                 }
@@ -203,6 +257,97 @@
         paymentRadios.forEach(radio => {
             radio.addEventListener('change', updateSummary);
         });
+
+        // Banner hold timer countdown
+        @if($userActivePendingOrder)
+            const remainingSecondsFromBackend = {{ $userActivePendingOrder->remaining_hold_seconds }};
+            const bannerTimerEl = document.getElementById('banner-hold-timer');
+            let bannerSecondsLeft = remainingSecondsFromBackend;
+
+            function updateBannerTimer() {
+                if (bannerSecondsLeft <= 0) {
+                    if (bannerTimerEl) bannerTimerEl.innerText = "{{ __('EXPIRED') }}";
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                    return;
+                }
+                const m = Math.floor(bannerSecondsLeft / 60);
+                const s = bannerSecondsLeft % 60;
+                if (bannerTimerEl) {
+                    bannerTimerEl.innerText = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+                }
+                bannerSecondsLeft--;
+            }
+
+            if (bannerTimerEl) {
+                updateBannerTimer();
+                setInterval(updateBannerTimer, 1000);
+            }
+        @endif
+
+        // Real-time seat status polling
+        const showtimeId = "{{ $showtime->id }}";
+        const pollStatusUrl = "{{ route('booking.seats_status', $showtime->id) }}";
+        const pollSeatsInterval = 8000; // Poll every 8 seconds
+
+        function refreshSeatStatuses() {
+            fetch(pollStatusUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status !== 'success') return;
+
+                const confirmed = new Set(data.confirmed || []);
+                const held = new Set(data.held || []);
+                let needSummaryUpdate = false;
+
+                checkboxes.forEach(cb => {
+                    const seatId = cb.value;
+                    const label = document.getElementById(`label-seat-${seatId}`);
+                    if (!label) return;
+
+                    const isConfirmed = confirmed.has(seatId);
+                    const isHeld = held.has(seatId);
+
+                    if (isConfirmed) {
+                        if (cb.checked) {
+                            cb.checked = false;
+                            needSummaryUpdate = true;
+                        }
+                        cb.disabled = true;
+                        label.className = 'flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-t-lg border-b-4 text-xs font-bold transition-all duration-200 select-none bg-slate-200 border-slate-300 text-slate-400 cursor-not-allowed';
+                        label.title = "{{ __('Booked') }}";
+                    } else if (isHeld) {
+                        if (cb.checked) {
+                            cb.checked = false;
+                            needSummaryUpdate = true;
+                        }
+                        cb.disabled = true;
+                        label.className = 'flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-t-lg border-b-4 text-xs font-bold transition-all duration-200 select-none bg-amber-100 border-amber-400 text-amber-800 cursor-not-allowed shadow-[0_0_8px_rgba(251,191,36,0.25)]';
+                        label.title = "{{ __('On Temporary Hold (Waiting for payment)') }}";
+                    } else {
+                        // Available
+                        if (cb.disabled) {
+                            cb.disabled = false;
+                            label.className = 'flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-t-lg border-b-4 text-xs font-bold transition-all duration-200 select-none bg-white border-slate-300 text-slate-700 hover:bg-slate-50 cursor-pointer peer-checked:border-blue-800 peer-checked:shadow-[0_0_15px_rgba(37,99,235,0.5)]';
+                            label.title = "{{ __('Available') }}";
+                        }
+                    }
+                });
+
+                if (needSummaryUpdate) {
+                    updateSummary();
+                }
+            })
+            .catch(err => console.error('Seat status polling failed:', err));
+        }
+
+        setInterval(refreshSeatStatuses, pollSeatsInterval);
     });
 </script>
 @endpush
